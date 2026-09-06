@@ -1,0 +1,56 @@
+# dns.kaipfstr.de
+# Zwei statische HTML-Dateien, kein Build, kein Framework, kein JavaScript.
+[build]
+  publish = "."
+  command = ""
+
+# Eine Seite ueber DNS-Privatsphaere, die selbst Skripte von fremden Servern
+# nachlaedt, waere eine Pointe, auf die wir verzichten. Die CSP schreibt den
+# Ist-Zustand fest: script-src 'none'.
+#
+# Die Datei enthaelt genau einen <script>-Block pro Sprache, und der ist
+# type="application/ld+json". JSON-LD wird vom Browser nie ausgefuehrt, sondern
+# nur von Suchmaschinen gelesen. Es faellt damit nicht unter script-src und
+# braucht keinen Hash. 'none' bricht die strukturierten Daten also nicht.
+#
+# style-src behaelt 'unsafe-inline', weil die Datei einen <style>-Block nutzt.
+# Fuer Styles ist das Risiko marginal, fuer Skripte waere es das nicht.
+#
+# connect-src 'none' schliesst den Rueckkanal: kein fetch, kein XHR, kein
+# WebSocket. Die Seite kann nichts nach Hause telefonieren.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=(), usb=(), interest-cohort=()"
+    X-Frame-Options = "DENY"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Resource-Policy = "same-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
+# Bewusst KEINE sprachabhaengige Weiterleitung auf "/".
+# Netlify koennte per Country- oder Language-Bedingung umleiten. Genau das
+# wuerde die getrennte Indexierung zerstoeren: Ein Crawler, der aus den USA auf
+# "/" zugreift und auf "/en/" umgeleitet wird, sieht die deutsche Fassung nie.
+# Die Sprachwahl passiert deshalb ueber sichtbare Links und hreflang, nicht
+# ueber Serverlogik.
+
+# Bewusst KEINE Redirect-Regel fuer "/en" ohne Schraegstrich.
+# Die Netlify-Doku sagt dazu ausdruecklich: "You cannot use a redirect rule to
+# add or remove a trailing slash. However, you can rely on Netlify's Pretty URLs
+# feature, which is enabled by default." Eine eigene Regel mit force = true
+# koennte hier eine Weiterleitungsschleife erzeugen. Pretty URLs erledigt es.

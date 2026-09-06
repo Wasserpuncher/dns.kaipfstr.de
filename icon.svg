@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="dns.kaipfstr.de">
+<rect width="64" height="64" rx="13" fill="#0f5c4a"/>
+<path d="M32 13c-9 6-13 12-13 19 0 8 6 14 13 19 7-5 13-11 13-19 0-7-4-13-13-19z"
+      fill="none" stroke="#fbfaf7" stroke-width="3.4" stroke-linejoin="round"/>
+<path d="M23 30h18M32 13v38" fill="none" stroke="#fbfaf7" stroke-width="2.4" opacity=".75"/>
+</svg>

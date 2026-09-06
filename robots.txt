@@ -1,0 +1,7 @@
+# dns.kaipfstr.de
+# Beide Sprachfassungen sollen indexiert werden. Es gibt nichts zu verstecken.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://dns.kaipfstr.de/sitemap.xml

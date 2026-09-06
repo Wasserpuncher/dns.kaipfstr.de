@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sichere DNS-Server: geprüfte Anbieter und Selbsthosting</title>
+<meta name="description" content="Elf öffentliche DNS-Resolver und sechs Wege zum Selbsthosten, am 6. September 2026 an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.">
+<meta name="author" content="Kai Pfister">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#0f5c4a">
+<meta name="referrer" content="no-referrer">
+<link rel="canonical" href="https://dns.kaipfstr.de/">
+<link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/">
+<link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/">
+<link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dns.kaipfstr.de/">
+<meta property="og:title" content="Sichere DNS-Server: geprüfte Anbieter und Selbsthosting">
+<meta property="og:description" content="Elf öffentliche DNS-Resolver und sechs Wege zum Selbsthosten, am 6. September 2026 an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.">
+<meta property="og:site_name" content="dns.kaipfstr.de">
+<meta property="og:locale" content="de_DE">
+<meta property="og:locale:alternate" content="en_GB">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#fbfaf7; --panel:#ffffff; --ink:#22201d; --muted:#5c574f;
+  --line:#e3ded4; --line-strong:#cec7b8;
+  --accent:#0f5c4a; --accent-ink:#0b4436;
+  --warn-bg:#fdf4ec; --warn-line:#d8a06a; --warn-ink:#7a4310;
+  --stop-bg:#fcf0ef; --stop-line:#c98a84; --stop-ink:#7d2b23;
+  --good:#0f5c4a; --code-bg:#f2efe8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14161a; --panel:#1b1e24; --ink:#e6e3dd; --muted:#a5a096;
+    --line:#2c3038; --line-strong:#3d434d;
+    --accent:#5fc0a4; --accent-ink:#8ad6bf;
+    --warn-bg:#2a2118; --warn-line:#7a5628; --warn-ink:#e8b579;
+    --stop-bg:#2b1a18; --stop-line:#7d3b34; --stop-ink:#f0a49a;
+    --good:#5fc0a4; --code-bg:#22262d;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--serif);font-size:1.0625rem;line-height:1.72;
+  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:52rem;margin:0 auto;padding:0 1.25rem}
+a{color:var(--accent-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+a:hover,a:focus-visible{text-decoration-thickness:.14em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3,h4{font-family:var(--sans);line-height:1.22;text-wrap:balance;font-weight:700}
+h1{font-size:clamp(2rem,5.2vw,3.05rem);letter-spacing:-.022em;margin:0 0 .6rem}
+h2{font-size:clamp(1.42rem,3.1vw,1.95rem);letter-spacing:-.014em;margin:4.2rem 0 1.1rem;
+   padding-bottom:.45rem;border-bottom:2px solid var(--line-strong)}
+h3{font-size:1.2rem;margin:2.4rem 0 .7rem;letter-spacing:-.008em}
+h4{font-size:.83rem;margin:1.5rem 0 .35rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+p{margin:0 0 1.15rem;text-wrap:pretty;hyphens:auto}
+ul,ol{margin:0 0 1.15rem;padding-left:1.3rem}
+li{margin:0 0 .5rem}
+strong{font-weight:700}
+code,kbd{font-family:var(--mono);font-size:.855em;background:var(--code-bg);
+  padding:.13em .38em;border-radius:4px;border:1px solid var(--line);word-break:break-all}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:20;background:var(--panel);padding:.6rem 1rem;
+  border:2px solid var(--accent);border-radius:6px}
+
+/* Kopf */
+header.top{background:var(--panel);border-bottom:1px solid var(--line);padding:3.6rem 0 2.6rem}
+.eyebrow{font-family:var(--sans);font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin:0 0 .9rem}
+.lede{font-size:1.2rem;color:var(--muted);margin:0 0 1.5rem;max-width:40rem;font-style:italic}
+.meta{font-family:var(--sans);font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;
+  gap:.55rem 1.1rem;align-items:center;margin:0}
+.langswitch{font-family:var(--sans);font-size:.85rem;font-weight:600;display:inline-block;
+  border:1px solid var(--muted);border-radius:999px;padding:.3rem .9rem;text-decoration:none}
+.langswitch:hover{border-color:var(--accent);background:var(--panel)}
+
+/* Inhaltsverzeichnis */
+nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1.4rem 1.5rem;margin:2.6rem 0}
+nav.toc h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);
+  border:0;margin:0 0 .7rem;padding:0}
+nav.toc ol{columns:2;column-gap:2rem;margin:0;padding-left:1.15rem;font-family:var(--sans);font-size:.93rem}
+nav.toc li{margin:0 0 .35rem;break-inside:avoid}
+@media(max-width:34rem){nav.toc ol{columns:1}}
+
+/* Karten */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:1.6rem 1.65rem;margin:1.6rem 0}
+.card h3{margin-top:0;display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.tag{font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;border:1px solid var(--line-strong);border-radius:999px;
+  padding:.16rem .55rem;color:var(--muted);white-space:nowrap}
+.card.warn{background:var(--warn-bg);border-color:var(--warn-line)}
+.card.warn .tag{border-color:var(--warn-line);color:var(--warn-ink)}
+.card.stop{background:var(--stop-bg);border-color:var(--stop-line)}
+.card.stop .tag{border-color:var(--stop-line);color:var(--stop-ink)}
+
+/* Definitionslisten */
+dl.facts{margin:0 0 1rem;display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.1rem;
+  font-size:.97rem;align-items:baseline}
+dl.facts dt{font-family:var(--sans);font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);font-weight:700;padding-top:.18rem}
+dl.facts dd{margin:0}
+@media(max-width:36rem){dl.facts{grid-template-columns:1fr;gap:.1rem}
+  dl.facts dd{margin:0 0 .7rem}}
+
+/* Endpunkt-Blöcke */
+.ep{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .9rem;margin:.9rem 0}
+.ep .epname{font-family:var(--sans);font-size:.86rem;font-weight:700;margin:0 0 .35rem}
+.ep dl{display:grid;grid-template-columns:3.2rem 1fr;gap:.16rem .7rem;margin:0;font-size:.92rem}
+.ep dt{font-family:var(--sans);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);font-weight:700;padding-top:.22rem}
+.ep dd{margin:0}
+
+/* Tabelle */
+.tablewrap{overflow-x:auto;margin:1.5rem 0;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+caption{caption-side:top;text-align:left;padding:.75rem .85rem .1rem;font-family:var(--sans);
+  font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.9rem;min-width:34rem}
+th,td{padding:.62rem .85rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  border-bottom:2px solid var(--line-strong);white-space:nowrap}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+tbody th{font-weight:400}
+td.yes{color:var(--good);font-weight:700}
+td.no{color:var(--muted)}
+
+/* Listen mit Vor- und Nachteilen */
+ul.pro,ul.con{list-style:none;padding-left:1.6rem}
+ul.pro li,ul.con li{position:relative}
+ul.pro li::before{content:"+";position:absolute;left:-1.25rem;color:var(--good);font-weight:700}
+ul.con li::before{content:"!";position:absolute;left:-1.2rem;color:var(--warn-ink);font-weight:700}
+
+/* Quellen */
+ul.src{list-style:none;padding:0;font-family:var(--sans);font-size:.87rem}
+ul.src li{margin:0 0 .42rem;padding-left:1.1rem;text-indent:-1.1rem}
+.srcnote{font-family:var(--sans);font-size:.83rem;color:var(--muted)}
+
+blockquote{margin:1.3rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:3px solid var(--accent);
+  color:var(--muted);font-style:italic}
+
+footer{border-top:1px solid var(--line);margin-top:4.5rem;padding:2.4rem 0 3.5rem;
+  font-family:var(--sans);font-size:.87rem;color:var(--muted)}
+footer a{color:var(--accent-ink)}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://dns.kaipfstr.de/#website","url":"https://dns.kaipfstr.de/","name":"dns.kaipfstr.de","inLanguage":["de","en"],"publisher":{"@id":"https://dns.kaipfstr.de/#person"}},{"@type":"Person","@id":"https://dns.kaipfstr.de/#person","name":"Kai Pfister","url":"https://github.com/Wasserpuncher"},{"@type":"WebPage","@id":"https://dns.kaipfstr.de/#webpage","url":"https://dns.kaipfstr.de/","name":"Sichere DNS-Server: geprüfte Anbieter und Selbsthosting","description":"Elf öffentliche DNS-Resolver und sechs Wege zum Selbsthosten, am 6. September 2026 an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.","inLanguage":"de","isPartOf":{"@id":"https://dns.kaipfstr.de/#website"},"author":{"@id":"https://dns.kaipfstr.de/#person"},"dateModified":"2026-09-06","breadcrumb":{"@id":"https://dns.kaipfstr.de/#breadcrumb"},"license":"https://opensource.org/licenses/MIT"},{"@type":"BreadcrumbList","@id":"https://dns.kaipfstr.de/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Sichere DNS-Server: geprüfte Anbieter und Selbsthosting","item":"https://dns.kaipfstr.de/"}]},{"@type":"ItemList","@id":"https://dns.kaipfstr.de/#providers","name":"Geprüfte öffentliche DNS-Resolver","numberOfItems":11,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Organization","name":"Quad9","url":"https://quad9.net/service/service-addresses-and-features/"}},{"@type":"ListItem","position":2,"item":{"@type":"Organization","name":"DNS4EU","url":"https://www.joindns4.eu/for-public"}},{"@type":"ListItem","position":3,"item":{"@type":"Organization","name":"DNS.SB","url":"https://dns.sb/"}},{"@type":"ListItem","position":4,"item":{"@type":"Organization","name":"UncensoredDNS","url":"https://blog.uncensoreddns.org/"}},{"@type":"ListItem","position":5,"item":{"@type":"Organization","name":"Digitalcourage e. V.","url":"https://digitalcourage.de/support/zensurfreier-dns-server"}},{"@type":"ListItem","position":6,"item":{"@type":"Organization","name":"Digitale Gesellschaft","url":"https://www.digitale-gesellschaft.ch/dns/"}},{"@type":"ListItem","position":7,"item":{"@type":"Organization","name":"Artikel10 e. V.","url":"https://dns.artikel10.org/"}},{"@type":"ListItem","position":8,"item":{"@type":"Organization","name":"dnsforge.de","url":"https://dnsforge.de/"}},{"@type":"ListItem","position":9,"item":{"@type":"Organization","name":"Freifunk München","url":"https://dns-setup.ffmuc.net/"}},{"@type":"ListItem","position":10,"item":{"@type":"Organization","name":"RESTENA","url":"https://www.restena.lu/en/service/public-dns-resolver"}},{"@type":"ListItem","position":11,"item":{"@type":"Organization","name":"Applied Privacy","url":"https://applied-privacy.net/services/dns/"}}]},{"@type":"FAQPage","@id":"https://dns.kaipfstr.de/#faq","inLanguage":"de","mainEntity":[{"@type":"Question","name":"Macht mich ein anderer DNS-Server anonym?","acceptedAnswer":{"@type":"Answer","text":"Nein. Er verlagert die Sichtbarkeit vom Zugangsanbieter zum neuen Resolver. Die Ziel-IP-Adressen Ihrer Verbindungen und, ohne Encrypted Client Hello, der Servername im TLS-Handshake bleiben sichtbar. Anonymität ist ein anderes Problem und braucht andere Werkzeuge."}},{"@type":"Question","name":"DNSSEC oder verschlüsseltes DNS, was brauche ich?","acceptedAnswer":{"@type":"Answer","text":"Beides, denn sie lösen verschiedene Probleme. DNSSEC prüft, ob die Antwort echt ist. DoT, DoH und DoQ verbergen die Frage. RFC 4033 sagt zu DNSSEC ausdrücklich: „These extensions do not provide confidentiality.“"}},{"@type":"Question","name":"Warum funktioniert die IP-Adresse von Digitale Gesellschaft, Artikel10 oder Applied Privacy nicht in meinem Router?","acceptedAnswer":{"@type":"Answer","text":"Weil diese Dienste bewusst kein Klartext-DNS auf Port 53 anbieten. Die genannten Adressen antworten nur über DoT auf Port 853 oder DoH auf Port 443. Sie gehören in ein Feld für verschlüsseltes DNS, nicht in das gewöhnliche DNS-Feld."}},{"@type":"Question","name":"Ist ein selbst betriebener Resolver privater?","acceptedAnswer":{"@type":"Answer","text":"Teilweise. Bei echter Rekursion entfällt der zentrale Resolver, der alles sieht. Dafür laufen die Anfragen an Root-, TLD- und autoritative Server, und in einem sehr kleinen Netz sind sie leichter einer Person zuzuordnen. Der Gewinn liegt also in der Verteilung, nicht in der Unsichtbarkeit."}},{"@type":"Question","name":"Reicht es, DoH im Browser einzuschalten?","acceptedAnswer":{"@type":"Answer","text":"Für den Browser ja, für das Gerät nein. Alles andere, vom E-Mail-Programm bis zum Betriebssystem-Update, nutzt weiterhin den systemweit eingestellten Resolver. Wer das ganze Gerät schützen will, stellt DNS im Betriebssystem oder im Router ein."}},{"@type":"Question","name":"Warum steht Mullvad hier als Warnung und nicht als Empfehlung?","acceptedAnswer":{"@type":"Answer","text":"Weil der öffentliche verschlüsselte DNS-Dienst am 2. November 2026 abgeschaltet wird. Das hat Mullvad am 3. September 2026 selbst angekündigt. Eine Adresse zu empfehlen, die in wenigen Wochen nicht mehr antwortet, wäre keine Hilfe."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="top"><div class="wrap">
+<p class="eyebrow">dns.kaipfstr.de</p>
+<h1>Sichere DNS-Server</h1>
+<p class="lede">Welchen Namensauflöser Sie benutzen, entscheidet, wer mitliest.</p>
+<p class="meta"><a class="langswitch" href="https://dns.kaipfstr.de/en/" hreflang="en" lang="en">English version</a><span>Stand: 6. September 2026</span></p>
+</div></header>
+<main id="main"><div class="wrap">
+<nav class="toc" aria-label="Inhalt"><h2>Inhalt</h2><ol>
+<li><a href="#was">Was DNS verrät</a></li>
+<li><a href="#grenzen">Was verschlüsseltes DNS nicht leistet</a></li>
+<li><a href="#protokolle">Die Protokolle</a></li>
+<li><a href="#auswahl">Woran man einen guten Anbieter erkennt</a></li>
+<li><a href="#anbieter">Die Anbieter im Einzelnen</a></li>
+<li><a href="#warnung">Nicht mehr verwenden</a></li>
+<li><a href="#kommerziell">Die großen kommerziellen Dienste</a></li>
+<li><a href="#selbst">Selbst betreiben</a></li>
+<li><a href="#einrichten">Einrichten</a></li>
+<li><a href="#recht">Rechtlicher Rahmen in Deutschland</a></li>
+<li><a href="#faq">Häufige Fragen</a></li>
+<li><a href="#methode">Wie diese Seite geprüft wurde</a></li>
+<li><a href="#quellen">Quellen</a></li>
+</ol></nav>
+<section id="was"><h2>Was DNS über Sie verrät</h2>
+<p>Jedes Mal, wenn ein Gerät eine Adresse aufruft, fragt es zuerst einen Namensserver, welche IP-Adresse dahintersteht. In der Voreinstellung ist das der Server des Zugangsanbieters, und in der Voreinstellung läuft diese Frage im Klartext über das Netz.</p>
+<p>Daraus entsteht eine vollständige, zeitlich sortierte Liste dessen, was ein Anschluss abruft. RFC 9076, das IETF-Dokument zu den Datenschutzaspekten des DNS, beschreibt die Tragweite an einem Beispiel: Der Aufruf der Website der Anonymen Alkoholiker sagt etwas über eine Person aus, das sie nicht notwendigerweise preisgeben wollte. Nicht der einzelne Abruf ist das Problem, sondern die Verknüpfbarkeit vieler Abrufe über die Zeit.</p>
+<p>Diese Seite listet Namensserver, die man statt des voreingestellten benutzen kann, und Wege, einen eigenen zu betreiben. Sie nennt zu jedem Dienst auch, was gegen ihn spricht. Ein Verzeichnis, das nur Vorteile aufzählt, ist Werbung und keine Hilfe bei einer Entscheidung.</p>
+</section>
+<section id="grenzen"><h2>Was verschlüsseltes DNS nicht leistet</h2>
+<p>Verschlüsseltes DNS verbirgt, welche Namen Sie nachschlagen. Es verbirgt nicht, welche Server Sie danach besuchen.</p>
+<p>Das ist keine Relativierung, sondern die Aussage der Spezifikation selbst. RFC 9849, die Spezifikation von Encrypted Client Hello vom März 2026, formuliert es so: „<span lang="en">ECH is not in itself sufficient to protect the identity of the server. The target domain may also be visible through other channels, such as plaintext client DNS queries or visible server IP addresses.</span>“ Umgekehrt gilt dasselbe: Verschlüsseltes DNS allein reicht nicht, solange der Servername im TLS-Handshake als Server Name Indication im Klartext steht und die Ziel-IP-Adresse ohnehin sichtbar bleibt.</p>
+<p>Was ein anderer DNS-Anbieter also bewirkt:</p>
+<p>Er nimmt Ihrem Zugangsanbieter den bequemsten Beobachtungsposten. Statt einer sauber lesbaren Liste von Domainnamen sieht er verschlüsselten Verkehr zu einer IP-Adresse. Er nimmt ihm außerdem die Möglichkeit, Antworten stillschweigend zu verändern. Und er nimmt ihm die Rolle des Adressaten von DNS-Sperren, soweit der neue Anbieter denselben Anordnungen nicht unterliegt.</p>
+<p>Was er nicht bewirkt:</p>
+<p>Er macht Sie nicht anonym. Der neue Resolver sieht nun das, was vorher der Zugangsanbieter sah. Sie tauschen einen Mitwisser gegen einen anderen und sollten deshalb einen wählen, dessen Interessen Ihren eigenen nicht widersprechen. Er ersetzt kein VPN und kein Tor. Und er ist kein Virenschutz: Ein DNS-Filter greift nur, solange ein Name aufgelöst wird, und lässt sich durch eine direkte IP-Verbindung umgehen.</p>
+<p>Die Bundesnetzagentur schreibt dazu in eigener Sache: „Ein kritischer Punkt bei der DNS-Sperre ist, dass eine solche Sperre leicht umgangen werden kann.“ Das gilt für Sperren, die man ablehnt, genauso wie für Schutzfilter, die man möchte.</p>
+</section>
+<section id="protokolle"><h2>Die Protokolle, kurz und richtig</h2>
+<article class="card"><h3>Klassisches DNS im Klartext <span class="tag">Do53</span> <span class="tag">RFC 1035, STD 13</span></h3>
+<p class="srcnote">UDP und TCP 53</p>
+<p>Der Standardfall seit 1987. RFC 1035 legt fest, dass DNS über UDP und TCP auf Port 53 läuft, und sieht keinerlei Vertraulichkeit vor. Wer im selben Netz sitzt oder das Netz betreibt, liest jede Anfrage mit.</p>
+<p>RFC 9076, das aktuelle IETF-Dokument zu den Datenschutzaspekten des DNS, benennt den lohnendsten Abhörpunkt ausdrücklich: „<span lang="en">The best place to tap, from an eavesdropper's point of view, is clearly between the stub resolvers and the recursive resolvers, because traffic is not limited by DNS caching.</span>“ Genau diese Strecke verschlüsseln DoT, DoH und DoQ.</p>
+</article>
+<article class="card"><h3>DNS over TLS <span class="tag">DoT</span> <span class="tag">RFC 7858</span></h3>
+<p class="srcnote">TCP 853</p>
+<p>DNS in einem TLS-Tunnel auf einem eigenen Port. RFC 7858 legt fest: „<span lang="en">By default, a DNS server that supports DNS over TLS MUST listen for and accept TCP connections on port 853, unless it has mutual agreement with its clients to use a port other than 853 for DNS over TLS.</span>“</p>
+<p>Der eigene Port ist Vorteil und Nachteil zugleich. Vorteil: Das Betriebssystem kann DoT systemweit für alle Programme setzen, was Android seit Jahren unter „Privates DNS“ tut. Nachteil: Port 853 ist sichtbar und in restriktiven Netzen leicht zu sperren.</p>
+</article>
+<article class="card"><h3>DNS over HTTPS <span class="tag">DoH</span> <span class="tag">RFC 8484</span></h3>
+<p class="srcnote">TCP 443</p>
+<p>DNS in gewöhnlichen HTTPS-Anfragen. RFC 8484 beschreibt es so: „<span lang="en">Each DNS query-response pair is mapped into an HTTP exchange.</span>“</p>
+<p>Weil der Verkehr auf Port 443 läuft, ist er von normalem Web-Verkehr kaum zu unterscheiden und entsprechend schwer zu sperren. Der Preis: DoH wird meist pro Anwendung eingestellt, nicht systemweit. Ein Browser mit eigenem DoH nutzt einen anderen Resolver als der Rest des Systems, was in der Praxis regelmäßig zu Verwirrung führt.</p>
+</article>
+<article class="card"><h3>DNS over QUIC <span class="tag">DoQ</span> <span class="tag">RFC 9250</span></h3>
+<p class="srcnote">UDP 853</p>
+<p>Der jüngste der drei verschlüsselten Transporte, standardisiert im Mai 2022. RFC 9250 beschreibt den Vorteil so: „<span lang="en">The encryption provided by QUIC has similar properties to those provided by TLS, while QUIC transport eliminates the head-of-line blocking issues inherent with TCP and provides more efficient packet-loss recovery than UDP.</span>“</p>
+<p>In der Praxis heißt das: gleiche Vertraulichkeit wie DoT, aber schnellerer Verbindungsaufbau und weniger Verzögerung bei Paketverlust. Quad9 und UncensoredDNS haben DoQ ausdrücklich angekündigt; dnsforge.de, Freifunk München und AdGuard DNS nennen ebenfalls DoQ-Endpunkte.</p>
+</article>
+<article class="card"><h3>Signaturen, keine Verschlüsselung <span class="tag">DNSSEC</span> <span class="tag">RFC 4033, 4034, 4035</span></h3>
+<p class="srcnote">unabhängig vom Transport</p>
+<p>Die häufigste Verwechslung auf diesem Themenfeld. DNSSEC verschlüsselt nichts. RFC 4033 sagt in einem Satz, was es leistet: „<span lang="en">The Domain Name System Security Extensions (DNSSEC) add data origin authentication and data integrity to the Domain Name System.</span>“ Und es sagt ebenso deutlich, was es nicht leistet: „<span lang="en">These extensions do not provide confidentiality.</span>“</p>
+<p>DNSSEC schützt also davor, dass jemand die Antwort fälscht. Es schützt nicht davor, dass jemand die Frage mitliest. Beides zusammen bekommt man erst, wenn ein validierender Resolver über einen verschlüsselten Transport erreicht wird.</p>
+<p>Eine Nebenwirkung sollte man kennen: RFC 4033 warnt, dass DNSSEC in der NSEC-Variante das Aufzählen aller Namen einer Zone ermöglicht. Für die Privatsphäre von Zoneninhalten ist DNSSEC also kein Gewinn.</p>
+</article>
+<article class="card"><h3>QNAME-Minimierung <span class="tag">QNAME</span> <span class="tag">RFC 9156</span></h3>
+<p class="srcnote">Verhalten des Resolvers</p>
+<p>Ohne Minimierung fragt ein rekursiver Resolver den Root-Server nach dem vollen Namen, obwohl der Root-Server nur die Zuständigkeit für die Endung kennt. Mit Minimierung erfährt jede Ebene nur so viel, wie sie zur Weiterleitung braucht.</p>
+<p>Wichtig für die Genauigkeit: Der gültige Standard ist RFC 9156 aus dem November 2021, Standards Track. Der oft zitierte RFC 7816 war experimentell und ist ausdrücklich als überholt gekennzeichnet.</p>
+</article>
+<article class="card"><h3>EDNS Client Subnet <span class="tag">ECS</span> <span class="tag">RFC 7871</span></h3>
+<p class="srcnote">Erweiterung, informational</p>
+<p>Der Resolver reicht einen gekürzten Teil der Client-Adresse an autoritative Server weiter, damit ein Content-Netz eine geografisch nahe Antwort geben kann. Der Preis ist Privatsphäre.</p>
+<p>Der RFC rät selbst zur Zurückhaltung: „<span lang="en">We recommend that the feature be turned off by default in all nameserver software, and that operators only enable it explicitly in those circumstances where it provides a clear benefit for their clients.</span>“ RFC 7871 ist informational, kein Standards Track.</p>
+<p>Praktische Folge: Wer Privatsphäre über Geschwindigkeit stellt, wählt einen Endpunkt ohne ECS. Bei Quad9 sind das 9.9.9.9 und 9.9.9.10, während 9.9.9.11 und 9.9.9.12 ECS ausdrücklich einsetzen.</p>
+</article>
+<article class="card"><h3>EDNS(0) Padding <span class="tag">Padding</span> <span class="tag">RFC 7830</span></h3>
+<p class="srcnote">Erweiterung</p>
+<p>Verschlüsselung verbirgt den Inhalt, nicht die Größe. RFC 9076 weist darauf hin, dass sich aus Größe und zeitlichem Muster verschlüsselter Nachrichten Rückschlüsse ziehen lassen. Als Gegenmittel definiert RFC 7830 eine Auffüllung auf einheitliche Längen. Wer einen Resolver selbst betreibt, sollte Padding aktivieren.</p>
+</article>
+</section>
+<section id="auswahl"><h2>Woran man einen guten Anbieter erkennt</h2>
+<h3>Wer haftet?</h3>
+<p>Ein eingetragener Verein, eine Stiftung oder eine Gesellschaft mit ladungsfähiger Anschrift ist überprüfbar. Ein anonymes Projekt ist es nicht. Das sagt nichts über die Redlichkeit, aber alles über die Durchsetzbarkeit von Zusagen.</p>
+<h3>Wovon lebt der Dienst?</h3>
+<p>Kostenloses DNS kostet den Betreiber Geld. Wenn nicht erkennbar ist, wer dafür aufkommt, ist die Frage offen, womit der Dienst bezahlt wird. Spenden, Mitgliedsbeiträge und ein tragendes Hauptgeschäft sind nachvollziehbare Antworten.</p>
+<h3>Was steht wörtlich in der Datenschutzerklärung?</h3>
+<p>„Wir respektieren Ihre Privatsphäre“ ist keine Zusage. „<span lang="en">We do not log DNS queries</span>“ mit benannten Ausnahmen und einer Speicherfrist ist eine. Eine Erklärung, die ihre eigenen Ausnahmen benennt, ist glaubwürdiger als eine ohne.</p>
+<h3>Wird gefiltert, und ist das abwählbar?</h3>
+<p>Ein Malware-Filter ist für die meisten Menschen ein Gewinn. Entscheidend ist, dass es eine ungefilterte Adresse desselben Betreibers gibt, damit die Entscheidung bei Ihnen bleibt.</p>
+<h3>Welche Jurisdiktion?</h3>
+<p>Der Sitz des Betreibers und der Standort der Server entscheiden darüber, welche Behörden welche Anordnungen treffen können. Beides kann auseinanderfallen und sollte getrennt betrachtet werden.</p>
+<h3>Gibt es einen zweiten Server?</h3>
+<p>Ein einzelner Resolver ist ein einzelner Ausfallpunkt. Tragen Sie immer einen zweiten, unabhängigen Server ein, am besten von einem anderen Betreiber.</p>
+</section>
+<section id="anbieter"><h2>Die Anbieter im Einzelnen</h2>
+<h3>Überblick</h3>
+<div class="tablewrap" tabindex="0" role="region" aria-label="Überblick"><table><caption>Die elf geprüften Resolver im Überblick</caption><thead><tr><th scope="col">Dienst</th><th scope="col">Trägerschaft</th><th scope="col">Sitz</th><th scope="col">Ungefilterte Adresse</th><th scope="col">Klartext-DNS</th></tr></thead><tbody><tr><th scope="row"><a href="#p-quad9">Quad9</a></th><td>Gemeinnützige Stiftung</td><td>CH</td><td class="no">mit Vorbehalt</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-dns4eu">DNS4EU</a></th><td>Privatwirtschaftliches Unternehmen, hervorgegangen aus einem EU-kofinanzierten Projekt</td><td>CZ</td><td class="no">mit Vorbehalt</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-dnssb">DNS.SB</a></th><td>Privatwirtschaftliches Unternehmen</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-uncensoreddns">UncensoredDNS</a></th><td>Privatperson, unentgeltlich betrieben</td><td>DK</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-digitalcourage">Digitalcourage e. V.</a></th><td>Gemeinnütziger eingetragener Verein</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-digiges">Digitale Gesellschaft</a></th><td>Gemeinnütziger Verein</td><td>CH</td><td class="yes">ja</td><td class="no">nein</td></tr><tr><th scope="row"><a href="#p-artikel10">Artikel10 e. V.</a></th><td>Eingetragener Verein</td><td>DE</td><td class="yes">ja</td><td class="no">nein</td></tr><tr><th scope="row"><a href="#p-dnsforge">dnsforge.de</a></th><td>Privates Projekt, spendenfinanziert</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-ffmuc">Freifunk München</a></th><td>Eingetragener Verein</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-restena">RESTENA</a></th><td>Stiftung, nationales Forschungs- und Bildungsnetz Luxemburgs</td><td>LU</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-appliedprivacy">Applied Privacy</a></th><td>Gemeinnütziger Verein</td><td>AT</td><td class="yes">ja</td><td class="no">nein</td></tr></tbody></table></div><p class="srcnote">„Mit Vorbehalt“ heißt: Es gibt eine Adresse ohne Inhaltsfilter, aber der Betreiber setzt gerichtlich oder gesetzlich angeordnete Sperren auch dort um. Die Einzelheiten stehen in der jeweiligen Karte. „Klartext-DNS“ meint, ob der Dienst auf Port 53 unverschlüsselt antwortet; wo nicht, ist er nur über DoT oder DoH nutzbar.</p>
+<article class="card" id="p-quad9">
+<h3>Quad9 <span class="tag">CH</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Quad9, Stiftung nach schweizerischem Recht, Zürich (UID CHE-435.091.407)</dd>
+<dt>Trägerschaft</dt><dd>Gemeinnützige Stiftung</dd>
+<dt>DNSSEC</dt><dd>Validierend. Seit dem 15. Juni 2026 validiert Quad9 nach eigener Ankündigung auf allen Endpunkten, also auch auf den zuvor nicht validierenden Adressen.</dd>
+<dt>DNS over QUIC</dt><dd>Ja. DNS over QUIC und DNS over HTTP/3 sind seit dem 31. März 2026 aktiv. Quad9 dazu wörtlich: „<span lang="en">Quad9 has enabled DNS over HTTP/3 (DoH3) and DNS over QUIC (DoQ) across its global resolver network.</span>“ DoQ läuft über den jeweiligen Diensthostnamen auf UDP-Port 853.</dd>
+<dt>Filterung</dt><dd>Wählbar über die Adresse. 9.9.9.9 und 9.9.9.11 blockieren Domains, die von Partnern als Malware, Phishing oder Botnetz gemeldet werden. 9.9.9.10 und 9.9.9.12 blockieren diese nicht. Werbung und Tracker filtert Quad9 nicht.</dd>
+<dt>Protokollierung</dt><dd>Die Datenschutzerklärung (Version 1.1, veröffentlicht am 24. Juni 2026) sagt in Abschnitt 2.1 wörtlich: „<span lang="en">Quad9 does not collect or record user IP addresses, nor does it collect or hold any proxy for or representation of user IP addresses, nor does it collect or hold any other unique identifier of individuals in lieu of IP addresses.</span>“</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Gefiltert</p><dl>
+<dt>IPv4</dt><dd><code>9.9.9.9</code> &middot; <code>149.112.112.112</code></dd>
+<dt>IPv6</dt><dd><code>2620:fe::fe</code> &middot; <code>2620:fe::9</code></dd>
+<dt>DoH</dt><dd><code>https://dns.quad9.net/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dns.quad9.net</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Ungefiltert</p><dl>
+<dt>IPv4</dt><dd><code>9.9.9.10</code> &middot; <code>149.112.112.10</code></dd>
+<dt>IPv6</dt><dd><code>2620:fe::10</code> &middot; <code>2620:fe::fe:10</code></dd>
+<dt>DoH</dt><dd><code>https://dns10.quad9.net/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dns10.quad9.net</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Gefiltert, mit EDNS Client Subnet</p><dl>
+<dt>IPv4</dt><dd><code>9.9.9.11</code> &middot; <code>149.112.112.11</code></dd>
+<dt>IPv6</dt><dd><code>2620:fe::11</code> &middot; <code>2620:fe::fe:11</code></dd>
+<dt>DoH</dt><dd><code>https://dns11.quad9.net/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dns11.quad9.net</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Ungefiltert, mit EDNS Client Subnet</p><dl>
+<dt>IPv4</dt><dd><code>9.9.9.12</code> &middot; <code>149.112.112.12</code></dd>
+<dt>IPv6</dt><dd><code>2620:fe::12</code> &middot; <code>2620:fe::fe:12</code></dd>
+<dt>DoH</dt><dd><code>https://dns12.quad9.net/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dns12.quad9.net</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Gemeinnützige Stiftung nach schweizerischem Recht, kein Unternehmen mit Werbe- oder Datengeschäft.</li>
+<li>Die Datenschutzerklärung ist ausdrücklich an RFC 8932 ausgerichtet, dem IETF-Dokument für Datenschutzrichtlinien von DNS-Betreibern. Das ist eine Selbstauskunft, kein geprüftes Testat, aber es macht die Zusagen vergleichbar.</li>
+<li>Sehr großes Anycast-Netz und vollständige Protokollpalette: Do53, DoT, DoH, DoH3 und DoQ.</li>
+<li>Sowohl gefilterte als auch ungefilterte Adressen unter demselben Betreiber und derselben Datenschutzerklärung.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Gerichtlich erzwungene Urheberrechtssperren wirken weltweit. Nach dem Pariser Urteil im Verfahren von Canal+ sperrt Quad9 die beanstandeten Domains für alle Nutzerinnen und Nutzer, weil der Dienst nicht nach Regionen unterscheidet. Quad9 selbst schreibt dazu: „<span lang="en">we have to block these sites for all users, in all areas. This amounts to French law being applied globally.</span>“</li>
+<li>Diese Sperren greifen auch auf den ungefilterten Adressen. „Ungefiltert“ bezieht sich bei Quad9 auf die Malware-Liste, nicht auf gerichtliche Anordnungen.</li>
+<li>Die Zusage, keine Client-IP-Adressen zu speichern, ist eine Selbstverpflichtung. Ein unabhängiges technisches Audit, das diese Praxis bestätigt, liegt nicht vor.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://quad9.net/service/service-addresses-and-features/" rel="noopener nofollow">Quad9: Service Addresses and Features</a></li>
+<li><a href="https://quad9.net/privacy/policy/" rel="noopener nofollow">Quad9: Data Privacy Policy, Version 1.1, 24.06.2026</a></li>
+<li><a href="https://quad9.net/news/blog/quad9-enables-dns-over-http-3-and-dns-over-quic/" rel="noopener nofollow">Quad9 Blog: Quad9 Enables DNS Over HTTP/3 and DNS Over QUIC, 31.03.2026</a></li>
+<li><a href="https://quad9.net/news/press/quad9-faces-new-dns-censorship-legal-challenge-in-france-from-canal/" rel="noopener nofollow">Quad9: Presseerklärung zum Verfahren von Canal+ in Frankreich, 10.12.2024</a></li>
+</ul></article>
+<article class="card" id="p-dns4eu">
+<h3>DNS4EU <span class="tag">CZ</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Whalebone, s.r.o., Jezuitská 14/13, 602 00 Brno, Tschechien (IČO 05120403)</dd>
+<dt>Trägerschaft</dt><dd>Privatwirtschaftliches Unternehmen, hervorgegangen aus einem EU-kofinanzierten Projekt</dd>
+<dt>DNSSEC</dt><dd>Validierend.</dd>
+<dt>DNS over QUIC</dt><dd>Nicht dokumentiert. Auf den geprüften Endpunkten wurde am 6. September 2026 weder die QUIC-Kennung „doq“ noch HTTP/3 angeboten.</dd>
+<dt>Filterung</dt><dd>Fünf Profile mit je eigenen Adressen. Das Kinderschutzprofil filtert laut Betreiber die Kategorien Gambling, Sexual content, Weapons, Child abuse, Drugs, Racism, Terrorism und Violence. Zusätzlich setzt DNS4EU gesetzlich angeordnete Sperren um, und diese greifen in allen Profilen.</dd>
+<dt>Protokollierung</dt><dd>Anders als bei den übrigen Diensten dieser Liste ist DNS4EU kein No-Log-Resolver. Die DNS4EU Public Resolvers Policy nennt als erhobene Daten unter anderem die gestellte Anfrage, die Antwort, den Anfragetyp und den Zeitpunkt. Die Client-IP-Adresse wird nach Angabe des Betreibers anonymisiert, die Abfragedaten werden bis zu sechs Monate gespeichert.</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Protective (Schutz vor Malware und Phishing)</p><dl>
+<dt>IPv4</dt><dd><code>86.54.11.1</code> &middot; <code>86.54.11.201</code></dd>
+<dt>IPv6</dt><dd><code>2a13:1001::86:54:11:1</code> &middot; <code>2a13:1001::86:54:11:201</code></dd>
+<dt>DoH</dt><dd><code>https://protective.joindns4.eu/dns-query</code></dd>
+<dt>DoT</dt><dd><code>protective.joindns4.eu</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Protective und Kinderschutz</p><dl>
+<dt>IPv4</dt><dd><code>86.54.11.12</code> &middot; <code>86.54.11.212</code></dd>
+<dt>IPv6</dt><dd><code>2a13:1001::86:54:11:12</code> &middot; <code>2a13:1001::86:54:11:212</code></dd>
+<dt>DoH</dt><dd><code>https://child.joindns4.eu/dns-query</code></dd>
+<dt>DoT</dt><dd><code>child.joindns4.eu</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Protective und Werbefilter</p><dl>
+<dt>IPv4</dt><dd><code>86.54.11.13</code> &middot; <code>86.54.11.213</code></dd>
+<dt>IPv6</dt><dd><code>2a13:1001::86:54:11:13</code> &middot; <code>2a13:1001::86:54:11:213</code></dd>
+<dt>DoH</dt><dd><code>https://noads.joindns4.eu/dns-query</code></dd>
+<dt>DoT</dt><dd><code>noads.joindns4.eu</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Protective, Kinderschutz und Werbefilter</p><dl>
+<dt>IPv4</dt><dd><code>86.54.11.11</code> &middot; <code>86.54.11.211</code></dd>
+<dt>IPv6</dt><dd><code>2a13:1001::86:54:11:11</code> &middot; <code>2a13:1001::86:54:11:211</code></dd>
+<dt>DoH</dt><dd><code>https://child-noads.joindns4.eu/dns-query</code></dd>
+<dt>DoT</dt><dd><code>child-noads.joindns4.eu</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Unfiltered (ohne Inhaltsfilter)</p><dl>
+<dt>IPv4</dt><dd><code>86.54.11.100</code> &middot; <code>86.54.11.200</code></dd>
+<dt>IPv6</dt><dd><code>2a13:1001::86:54:11:100</code> &middot; <code>2a13:1001::86:54:11:200</code></dd>
+<dt>DoH</dt><dd><code>https://unfiltered.joindns4.eu/dns-query</code></dd>
+<dt>DoT</dt><dd><code>unfiltered.joindns4.eu</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Resolver ausschließlich innerhalb der EU. Die Policy nennt 14 rekursive Resolver in 14 EU-Mitgliedstaaten.</li>
+<li>Fünf klar getrennte Filterprofile mit eigenen Adressen, darunter ein Profil ganz ohne Inhaltsfilter.</li>
+<li>Aufsicht durch eine benannte europäische Datenschutzbehörde, das tschechische Úřad pro ochranu osobních údajů. Ein benannter Datenschutzbeauftragter ist erreichbar.</li>
+<li>Der Betreiber hat einen Transparenzbericht nach dem Digital Services Act und eine Liste der Sperranordnungen veröffentlicht.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Der Name legt einen Betrieb durch die EU nahe, den es so nicht gibt. Die EU-kofinanzierte Projektphase lief von 2023 bis 2025. Die offizielle Seite formuliert sie in der Vergangenheitsform und schreibt für heute: „<span lang="en">Now fully commercialized and operated by Whalebone […] without ongoing EU operational funding.</span>“ Wer DNS4EU heute wählt, wählt einen kostenlosen Dienst eines tschechischen Privatunternehmens mit EU-Projektherkunft, keinen von der EU betriebenen Resolver.</li>
+<li>Abfragedaten werden bis zu sechs Monate gespeichert. Das ist die längste dokumentierte Speicherfrist aller hier empfohlenen Dienste.</li>
+<li>Gesetzlich angeordnete Sperren wirken auch im Profil „Unfiltered“. Am 6. September 2026 wurden dort unter anderem rt.com und Domains von Sputnik nicht aufgelöst. „Unfiltered“ bezieht sich bei DNS4EU auf die Inhaltsfilter, nicht auf Sperranordnungen.</li>
+<li>Die Nutzungsbedingungen schließen Unternehmen und Zugangsanbieter aus. Der Dienst ist für Privatpersonen gedacht; es gilt ein Limit von 1.000 Anfragen pro Sekunde je IP-Adresse.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://www.joindns4.eu/for-public" rel="noopener nofollow">DNS4EU: DNS4EU for Public</a></li>
+<li><a href="https://www.joindns4.eu/about" rel="noopener nofollow">DNS4EU: About the project</a></li>
+<li><a href="https://joindns4.eu/legal-information-and-compliance" rel="noopener nofollow">DNS4EU: Legal information and compliance</a></li>
+<li><a href="https://hadea.ec.europa.eu/" rel="noopener nofollow">HaDEA, EU-Exekutivagentur zur CEF-Digital-Förderung</a></li>
+</ul></article>
+<article class="card" id="p-dnssb">
+<h3>DNS.SB <span class="tag">DE</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>xTom GmbH, Kreuzstraße 60, 40210 Düsseldorf (HRB 86779, Amtsgericht Düsseldorf)</dd>
+<dt>Trägerschaft</dt><dd>Privatwirtschaftliches Unternehmen</dd>
+<dt>DNSSEC</dt><dd>Validierend.</dd>
+<dt>DNS over QUIC</dt><dd>Nicht offiziell dokumentiert.</dd>
+<dt>Filterung</dt><dd>Keine. Der Betreiber schreibt: „<span lang="en">No, we do not implement any content filtering or blocking. DNS.SB provides neutral, unfiltered DNS resolution.</span>“</dd>
+<dt>Protokollierung</dt><dd>Die Datenschutzerklärung, wirksam seit dem 17. Januar 2026, beginnt mit: „<span lang="en">TL;DR: We don't collect or store your DNS queries. Period.</span>“ Im Detail nennt sie, dass weder abgefragte Domains noch IP-Adressen noch Zeitstempel in Verbindung mit Anfragen aufgezeichnet werden.</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Ungefiltert</p><dl>
+<dt>IPv4</dt><dd><code>185.222.222.222</code> &middot; <code>45.11.45.11</code></dd>
+<dt>IPv6</dt><dd><code>2a09::</code> &middot; <code>2a11::</code></dd>
+<dt>DoH</dt><dd><code>https://doh.dns.sb/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dot.sb</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Sehr kurze, unmissverständliche Datenschutzerklärung mit ausgewiesenem Wirksamkeitsdatum.</li>
+<li>Der Betreiber veröffentlicht seit 2019 jährliche Transparenzberichte über Behördenanfragen, einschließlich Anfragen von Behörden außerhalb Deutschlands.</li>
+<li>Weltweit verteiltes Netz. Der Betreiber nennt 19 Standorte.</li>
+<li>Betreiber mit deutschem Handelsregistereintrag und ladungsfähiger Anschrift, also mit greifbarer Verantwortlichkeit.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Die weit verbreitete Angabe, hinter DNS.SB stehe eine Firma namens „Xing Tech“, ließ sich in keiner Primärquelle bestätigen. Betreiber ist die xTom GmbH.</li>
+<li>Die xTom GmbH ist ein gewinnorientiertes Hosting-Unternehmen, kein gemeinnütziger Träger. Den Dienst finanziert sie unter anderem über bepreiste Sponsorenstufen.</li>
+<li>Die No-Log-Zusage ist Selbstauskunft. Ein unabhängiges Audit gibt es nicht.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://dns.sb/" rel="noopener nofollow">DNS.SB: Startseite mit Endpunkten</a></li>
+<li><a href="https://dns.sb/privacy/" rel="noopener nofollow">DNS.SB: Privacy Policy, wirksam 17.01.2026</a></li>
+<li><a href="https://dns.sb/report/" rel="noopener nofollow">DNS.SB: Transparenzberichte seit 2019</a></li>
+<li><a href="https://xtom.com/impressum/" rel="noopener nofollow">xTom GmbH: Impressum</a></li>
+</ul></article>
+<article class="card" id="p-uncensoreddns">
+<h3>UncensoredDNS <span class="tag">DK</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Thomas Steen Rasmussen, Dänemark. Privatperson, keine Rechtsform.</dd>
+<dt>Trägerschaft</dt><dd>Privatperson, unentgeltlich betrieben</dd>
+<dt>DNSSEC</dt><dd>Validierend.</dd>
+<dt>DNS over QUIC</dt><dd>Ja. Der Betreiber kündigte am 23. Oktober 2025 volle QUIC-Unterstützung an: „Starting today UncensoredDNS fully supports QUIC based DNS lookups.“ Auf beiden Endpunkten wurde die QUIC-Kennung „doq“ am 6. September 2026 ausgehandelt.</dd>
+<dt>Filterung</dt><dd>Keine. Der Dienst existiert ausdrücklich als Gegenentwurf zur Filterung. Der Betreiber schreibt: „<span lang="en">I am strongly against using DNS as a tool to filter content on the internet.</span>“</dd>
+<dt>Protokollierung</dt><dd>Die FAQ sagt: „<span lang="en">Absolutely nothing is being logged, neither about the users nor the usage of this service. I do keep graphs of the total number of queries, but no personally identifiable information is saved.</span>“</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Anycast-Knoten</p><dl>
+<dt>IPv4</dt><dd><code>91.239.100.100</code></dd>
+<dt>IPv6</dt><dd><code>2001:67c:28a4::</code></dd>
+<dt>DoH</dt><dd><code>https://anycast.uncensoreddns.org/dns-query</code></dd>
+<dt>DoT</dt><dd><code>anycast.uncensoreddns.org</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Unicast-Knoten</p><dl>
+<dt>IPv4</dt><dd><code>89.233.43.71</code></dd>
+<dt>IPv6</dt><dd><code>2a01:3a0:53:53::</code></dd>
+<dt>DoH</dt><dd><code>https://unicast.uncensoreddns.org/dns-query</code></dd>
+<dt>DoT</dt><dd><code>unicast.uncensoreddns.org</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Der Dienst läuft seit 2009 und ist damit einer der ältesten unabhängigen offenen Resolver Europas.</li>
+<li>Vollständige Protokollpalette einschließlich DNS over QUIC und DNS over HTTP/3.</li>
+<li>Klare, unzweideutige Haltung gegen Filterung, ohne kommerzielles Interesse dahinter.</li>
+<li>Zwei getrennte Zugänge, ein Anycast- und ein Unicast-Knoten, die sich als primärer und sekundärer Server eintragen lassen.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Der Dienst hängt vollständig an einer einzelnen Privatperson. Es gibt keinen Verein, kein Team und keine veröffentlichte Nachfolgeregelung.</li>
+<li>Die Logging-Zusage steht in zwei Sätzen einer FAQ. Es gibt keine förmliche Datenschutzerklärung, kein Audit und keinen Transparenzbericht.</li>
+<li>Das Anycast-Netz ist klein. Die offizielle Tabelle nennt drei Knoten, zwei davon in Dänemark. Außerhalb Nordeuropas ist der Latenzvorteil entsprechend gering.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://blog.uncensoreddns.org/" rel="noopener nofollow">UncensoredDNS: Startseite und Serverliste</a></li>
+<li><a href="https://blog.uncensoreddns.org/faq/" rel="noopener nofollow">UncensoredDNS: FAQ mit Logging-Aussage</a></li>
+<li><a href="https://blog.uncensoreddns.org/blog/43-full-doq-and-doh3-support/" rel="noopener nofollow">UncensoredDNS: Full DoQ and DoH3 support, 23.10.2025</a></li>
+</ul></article>
+<article class="card" id="p-digitalcourage">
+<h3>Digitalcourage e. V. <span class="tag">DE</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Digitalcourage e. V., Marktstraße 18, 33602 Bielefeld</dd>
+<dt>Trägerschaft</dt><dd>Gemeinnütziger eingetragener Verein</dd>
+<dt>DNSSEC</dt><dd>Eine eigene Messung am 6. September 2026 zeigte DNSSEC-Validierung. Der Verein selbst sagt dazu auf der Dienstseite nichts, es gibt also keine zugesicherte Eigenschaft.</dd>
+<dt>DNS over QUIC</dt><dd>Nein.</dd>
+<dt>Filterung</dt><dd>Keine. Der Dienst ist ausdrücklich ein zensurfreier Resolver und kein Werbe- oder Trackerblocker.</dd>
+<dt>Protokollierung</dt><dd>Auf der offiziellen Seite zu dns3.digitalcourage.de steht: „kein Logging, nur im Fehlerfall (ohne Client-IP)“.</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Zensurfreier Resolver</p><dl>
+<dt>IPv4</dt><dd><code>5.9.164.112</code></dd>
+<dt>IPv6</dt><dd><code>2a01:4f8:251:554::2</code></dd>
+<dt>DoT</dt><dd><code>dns3.digitalcourage.de</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Gemeinnütziger Verein mit langer, öffentlich nachvollziehbarer Arbeit zu Grundrechten und Datenschutz.</li>
+<li>Deutscher Serverstandort und deutsche Jurisdiktion. Trägerschaft und Finanzierung sind über einen veröffentlichten Transparenzbericht nachvollziehbar.</li>
+<li>Ausdrücklich zensurfrei, ohne kommerzielles Interesse an den Anfragedaten.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Die vielerorts noch genannte Adresse dns.digitalcourage.de ist dauerhaft abgeschaltet. Der Verein schreibt: „Dieser Server ist abgeschaltet. Bitte die IP aus vorhandenen Konfigurationen entfernen: 85.214.20.141 (dauerhaft abgeschaltet)“. Wer diese IP noch eingetragen hat, hat keinen funktionierenden Resolver. Aktiv ist ausschließlich dns3.digitalcourage.de.</li>
+<li>Kein DoH. Der Verein sagt dazu ausdrücklich: „Außerdem kann dieser Server nicht im Browser als DNS-Server eingestellt werden, denn das würde DNS over HTTP (DoH) erfordern, was wir ebenfalls nicht unterstützen.“ In den DoH-Einstellungen von Firefox oder Chrome ist der Dienst damit nicht nutzbar.</li>
+<li>Es gibt genau einen Server. Kein Anycast, kein zweiter Knoten, also ein einzelner Ausfallpunkt. Ein zweiter, unabhängiger Resolver als Ersatzeintrag ist sinnvoll.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://digitalcourage.de/support/zensurfreier-dns-server" rel="noopener nofollow">Digitalcourage: Zensurfreier DNS-Server</a></li>
+<li><a href="https://digitalcourage.de/impressum" rel="noopener nofollow">Digitalcourage e. V.: Impressum</a></li>
+</ul></article>
+<article class="card" id="p-digiges">
+<h3>Digitale Gesellschaft <span class="tag">CH</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Digitale Gesellschaft, Verein nach Art. 60 ff. ZGB, Sitz Basel. Server in Zürich.</dd>
+<dt>Trägerschaft</dt><dd>Gemeinnütziger Verein</dd>
+<dt>DNSSEC</dt><dd>Validierend, ausdrücklich zugesichert: „DNSSEC wird validiert.“</dd>
+<dt>DNS over QUIC</dt><dd>Nicht dokumentiert.</dd>
+<dt>Filterung</dt><dd>Keine. Der Verein sagt: „Es findet kein Logging statt und es werden keine Sperrlisten verwendet.“ Vorbehalten bleibt eine zeitweise Sperre bei Missbrauch.</dd>
+<dt>Protokollierung</dt><dd>Offizielle Aussage: „Es findet kein Logging statt und es werden keine Sperrlisten verwendet. DNSSEC wird validiert.“</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Nur verschlüsselt, kein Klartext-DNS</p><dl>
+<dt>IPv4</dt><dd><code>185.95.218.42</code> &middot; <code>185.95.218.43</code></dd>
+<dt>IPv6</dt><dd><code>2a05:fc84::42</code> &middot; <code>2a05:fc84::43</code></dd>
+<dt>DoH</dt><dd><code>https://dns.digitale-gesellschaft.ch/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dns.digitale-gesellschaft.ch</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Gemeinnütziger Verein mit veröffentlichten Statuten und offengelegter Serverkonfiguration in einem öffentlichen Repository.</li>
+<li>Schweizer Serverstandort und Schweizer Recht, außerhalb der EU-Jurisdiktion.</li>
+<li>Klare, knappe Zusage ohne Marketingaufwand: kein Logging, keine Sperrlisten, DNSSEC-Validierung.</li>
+<li>Der Betrieb kostet laut FAQ 1.000 Franken im Jahr. Die Finanzierung ist damit nachvollziehbar unabhängig.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Kein Klartext-DNS auf Port 53. Der Verein betreibt es bewusst nicht. Router, Smart-TVs und viele IoT-Geräte, die nur klassisches DNS können, lassen sich damit nicht versorgen.</li>
+<li>Die genannten IP-Adressen sind die Adressen der verschlüsselten Endpunkte. Sie gehören in ein DoT- oder DoH-Feld, nicht in ein gewöhnliches DNS-Server-Feld.</li>
+<li>Der Betreiber behält sich vor, bei Missbrauch einzelne Client-IP-Adressen und einzelne Domainnamen zeitweise zu sperren. „Keine Sperrlisten“ heißt also nicht „unter allen Umständen unverändert“.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://www.digitale-gesellschaft.ch/dns/" rel="noopener nofollow">Digitale Gesellschaft: Öffentlicher DNS-Resolver</a></li>
+<li><a href="https://github.com/DigitaleGesellschaft/DNS-Resolver" rel="noopener nofollow">Digitale Gesellschaft: Konfiguration des Resolvers</a></li>
+</ul></article>
+<article class="card" id="p-artikel10">
+<h3>Artikel10 e. V. <span class="tag">DE</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Artikel10 e. V., Hamburg (VR 24066, Amtsgericht Hamburg). Infrastruktur bei Individual Network Berlin e. V.</dd>
+<dt>Trägerschaft</dt><dd>Eingetragener Verein</dd>
+<dt>DNSSEC</dt><dd>Eine eigene Messung am 6. September 2026 zeigte DNSSEC-Validierung. Eine ausdrückliche Zusage des Betreibers dazu gibt es nicht.</dd>
+<dt>DNS over QUIC</dt><dd>Nicht dokumentiert.</dd>
+<dt>Filterung</dt><dd>Der Betreiber äußert sich nicht ausdrücklich dazu. Eine eigene Messung am 6. September 2026 zeigte keine Filterung.</dd>
+<dt>Protokollierung</dt><dd>Die Dienstseite sagt: „Der Server speichert keine Informationen über einzelne DNS-Anfragen.“</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Nur verschlüsselt, kein Klartext-DNS</p><dl>
+<dt>IPv4</dt><dd><code>217.197.91.153</code></dd>
+<dt>IPv6</dt><dd><code>2001:67c:1401:2120::1</code></dd>
+<dt>DoH</dt><dd><code>https://dns.artikel10.org/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dns.artikel10.org</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Eingetragener Verein mit Satzung und Registereintrag, der sich seit Jahren dem Schutz des Fernmeldegeheimnisses widmet und daneben Tor-Infrastruktur betreibt.</li>
+<li>Deutscher Standort und deutsche Jurisdiktion.</li>
+<li>Knappe, klare Logging-Aussage ohne Einschränkungen im Kleingedruckten.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Kein Klartext-DNS auf Port 53. Die genannten Adressen antworten ausschließlich über DoT auf Port 853 und DoH auf Port 443. Wer sie als gewöhnliche DNS-Server einträgt, bekommt keine Auflösung.</li>
+<li>Der Verein kommuniziert öffentlich seit dem 27. November 2023 nicht mehr. Der Dienst läuft nachweislich, aber es gibt keine aktuelle Kommunikation über seinen Zustand.</li>
+<li>Der Verein dokumentiert den Dienst knapp: keine förmliche Datenschutzerklärung für den Resolver, kein Audit, kein Transparenzbericht.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://dns.artikel10.org/" rel="noopener nofollow">Artikel10: DNS-Resolver</a></li>
+<li><a href="https://artikel10.org/" rel="noopener nofollow">Artikel10 e. V.: Website und Impressum</a></li>
+</ul></article>
+<article class="card" id="p-dnsforge">
+<h3>dnsforge.de <span class="tag">DE</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>adminForge, betrieben von Stefan Giebel, Köln. Server in Deutschland.</dd>
+<dt>Trägerschaft</dt><dd>Privates Projekt, spendenfinanziert</dd>
+<dt>DNSSEC</dt><dd>Validierend.</dd>
+<dt>DNS over QUIC</dt><dd>Der Betreiber listet für alle vier Varianten DoQ-Endpunkte. Eigene Messungen dazu liegen nicht vor.</dd>
+<dt>Filterung</dt><dd>Vier abgestufte Varianten mit je eigenen Adressen, von „Normal“ mit Werbe- und Trackerfilter bis „Blank“ ganz ohne Filter. Geblockte Namen werden mit 0.0.0.0 beziehungsweise :: beantwortet, nicht mit NXDOMAIN.</dd>
+<dt>Protokollierung</dt><dd>Die FAQ sagt: „Nein. dnsforge.de protokolliert keine DNS-Anfragen und arbeitet vollständig ohne Logging.“ Der Datenschutzhinweis von adminForge enthält dazu einen eigenen Abschnitt.</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Normal, mit Werbe- und Trackerfilter</p><dl>
+<dt>IPv4</dt><dd><code>49.12.67.122</code> &middot; <code>91.99.154.175</code> &middot; <code>176.9.93.198</code> &middot; <code>176.9.1.117</code></dd>
+<dt>IPv6</dt><dd><code>2a01:4f8:c013:29d::122</code> &middot; <code>2a01:4f8:c010:8c35::175</code> &middot; <code>2a01:4f8:151:34aa::198</code> &middot; <code>2a01:4f8:141:316d::117</code></dd>
+<dt>DoH</dt><dd><code>https://dnsforge.de/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dnsforge.de</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Clean, zusätzlich Erwachsenen- und Glücksspielinhalte</p><dl>
+<dt>IPv4</dt><dd><code>49.12.223.2</code> &middot; <code>49.12.43.208</code></dd>
+<dt>IPv6</dt><dd><code>2a01:4f8:c17:4fbc::2</code> &middot; <code>2a01:4f8:c012:ed89::208</code></dd>
+<dt>DoH</dt><dd><code>https://clean.dnsforge.de/dns-query</code></dd>
+<dt>DoT</dt><dd><code>clean.dnsforge.de</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Hard, strengster Filter</p><dl>
+<dt>IPv4</dt><dd><code>49.12.222.213</code> &middot; <code>88.198.122.154</code></dd>
+<dt>IPv6</dt><dd><code>2a01:4f8:c17:2c61::213</code> &middot; <code>2a01:4f8:c013:5ec0::154</code></dd>
+<dt>DoH</dt><dd><code>https://hard.dnsforge.de/dns-query</code></dd>
+<dt>DoT</dt><dd><code>hard.dnsforge.de</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Blank, ohne jeden Filter</p><dl>
+<dt>IPv4</dt><dd><code>138.199.149.249</code> &middot; <code>78.47.71.194</code></dd>
+<dt>IPv6</dt><dd><code>2a01:4f8:c17:7aa5::249</code> &middot; <code>2a01:4f8:c013:aae9::194</code></dd>
+<dt>DoH</dt><dd><code>https://blank.dnsforge.de/dns-query</code></dd>
+<dt>DoT</dt><dd><code>blank.dnsforge.de</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Vier klar getrennte Filterstufen, darunter eine völlig ungefilterte. Die Wahl bleibt bei der Nutzerin und nicht beim Betreiber.</li>
+<li>Die verwendeten Blocklisten werden offen benannt, nicht bloß behauptet.</li>
+<li>Server ausschließlich in Deutschland, Betreiber mit Impressum und ladungsfähiger Anschrift.</li>
+<li>Die Blocklisten-Zählerstände werden tagesaktuell auf der Startseite veröffentlicht.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Träger ist kein Verein und keine Gesellschaft, sondern ein privates Projekt. Für den Einsatz in Organisationen mit Verfügbarkeitsanforderungen ist das ein ernst zu nehmender Punkt.</li>
+<li>Der Dienst finanziert sich über Spenden. Die Spendenseite weist die Monatsziele aus, die Finanzierung ist damit sichtbar, aber nicht institutionell abgesichert.</li>
+<li>Die No-Log-Zusage ist Selbstauskunft ohne unabhängiges Audit.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://dnsforge.de/" rel="noopener nofollow">dnsforge.de: Endpunkte, Varianten und FAQ</a></li>
+<li><a href="https://adminforge.de/datenschutz/" rel="noopener nofollow">adminForge: Datenschutzhinweis</a></li>
+<li><a href="https://adminforge.de/impressum/" rel="noopener nofollow">adminForge: Impressum</a></li>
+</ul></article>
+<article class="card" id="p-ffmuc">
+<h3>Freifunk München <span class="tag">DE</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Freie Netze München e. V., Parkstraße 28, 82131 Gauting (VR 206402, Amtsgericht München). Server in München und Wien.</dd>
+<dt>Trägerschaft</dt><dd>Eingetragener Verein</dd>
+<dt>DNSSEC</dt><dd>Validierend.</dd>
+<dt>DNS over QUIC</dt><dd>Der Betreiber nennt den Hostnamen doq.ffmuc.net. DoH über HTTP/3 wird angeboten.</dd>
+<dt>Filterung</dt><dd>Keine. Die Datenschutzrichtlinie des Dienstes sagt: „<span lang="en">The resolver operates as a general-purpose recursive DNS service and does not perform content filtering or censorship by default.</span>“</dd>
+<dt>Protokollierung</dt><dd>Die Datenschutzrichtlinie sagt: „<span lang="en">The service does not retain identifiable per-user DNS query logs.</span>“ Ausdrücklich genannt werden temporäre Zähler je IP-Adresse für die Begrenzung der Anfragerate.</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Ungefiltert</p><dl>
+<dt>IPv4</dt><dd><code>5.1.66.255</code> &middot; <code>185.150.99.255</code></dd>
+<dt>IPv6</dt><dd><code>2001:678:e68:f000::</code> &middot; <code>2001:678:ed0:f000::</code></dd>
+<dt>DoH</dt><dd><code>https://doh.ffmuc.net/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dot.ffmuc.net</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Eingetragener Verein aus der Freifunk-Bewegung mit langjähriger Praxis im Betrieb offener Netze.</li>
+<li>Server ausschließlich in der EU, konkret in München und Wien.</li>
+<li>Der Betreiber benennt die Ausnahme selbst: temporäre Zähler je IP für Ratenbegrenzung.</li>
+<li>Klartext-DNS und verschlüsselte Protokolle stehen beide zur Verfügung.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Der Gemeinnützigkeitsstatus ist unklar. Die Einrichtungsseite bezeichnet den Verein als gemeinnützig, während die eigene Wiki-FAQ sagt, man sei „wegen fehlender rechtlicher Voraussetzungen nicht gemeinnützig“ und könne keine Spendenquittung ausstellen. Ein Freistellungsbescheid ließ sich nicht auffinden. „e. V.“ allein bedeutet keine Gemeinnützigkeit.</li>
+<li>Zwei Standorte, beide im deutschsprachigen Raum. Außerhalb Mitteleuropas ist der Dienst entsprechend langsamer.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://dns-setup.ffmuc.net/" rel="noopener nofollow">FFMUC: DNS-Einrichtung</a></li>
+<li><a href="https://ffmuc.net/dns-privacy/" rel="noopener nofollow">FFMUC: DNS Privacy Policy</a></li>
+<li><a href="https://ffmuc.net/impressum/" rel="noopener nofollow">Freie Netze München e. V.: Impressum</a></li>
+</ul></article>
+<article class="card" id="p-restena">
+<h3>RESTENA <span class="tag">LU</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Fondation Restena, 2 place de l'Université, L-4365 Esch-sur-Alzette, Luxemburg</dd>
+<dt>Trägerschaft</dt><dd>Stiftung, nationales Forschungs- und Bildungsnetz Luxemburgs</dd>
+<dt>DNSSEC</dt><dd>Validierend.</dd>
+<dt>DNS over QUIC</dt><dd>Nicht dokumentiert.</dd>
+<dt>Filterung</dt><dd>Für den öffentlichen Resolver ist keine Filterung dokumentiert. Die Dienstseite nennt als Eigenschaft die „<span lang="en">Guaranteed neutrality, as the resolver does not deliberately modify the collected information before transmitting it</span>“. Die separat angebotene DNS-Firewall ist laut Betreiber nur für angeschlossene Einrichtungen verfügbar.</dd>
+<dt>Protokollierung</dt><dd>Es gibt keine eigene Logging-Richtlinie für den Resolver. Die Dienstseite sagt, die für die Auflösung erhobenen Informationen seien „<span lang="en">limited to the minimum necessary for the technical functioning of the service</span>“. Das ist weniger konkret als bei den übrigen Diensten dieser Liste.</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Öffentlicher Resolver</p><dl>
+<dt>IPv4</dt><dd><code>158.64.1.29</code></dd>
+<dt>IPv6</dt><dd><code>2001:a18:1::29</code></dd>
+<dt>DoH</dt><dd><code>https://dnspub.restena.lu/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dnspub.restena.lu</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Träger ist eine Stiftung mit staatlichem Auftrag, das nationale Forschungs- und Bildungsnetz Luxemburgs. Das ist eine institutionelle Stabilität, die private Projekte nicht bieten können.</li>
+<li>Standort und Jurisdiktion Luxemburg, innerhalb der EU.</li>
+<li>Ausdrücklich zugesagte Neutralität der Antworten.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Die Nutzungsbedingungen der Stiftung beschränken die Nutzung ihrer Ressourcen allgemein auf „<span lang="en">the community of education, research, culture, health and administration</span>“, während die Seite des öffentlichen Resolvers ausdrücklich die Allgemeinheit anspricht. Dieser Widerspruch ist in den Primärquellen nicht aufgelöst.</li>
+<li>Es gibt genau einen öffentlichen Resolver-Host, eine IPv4- und eine IPv6-Adresse. Kein dokumentiertes Anycast, kein Ersatzziel. Die Stiftung empfiehlt selbst, einen zweiten Server einzutragen.</li>
+<li>Die Logging-Aussage ist allgemein gehalten. Es gibt keine bezifferte Speicherfrist.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://www.restena.lu/en/service/public-dns-resolver" rel="noopener nofollow">Fondation Restena: Public DNS resolver</a></li>
+<li><a href="https://www.restena.lu/" rel="noopener nofollow">Fondation Restena: Website</a></li>
+</ul></article>
+<article class="card" id="p-appliedprivacy">
+<h3>Applied Privacy <span class="tag">AT</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>Foundation for Applied Privacy, Verein zur Förderung der digitalen Privatsphäre, ZVR 1254016365, Floragasse 7, 1040 Wien</dd>
+<dt>Trägerschaft</dt><dd>Gemeinnütziger Verein</dd>
+<dt>DNSSEC</dt><dd>Validierend.</dd>
+<dt>DNS over QUIC</dt><dd>Nicht dokumentiert.</dd>
+<dt>Filterung</dt><dd>Keine. Der Betreiber sagt: „<span lang="en">We do not provide DNS filter services, our resolvers provide the information they get from the authoritative DNS servers.</span>“</dd>
+<dt>Protokollierung</dt><dd>Die Datenschutzerklärung sagt: „<span lang="en">We do NOT log your IP address. We do NOT log your DNS query. We do NOT share query data with third parties.</span>“</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Nur verschlüsselt, kein Klartext-DNS</p><dl>
+<dt>IPv4</dt><dd><code>146.255.56.98</code></dd>
+<dt>IPv6</dt><dd><code>2a02:1b8:10:234::2</code></dd>
+<dt>DoH</dt><dd><code>https://doh.applied-privacy.net/query</code></dd>
+<dt>DoT</dt><dd><code>dot1.applied-privacy.net</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Gemeinnütziger Verein mit österreichischer Vereinsregisternummer und ausdrücklichem Zweck der Förderung digitaler Privatsphäre.</li>
+<li>Sehr klare, dreifach negierte Logging-Zusage ohne Einschränkungen.</li>
+<li>DoT wird zusätzlich auf Port 443 angeboten. Das hilft in Netzen, die Port 853 sperren.</li>
+<li>Der Betreiber setzt nach eigener Angabe kein EDNS Client Subnet.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Der Betreiber stuft den Dienst selbst als experimentell ein: „<span lang="en">This is an experimental service which is operated on a best effort basis.</span>“ Für produktive oder geschäftskritische Nutzung ist er damit nicht gedacht.</li>
+<li>Ein einziger dokumentierter Standort, Wien, und faktisch ein einziges Serverpaar. DoH- und DoT-Endpunkt lösen auf dieselben Adressen auf. Kein Anycast, keine geografische Redundanz.</li>
+<li>Kein Klartext-DNS auf Port 53.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://applied-privacy.net/services/dns/" rel="noopener nofollow">Foundation for Applied Privacy: DNS Privacy Services</a></li>
+<li><a href="https://applied-privacy.net/privacy-policy/" rel="noopener nofollow">Foundation for Applied Privacy: Privacy Policy</a></li>
+</ul></article>
+</section>
+<section id="warnung"><h2>Nicht mehr verwenden</h2>
+<article class="card stop" id="p-mullvad"><h3>Mullvad Encrypted DNS <span class="tag">Abschaltung am 2. November 2026</span></h3>
+<p>Mullvad hat am 3. September 2026 angekündigt, den öffentlichen verschlüsselten DNS-Dienst einzustellen und stattdessen Quad9 finanziell zu unterstützen. Der Blogbeitrag trägt den Titel „<span lang="en">Shutting down our public encrypted DNS servers and sponsoring Quad9 instead</span>“ und nennt als Datum der Abschaltung den 2. November 2026.</p>
+<p>Wer die Adressen 194.242.2.2 bis 194.242.2.9 oder die Hostnamen unter dns.mullvad.net eingetragen hat, sollte jetzt wechseln, nicht erst im November. Der Dienst wird hier nicht mehr empfohlen, sondern nur noch dokumentiert, damit niemand eine Adresse konfiguriert, die in wenigen Wochen nicht mehr antwortet.</p>
+<p>Zwei Einschränkungen zur Genauigkeit. Erstens spricht der Blogbeitrag ausdrücklich von den öffentlichen DoH-Servern. Ob die standortfesten Einzelserver und die in das VPN eingebauten Resolver denselben Zeitplan haben, sagt er nicht. Zweitens hatte Quad9 das angekündigte Sponsoring am 6. September 2026 auf keiner eigenen Seite bestätigt. Die Ankündigung ist bislang einseitig.</p>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://mullvad.net/en/blog/shutting-down-our-public-encrypted-dns-servers-and-sponsoring-quad9-instead" rel="noopener nofollow">Mullvad: Shutting down our public encrypted DNS servers, 03.09.2026</a></li>
+</ul></article>
+<article class="card stop" id="p-dns0eu"><h3>dns0.eu <span class="tag">Eingestellt seit Oktober 2025</span></h3>
+<p>dns0.eu wird in vielen Empfehlungslisten weiterhin geführt. Der Dienst existiert nicht mehr.</p>
+<p>Der Betreiber, ein in Paris eingetragener französischer Verein, kündigte die Einstellung zwischen dem 14. und dem 18. Oktober 2025 an, mit dem Hinweis: „<span lang="en">The dns0.eu service has been discontinued. We would have liked to keep it running, but it was not sustainable for us in terms of time and resources.</span>“ Die Domain zeigt inzwischen nur noch eine Parkseite.</p>
+<p>Am 6. September 2026 antwortete keine der ehemaligen Adressen mehr, weder 193.110.81.0 noch 185.253.5.0 und auch keine der Varianten ZERO, KIDS oder OPEN. Wer diese Adressen noch eingetragen hat, sollte sie entfernen. Nicht nur, weil sie ausgefallen sind, sondern weil IP-Bereiche später neu vergeben werden können.</p>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://web.archive.org/web/20251018114400/https://www.dns0.eu/" rel="noopener nofollow">Internet Archive: dns0.eu mit Abschaltungshinweis, 18.10.2025</a></li>
+</ul></article>
+</section>
+<section id="kommerziell"><h2>Die großen kommerziellen Dienste</h2>
+<p>Diese drei sind die meistgenutzten öffentlichen Resolver. Sie stehen hier zur Einordnung, nicht als Empfehlung. Alle drei gehören Unternehmen, die ihr Geld an anderer Stelle verdienen, und in allen drei Fällen ist die Zusage zum Umgang mit den Daten eine Selbstauskunft des Unternehmens. Das macht sie nicht schlecht; es macht sie nur zu einer anderen Art von Entscheidung.</p>
+<article class="card"><h3>Cloudflare</h3>
+<dl class="facts"><dt>Adressen</dt><dd>1.1.1.1 und 1.0.0.1, gefilterte Varianten 1.1.1.2 und 1.1.1.3</dd></dl>
+<p>Cloudflare, Inc. ist eine US-Gesellschaft. Die Datenschutzzusage ist ungewöhnlich konkret: Quell-IP-Adressen werden nach eigener Angabe nicht dauerhaft gespeichert, gekürzte Adressen und Protokolldaten innerhalb von 25 Stunden gelöscht. Es gibt eine Ausnahme für höchstens 0,05 Prozent zufällig gesampelter Netzwerkpakete, für die keine Frist genannt wird. Aggregierte Auswertungen dürfen unbegrenzt gespeichert werden. Cloudflare gibt Abfragedaten ohne Client-IP an APNIC Labs weiter. Ein externes Audit ist zugesagt.</p>
+<ul class="src"><li><a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" rel="noopener nofollow">Cloudflare: Public DNS Resolver Privacy</a></li></ul>
+</article>
+<article class="card"><h3>Google Public DNS</h3>
+<dl class="facts"><dt>Adressen</dt><dd>8.8.8.8 und 8.8.4.4</dd></dl>
+<p>Google LLC, US-Gesellschaft. Google Public DNS ist kein Malware-Blocker, behält sich aber sicherheitsbedingte Sperren sowie die Umsetzung gerichtlicher Anordnungen vor. Google sendet EDNS Client Subnet an autoritative Server, die es unterstützen, was die Auflösung geografisch näher macht und zugleich einen gekürzten Teil der Client-Adresse an Dritte weitergibt.</p>
+<ul class="src"><li><a href="https://developers.google.com/speed/public-dns/privacy" rel="noopener nofollow">Google Public DNS: Privacy</a></li></ul>
+</article>
+<article class="card"><h3>AdGuard DNS</h3>
+<dl class="facts"><dt>Adressen</dt><dd>94.140.14.14 gefiltert, 94.140.14.140 ungefiltert</dd></dl>
+<p>AdGuard Software Limited mit Sitz in Limassol, Zypern. Der Dienst bietet gefilterte und ungefilterte Adressen sowie DoH, DoT, DoQ und DNSCrypt. Die verwendete Filterliste liegt als öffentliches Repository mit offenem Fehlerregister vor, Fehlklassifikationen sind also nachvollziehbar meldbar.</p>
+<ul class="src"><li><a href="https://adguard-dns.io/en/public-dns.html" rel="noopener nofollow">AdGuard DNS: Public DNS</a></li></ul>
+</article>
+</section>
+<section id="selbst"><h2>Selbst betreiben</h2>
+<p>Wer den Resolver selbst betreibt, tauscht einen fremden Betreiber gegen die eigene Verantwortung. Das ist ein echter Gewinn, aber ein begrenzter, und die Projekte selbst sagen das am deutlichsten.</p>
+<p>Bei echter Rekursion, also wenn die eigene Software ab den Root-Servern auflöst, gibt es keinen zentralen Dienst mehr, der die gesamte Abfragehistorie sieht. Dafür laufen die einzelnen Anfragen nun an Root-, TLD- und autoritative Server, und je kleiner das eigene Netz ist, desto weniger verschwinden sie in der Menge. Der Gewinn liegt in der Verteilung, nicht in der Unsichtbarkeit.</p>
+<p>Wichtig ist die Unterscheidung, die Werbetexte gern verwischen: Pi-hole, AdGuard Home und blocky sind Filter, keine Resolver. Sie geben die Anfrage weiter. Nur Unbound, Knot Resolver und Technitium lösen selbst auf.</p>
+<article class="card"><h3>Unbound <span class="tag">BSD 3-Clause</span></h3>
+<dl class="facts"><dt>Was es ist</dt><dd>Vollwertiger validierender rekursiver Resolver</dd><dt>Herausgeber</dt><dd>NLnet Labs, Niederlande</dd></dl>
+<p>Unbound löst selbst ab den Root-Servern auf, statt eine Anfrage an einen fremden Resolver weiterzureichen. Damit verschwindet der zentrale Mitleser: Kein einzelner Betreiber sieht mehr die vollständige Abfragehistorie. DNSSEC-Validierung ist eingebaut und in der Standardkonfiguration aktiv, sie braucht allerdings einen gesetzten Vertrauensanker. Die Handbuchseite sagt dazu ausdrücklich: „<span lang="en">You must also set trust-anchors for validation to be useful.</span>“ Unbound kann auch als Forwarder über DoT laufen, wenn man die Rekursion nicht selbst machen will.</p>
+<p>Träger ist NLnet Labs, eine niederländische Non-Profit-Organisation, die von den niederländischen Steuerbehörden als gemeinnützig anerkannt ist. Sie sagt zur Kontinuität zu, eine Einstellung der Softwarepflege mindestens zwei Jahre im Voraus anzukündigen.</p>
+<ul class="src">
+<li><a href="https://nlnetlabs.nl/projects/unbound/about/" rel="noopener nofollow">NLnet Labs: Unbound</a></li>
+</ul></article>
+<article class="card"><h3>Knot Resolver <span class="tag">GPL-3.0-or-later</span></h3>
+<dl class="facts"><dt>Was es ist</dt><dd>Vollwertiger validierender rekursiver Resolver</dd><dt>Herausgeber</dt><dd>CZ.NIC, Tschechien</dd></dl>
+<p>Knot Resolver stammt von CZ.NIC, der Betreiberin der tschechischen Landesdomain .cz. DNSSEC-Validierung ist seit Version 4.0 standardmäßig aktiv. Bemerkenswert ist die Ehrlichkeit der eigenen Dokumentation. Sie warnt ausdrücklich davor, verschlüsseltes DNS mit Privatsphäre gleichzusetzen: „<span lang="en">Latest research has proven that encrypting DNS traffic is not sufficient to protect the users' privacy. Therefore, we recommend all users to use a full VPN instead of encrypting just DNS queries.</span>“ Ein Projekt, das die Grenzen des eigenen Produkts benennt, verdient mehr Vertrauen als eines, das sie verschweigt.</p>
+<p>Wegen der GPL ist Knot Resolver anders als Unbound nicht ohne Weiteres in geschlossene Geräte einbettbar. Für den Eigenbetrieb spielt das keine Rolle.</p>
+<ul class="src">
+<li><a href="https://www.knot-resolver.cz/" rel="noopener nofollow">CZ.NIC: Knot Resolver</a></li>
+</ul></article>
+<article class="card"><h3>Pi-hole <span class="tag">EUPL v1.2</span></h3>
+<dl class="facts"><dt>Was es ist</dt><dd>DNS-Sinkhole zum Filtern, kein eigener Resolver</dd><dt>Herausgeber</dt><dd>Pi-hole, LLC</dd></dl>
+<p>Pi-hole ist ein DNS-Sinkhole, kein rekursiver Resolver. Es prüft Anfragen gegen Blocklisten und reicht alles Übrige an einen konfigurierten Upstream weiter. Die technische Basis ist ein dnsmasq-Abkömmling namens FTL.</p>
+<p>Zwei Punkte, die oft falsch dargestellt werden. Erstens ist Google 8.8.8.8 als Upstream voreingestellt. Wer Pi-hole installiert und nichts ändert, schickt weiterhin jede nicht geblockte Anfrage an Google, nur gebündelt über eine einzige IP. Zweitens ist DNSSEC-Validierung zwar eingebaut, aber standardmäßig ausgeschaltet.</p>
+<p>Verschlüsselten Transport bringt Pi-hole von Haus aus weder zu den Clients noch zum Upstream mit. Wer echte Rekursion will, installiert zusätzlich Unbound und trägt es als lokalen Upstream ein. Die Rekursion leistet dann Unbound, nicht Pi-hole.</p>
+<ul class="src">
+<li><a href="https://docs.pi-hole.net/guides/dns/unbound/" rel="noopener nofollow">Pi-hole: Unbound als rekursiver Upstream</a></li>
+</ul></article>
+<article class="card"><h3>AdGuard Home <span class="tag">GPL-3.0</span></h3>
+<dl class="facts"><dt>Was es ist</dt><dd>Eigener DNS-Server mit Filterung, arbeitet als Forwarder</dd><dt>Herausgeber</dt><dd>AdGuard Software Limited, Zypern</dd></dl>
+<p>AdGuard Home ist anders als Pi-hole kein Aufsatz auf dnsmasq, sondern ein eigenständiger, in Go geschriebener DNS-Server. Es kann DoH, DoT und DoQ ohne Zusatzsoftware für die eigenen Clients anbieten. Das ist der praktische Vorteil gegenüber Pi-hole: Mobilgeräte können den heimischen Filter auch von unterwegs verschlüsselt erreichen.</p>
+<p>Die Option „Enable DNSSEC“ bedeutet nicht, dass AdGuard Home selbst validiert. Es setzt das DO-Bit und verlässt sich auf den Upstream. Wer echte lokale Validierung will, braucht einen validierenden Resolver davor oder dahinter.</p>
+<p>Rekursiv arbeitet AdGuard Home nicht. Ein gewählter Upstream sieht weiterhin alle nicht geblockten Anfragen.</p>
+<ul class="src">
+<li><a href="https://github.com/AdguardTeam/AdGuardHome" rel="noopener nofollow">AdGuard Home: Repository und Dokumentation</a></li>
+</ul></article>
+<article class="card"><h3>Technitium DNS Server <span class="tag">GPL-3.0</span></h3>
+<dl class="facts"><dt>Was es ist</dt><dd>Autoritativer Server und rekursiver Resolver in einem</dd><dt>Herausgeber</dt><dd>Technitium</dd></dl>
+<p>Technitium deckt beides ab: eigene Rekursion ab den Root-Servern einschließlich QNAME-Minimierung nach RFC 9156 oder Forwarder-Betrieb über DoT, DoH und DoQ zu einem öffentlichen Resolver. Es bringt eine Weboberfläche, Blocklisten, einen DHCP-Server und eine HTTP-Schnittstelle mit und kann DoT, DoH und DoQ auch selbst für die eigenen Clients anbieten, DoH dabei über HTTP/1.1, HTTP/2 und HTTP/3.</p>
+<p>Für ein Heimnetz oder ein kleines Büro ist das die vollständigste Einzellösung dieser Liste.</p>
+<ul class="src">
+<li><a href="https://github.com/TechnitiumSoftware/DnsServer" rel="noopener nofollow">Technitium DNS Server: Repository</a></li>
+</ul></article>
+<article class="card"><h3>dnscrypt-proxy <span class="tag">ISC</span></h3>
+<dl class="facts"><dt>Was es ist</dt><dd>Lokaler verschlüsselnder Proxy, kein Resolver</dd><dt>Herausgeber</dt><dd>Frank Denis</dd></dl>
+<p>dnscrypt-proxy nimmt unverschlüsseltes DNS auf einem lokalen Socket entgegen und schickt es verschlüsselt an einen öffentlichen Resolver. Es unterstützt DNSCrypt, DoH und, was es von den meisten anderen unterscheidet, Anonymized DNSCrypt und Oblivious DoH nach RFC 9230. Diese beiden trennen die Frage „wer fragt“ von der Frage „was wird gefragt“, indem ein Relais dazwischentritt, das den Inhalt nicht sieht, während der Resolver die Client-Adresse nicht sieht.</p>
+<p>Der sachliche Unterschied zwischen DNSCrypt und DoH liegt nicht in der Stärke der Verschlüsselung, sondern im Vertrauensanker. DNSCrypt nutzt einen fest hinterlegten öffentlichen Schlüssel des Anbieters ohne Zertifizierungsstelle. DoH nutzt die übliche Zertifikatskette und einen Hostnamen, der ohne Encrypted Client Hello im Klartext übertragen wird. Ein Beobachter sieht bei DoH also üblicherweise, welchen Anbieter man nutzt.</p>
+<p>Das Projekt benennt die Grenze selbst: „<span lang="en">one still has to trust non-logging DNS servers for actually doing what they pretend to do.</span>“</p>
+<ul class="src">
+<li><a href="https://github.com/DNSCrypt/dnscrypt-proxy" rel="noopener nofollow">dnscrypt-proxy: Repository und Wiki</a></li>
+</ul></article>
+</section>
+<section id="einrichten"><h2>Einrichten</h2>
+<p>Die Menüpfade unterscheiden sich zwischen Versionen. Entscheidend ist, welches Protokoll das jeweilige System spricht.</p>
+<h3>Android</h3><p>Einstellungen, Netzwerk und Internet, Privates DNS. Dort wird ein DoT-Hostname eingetragen, zum Beispiel <code>dns.quad9.net</code>. Android nutzt ausschließlich DNS over TLS; eine DoH-Adresse oder eine reine IP-Adresse funktioniert an dieser Stelle nicht. Die Einstellung gilt systemweit und auch im Mobilfunknetz.</p>
+<h3>iOS, iPadOS und macOS</h3><p>Apple bietet keine Eingabemaske für DoH oder DoT. Verschlüsseltes DNS wird über ein DNS-Konfigurationsprofil gesetzt, das ein Anbieter bereitstellt, oder über eine App, die ein solches Profil installiert. Ein im Netzwerk-Dialog eingetragener DNS-Server bleibt unverschlüsseltes Klartext-DNS.</p>
+<h3>Windows 11</h3><p>Einstellungen, Netzwerk und Internet, Adapter, DNS-Serverzuweisung bearbeiten. Nach dem Eintragen einer IP-Adresse lässt sich die DNS-Verschlüsselung auf „Nur verschlüsselt“ stellen, sofern Windows für diese Adresse einen DoH-Endpunkt kennt. Für die Adressen von Quad9 und Cloudflare ist das der Fall.</p>
+<h3>Linux mit systemd-resolved</h3><p>In <code>/etc/systemd/resolved.conf</code> die Werte <code>DNS=</code>, <code>DNSOverTLS=yes</code> und <code>DNSSEC=</code> setzen, danach <code>systemctl restart systemd-resolved</code>. Bei DoT gehört hinter die IP-Adresse der Hostname für die Zertifikatsprüfung, etwa <code>9.9.9.9#dns.quad9.net</code>.</p>
+<h3>Firefox</h3><p>Einstellungen, Datenschutz und Sicherheit, DNS über HTTPS. Neben den vorgegebenen Anbietern lässt sich unter „Benutzerdefiniert“ jede DoH-Adresse aus den Tabellen oben eintragen. Diese Einstellung gilt nur für Firefox, nicht für das übrige System.</p>
+<h3>Router</h3><p>Der wirksamste Ort, denn die Einstellung erreicht jedes Gerät im Netz, auch Fernseher und Drucker. Viele Router unterstützen nur Klartext-DNS. Dann gehören dort die IPv4- und IPv6-Adressen hinein, und die Verschlüsselung übernimmt ein eigener Resolver im Netz, siehe den Abschnitt „Selbst betreiben“.</p>
+</section>
+<section id="recht"><h2>Rechtlicher Rahmen in Deutschland</h2>
+<p>In Deutschland können Rechteinhaber Zugangsanbieter dazu verpflichten lassen, einzelne Domains zu sperren. Der Abschnitt beschreibt die Rechtslage, er bewertet sie nicht.</p>
+<p>Rechtsgrundlage ist § 8 des Digitale-Dienste-Gesetzes mit der amtlichen Überschrift „Anspruch auf Sperrung bei Rechtsverletzung“. Der Bundesgerichtshof hat mit Urteil vom 13. Oktober 2022, Aktenzeichen I ZR 111/21, unter dem Titel „DNS-Sperre“ entschieden, unter welchen Voraussetzungen Rechteinhaber einen Zugangsanbieter auf Sperrung in Anspruch nehmen können. Das Gericht beschreibt die Maßnahme technisch so, dass die Zuordnung zwischen Domainname und IP-Adresse auf dem DNS-Server des Zugangsanbieters verhindert wird.</p>
+<p>Koordiniert werden diese Verfahren von der Clearingstelle Urheberrecht im Internet, kurz CUII. Sie beschreibt sich als unabhängige Stelle, die von Internetzugangsanbietern und Rechteinhabern gegründet wurde. Zum Juli 2025 hat sie ihr Verfahren umgestellt. Seither gilt der CUII-Verhaltenskodex 2.0, nach dem sich ein Rechteinhaber zunächst an ein deutsches Gericht wendet, das den Sperranspruch prüft. Die CUII begründet den Wechsel damit, dass die Bundesnetzagentur ihr mitgeteilt habe, sich künftig auf ihre Pflichtaufgaben konzentrieren zu wollen.</p>
+<p>Die CUII stellt selbst klar, dass die gerichtliche Prüfung auf Freiwilligkeit beruht: „Das ist freiwillige Selbstverpflichtung der CUII-Mitglieder. Denn eigentlich besteht kein Richtervorbehalt.“</p>
+<p>Die Bundesnetzagentur grenzt ihre eigene Rolle deutlich ab: „Die Bundesnetzagentur ordnet keine Sperren im Internet an.“ Und: „Die Bundesnetzagentur kann auch weder DNS-Sperren anordnen noch durchsetzen.“ Sie prüft, ob eingerichtete Sperren mit der Verordnung (EU) 2015/2120 über den Zugang zum offenen Internet vereinbar sind.</p>
+<p>Zwei Punkte zur Genauigkeit, weil sie oft falsch wiedergegeben werden. Erstens betreffen diese Sperren die Resolver der beteiligten Zugangsanbieter, nicht das Internet als solches. Wer einen anderen Resolver nutzt, ist von ihnen nur dann erfasst, wenn dieser Anbieter denselben Anordnungen unterliegt. Quad9 zeigt, dass das vorkommt: Nach einem französischen Urteil sperrt der Dienst weltweit. Zweitens ist der Umfang öffentlich nachvollziehbar: Die CUII veröffentlicht sowohl die gerichtlichen Anordnungen als auch die älteren Empfehlungen ihres früheren Prüfausschusses.</p>
+<p>Die Sperranordnungen richten sich an die Zugangsanbieter, nicht an deren Kundinnen und Kunden. Wer den Resolver wechselt, ändert, wen er fragt. Ob eine konkrete Nutzung zulässig ist, richtet sich nach dem Inhalt, der aufgerufen wird, nicht nach dem verwendeten DNS-Server. Diese Seite ist eine technische Darstellung und keine Rechtsberatung.</p>
+<h3>Belege</h3><ul class="src">
+<li><a href="https://cuii.info/" rel="noopener nofollow">Clearingstelle Urheberrecht im Internet (CUII)</a></li>
+<li><a href="https://cuii.info/anordnungen/" rel="noopener nofollow">CUII: Gerichtliche Sperranordnungen und frühere Empfehlungen</a></li>
+<li><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/Digitales/Schutz/Netzneutralitaet/DNSsperren/start.html" rel="noopener nofollow">Bundesnetzagentur: Offenes Internet und Netzsperren</a></li>
+<li><a href="https://www.bundesgerichtshof.de/SharedDocs/Pressemitteilungen/DE/2022/2022145.html" rel="noopener nofollow">Bundesgerichtshof, Pressemitteilung Nr. 145/2022 zum Urteil vom 13.10.2022, I ZR 111/21</a></li>
+<li><a href="https://www.gesetze-im-internet.de/ddg/__8.html" rel="noopener nofollow">§ 8 Digitale-Dienste-Gesetz</a></li>
+</ul></section>
+<section id="faq"><h2>Häufige Fragen</h2>
+<h3>Macht mich ein anderer DNS-Server anonym?</h3><p>Nein. Er verlagert die Sichtbarkeit vom Zugangsanbieter zum neuen Resolver. Die Ziel-IP-Adressen Ihrer Verbindungen und, ohne Encrypted Client Hello, der Servername im TLS-Handshake bleiben sichtbar. Anonymität ist ein anderes Problem und braucht andere Werkzeuge.</p>
+<h3>DNSSEC oder verschlüsseltes DNS, was brauche ich?</h3><p>Beides, denn sie lösen verschiedene Probleme. DNSSEC prüft, ob die Antwort echt ist. DoT, DoH und DoQ verbergen die Frage. RFC 4033 sagt zu DNSSEC ausdrücklich: „<span lang="en">These extensions do not provide confidentiality.</span>“</p>
+<h3>Warum funktioniert die IP-Adresse von Digitale Gesellschaft, Artikel10 oder Applied Privacy nicht in meinem Router?</h3><p>Weil diese Dienste bewusst kein Klartext-DNS auf Port 53 anbieten. Die genannten Adressen antworten nur über DoT auf Port 853 oder DoH auf Port 443. Sie gehören in ein Feld für verschlüsseltes DNS, nicht in das gewöhnliche DNS-Feld.</p>
+<h3>Ist ein selbst betriebener Resolver privater?</h3><p>Teilweise. Bei echter Rekursion entfällt der zentrale Resolver, der alles sieht. Dafür laufen die Anfragen an Root-, TLD- und autoritative Server, und in einem sehr kleinen Netz sind sie leichter einer Person zuzuordnen. Der Gewinn liegt also in der Verteilung, nicht in der Unsichtbarkeit.</p>
+<h3>Reicht es, DoH im Browser einzuschalten?</h3><p>Für den Browser ja, für das Gerät nein. Alles andere, vom E-Mail-Programm bis zum Betriebssystem-Update, nutzt weiterhin den systemweit eingestellten Resolver. Wer das ganze Gerät schützen will, stellt DNS im Betriebssystem oder im Router ein.</p>
+<h3>Warum steht Mullvad hier als Warnung und nicht als Empfehlung?</h3><p>Weil der öffentliche verschlüsselte DNS-Dienst am 2. November 2026 abgeschaltet wird. Das hat Mullvad am 3. September 2026 selbst angekündigt. Eine Adresse zu empfehlen, die in wenigen Wochen nicht mehr antwortet, wäre keine Hilfe.</p>
+</section>
+<section id="methode"><h2>Wie diese Seite geprüft wurde</h2>
+<p>Diese Seite behauptet nichts, was nicht belegt ist.</p>
+<p>Alle Angaben zu Betreibern, Adressen, Endpunkten, Filterung und Protokollierung stammen aus den offiziellen Seiten, Datenschutzerklärungen und Repositories der jeweiligen Dienste, aus öffentlichen Registern sowie aus den RFCs beim RFC Editor. Alle Abrufe erfolgten am 6. September 2026.</p>
+<p>Jede Angabe wurde zweimal erhoben: einmal beim Zusammentragen und einmal in einer getrennten Gegenprüfung, deren Auftrag ausdrücklich lautete, die erste Fassung zu widerlegen. Dabei aufgedeckte Fehler wurden korrigiert oder gestrichen. Zwei Beispiele, damit das nachvollziehbar bleibt: Die vielerorts genannte Adresse dns.digitalcourage.de ist dauerhaft abgeschaltet, und dns0.eu existiert seit Oktober 2025 nicht mehr, steht aber weiterhin in gängigen Empfehlungslisten.</p>
+<p>Wo eine Angabe nicht aus einer Primärquelle zu belegen war, steht sie nicht auf dieser Seite. Wo eine Aussage eine Selbstauskunft des Anbieters ist, wird sie als solche gekennzeichnet. Keine der No-Log-Zusagen auf dieser Seite ist unabhängig auditiert; das gilt für alle und ist deshalb bei jedem Dienst mitzudenken.</p>
+<p>Zahlen zu Serverstandorten, Nutzerzahlen oder Geschwindigkeit sind bewusst zurückhaltend gehalten. Sie ändern sich schneller, als eine statische Seite gepflegt werden kann.</p>
+<p>Wer einen Fehler findet, möge ihn melden. Der Quelltext dieser Seite liegt offen, jede Aussage lässt sich bis zu ihrer Quelle zurückverfolgen.</p>
+</section>
+<section id="quellen"><h2>Quellen</h2>
+<p class="srcnote">Alle Quellen wurden am 6. September 2026 abgerufen.</p>
+<ul class="src">
+<li><a href="https://quad9.net/service/service-addresses-and-features/" rel="noopener nofollow">Quad9: Service Addresses and Features</a></li>
+<li><a href="https://quad9.net/privacy/policy/" rel="noopener nofollow">Quad9: Data Privacy Policy, Version 1.1, 24.06.2026</a></li>
+<li><a href="https://quad9.net/news/blog/quad9-enables-dns-over-http-3-and-dns-over-quic/" rel="noopener nofollow">Quad9 Blog: Quad9 Enables DNS Over HTTP/3 and DNS Over QUIC, 31.03.2026</a></li>
+<li><a href="https://quad9.net/news/press/quad9-faces-new-dns-censorship-legal-challenge-in-france-from-canal/" rel="noopener nofollow">Quad9: Presseerklärung zum Verfahren von Canal+ in Frankreich, 10.12.2024</a></li>
+<li><a href="https://www.joindns4.eu/for-public" rel="noopener nofollow">DNS4EU: DNS4EU for Public</a></li>
+<li><a href="https://www.joindns4.eu/about" rel="noopener nofollow">DNS4EU: About the project</a></li>
+<li><a href="https://joindns4.eu/legal-information-and-compliance" rel="noopener nofollow">DNS4EU: Legal information and compliance</a></li>
+<li><a href="https://hadea.ec.europa.eu/" rel="noopener nofollow">HaDEA, EU-Exekutivagentur zur CEF-Digital-Förderung</a></li>
+<li><a href="https://dns.sb/" rel="noopener nofollow">DNS.SB: Startseite mit Endpunkten</a></li>
+<li><a href="https://dns.sb/privacy/" rel="noopener nofollow">DNS.SB: Privacy Policy, wirksam 17.01.2026</a></li>
+<li><a href="https://dns.sb/report/" rel="noopener nofollow">DNS.SB: Transparenzberichte seit 2019</a></li>
+<li><a href="https://xtom.com/impressum/" rel="noopener nofollow">xTom GmbH: Impressum</a></li>
+<li><a href="https://blog.uncensoreddns.org/" rel="noopener nofollow">UncensoredDNS: Startseite und Serverliste</a></li>
+<li><a href="https://blog.uncensoreddns.org/faq/" rel="noopener nofollow">UncensoredDNS: FAQ mit Logging-Aussage</a></li>
+<li><a href="https://blog.uncensoreddns.org/blog/43-full-doq-and-doh3-support/" rel="noopener nofollow">UncensoredDNS: Full DoQ and DoH3 support, 23.10.2025</a></li>
+<li><a href="https://digitalcourage.de/support/zensurfreier-dns-server" rel="noopener nofollow">Digitalcourage: Zensurfreier DNS-Server</a></li>
+<li><a href="https://digitalcourage.de/impressum" rel="noopener nofollow">Digitalcourage e. V.: Impressum</a></li>
+<li><a href="https://www.digitale-gesellschaft.ch/dns/" rel="noopener nofollow">Digitale Gesellschaft: Öffentlicher DNS-Resolver</a></li>
+<li><a href="https://github.com/DigitaleGesellschaft/DNS-Resolver" rel="noopener nofollow">Digitale Gesellschaft: Konfiguration des Resolvers</a></li>
+<li><a href="https://dns.artikel10.org/" rel="noopener nofollow">Artikel10: DNS-Resolver</a></li>
+<li><a href="https://artikel10.org/" rel="noopener nofollow">Artikel10 e. V.: Website und Impressum</a></li>
+<li><a href="https://dnsforge.de/" rel="noopener nofollow">dnsforge.de: Endpunkte, Varianten und FAQ</a></li>
+<li><a href="https://adminforge.de/datenschutz/" rel="noopener nofollow">adminForge: Datenschutzhinweis</a></li>
+<li><a href="https://adminforge.de/impressum/" rel="noopener nofollow">adminForge: Impressum</a></li>
+<li><a href="https://dns-setup.ffmuc.net/" rel="noopener nofollow">FFMUC: DNS-Einrichtung</a></li>
+<li><a href="https://ffmuc.net/dns-privacy/" rel="noopener nofollow">FFMUC: DNS Privacy Policy</a></li>
+<li><a href="https://ffmuc.net/impressum/" rel="noopener nofollow">Freie Netze München e. V.: Impressum</a></li>
+<li><a href="https://www.restena.lu/en/service/public-dns-resolver" rel="noopener nofollow">Fondation Restena: Public DNS resolver</a></li>
+<li><a href="https://www.restena.lu/" rel="noopener nofollow">Fondation Restena: Website</a></li>
+<li><a href="https://applied-privacy.net/services/dns/" rel="noopener nofollow">Foundation for Applied Privacy: DNS Privacy Services</a></li>
+<li><a href="https://applied-privacy.net/privacy-policy/" rel="noopener nofollow">Foundation for Applied Privacy: Privacy Policy</a></li>
+<li><a href="https://mullvad.net/en/blog/shutting-down-our-public-encrypted-dns-servers-and-sponsoring-quad9-instead" rel="noopener nofollow">Mullvad: Shutting down our public encrypted DNS servers, 03.09.2026</a></li>
+<li><a href="https://web.archive.org/web/20251018114400/https://www.dns0.eu/" rel="noopener nofollow">Internet Archive: dns0.eu mit Abschaltungshinweis, 18.10.2025</a></li>
+<li><a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" rel="noopener nofollow">Cloudflare: Public DNS Resolver Privacy</a></li>
+<li><a href="https://developers.google.com/speed/public-dns/privacy" rel="noopener nofollow">Google Public DNS: Privacy</a></li>
+<li><a href="https://adguard-dns.io/en/public-dns.html" rel="noopener nofollow">AdGuard DNS: Public DNS</a></li>
+<li><a href="https://nlnetlabs.nl/projects/unbound/about/" rel="noopener nofollow">NLnet Labs: Unbound</a></li>
+<li><a href="https://www.knot-resolver.cz/" rel="noopener nofollow">CZ.NIC: Knot Resolver</a></li>
+<li><a href="https://docs.pi-hole.net/guides/dns/unbound/" rel="noopener nofollow">Pi-hole: Unbound als rekursiver Upstream</a></li>
+<li><a href="https://github.com/AdguardTeam/AdGuardHome" rel="noopener nofollow">AdGuard Home: Repository und Dokumentation</a></li>
+<li><a href="https://github.com/TechnitiumSoftware/DnsServer" rel="noopener nofollow">Technitium DNS Server: Repository</a></li>
+<li><a href="https://github.com/DNSCrypt/dnscrypt-proxy" rel="noopener nofollow">dnscrypt-proxy: Repository und Wiki</a></li>
+<li><a href="https://cuii.info/" rel="noopener nofollow">Clearingstelle Urheberrecht im Internet (CUII)</a></li>
+<li><a href="https://cuii.info/anordnungen/" rel="noopener nofollow">CUII: Gerichtliche Sperranordnungen und frühere Empfehlungen</a></li>
+<li><a href="https://www.bundesnetzagentur.de/DE/Fachthemen/Digitales/Schutz/Netzneutralitaet/DNSsperren/start.html" rel="noopener nofollow">Bundesnetzagentur: Offenes Internet und Netzsperren</a></li>
+<li><a href="https://www.bundesgerichtshof.de/SharedDocs/Pressemitteilungen/DE/2022/2022145.html" rel="noopener nofollow">Bundesgerichtshof, Pressemitteilung Nr. 145/2022 zum Urteil vom 13.10.2022, I ZR 111/21</a></li>
+<li><a href="https://www.gesetze-im-internet.de/ddg/__8.html" rel="noopener nofollow">§ 8 Digitale-Dienste-Gesetz</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1035.txt" rel="noopener nofollow">RFC 1035, Domain Names, Implementation and Specification</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4033.txt" rel="noopener nofollow">RFC 4033, DNS Security Introduction and Requirements</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7816.txt" rel="noopener nofollow">RFC 7816, DNS Query Name Minimisation to Improve Privacy (überholt durch RFC 9156)</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7830.txt" rel="noopener nofollow">RFC 7830, The EDNS(0) Padding Option</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7858.txt" rel="noopener nofollow">RFC 7858, Specification for DNS over Transport Layer Security</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7871.txt" rel="noopener nofollow">RFC 7871, Client Subnet in DNS Queries</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8484.txt" rel="noopener nofollow">RFC 8484, DNS Queries over HTTPS</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8932.txt" rel="noopener nofollow">RFC 8932, Recommendations for DNS Privacy Service Operators</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9076.txt" rel="noopener nofollow">RFC 9076, DNS Privacy Considerations</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9156.txt" rel="noopener nofollow">RFC 9156, DNS Query Name Minimisation to Improve Privacy</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9230.txt" rel="noopener nofollow">RFC 9230, Oblivious DNS over HTTPS</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9250.txt" rel="noopener nofollow">RFC 9250, DNS over Dedicated QUIC Connections</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9849.txt" rel="noopener nofollow">RFC 9849, TLS Encrypted Client Hello</a></li>
+</ul></section>
+</div></main>
+<footer><div class="wrap"><p>Diese Seite ist eine technische Darstellung und keine Rechtsberatung. Sie führt kein Skript aus, setzt kein Cookie und lädt nichts von fremden Servern.</p>
+<p><a href="https://dns.kaipfstr.de/en/" hreflang="en" lang="en">English version</a> &middot; <a href="https://github.com/Wasserpuncher/dns.kaipfstr.de" rel="noopener">Quelltext auf GitHub</a></p>
+</div></footer>
+</body>
+</html>
