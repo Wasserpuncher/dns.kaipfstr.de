@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sichere DNS-Server: geprüfte Anbieter und Selbsthosting</title>
-<meta name="description" content="Elf öffentliche DNS-Resolver und sechs Wege zum Selbsthosten, am 6. September 2026 an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.">
+<meta name="description" content="Öffentliche DNS-Resolver und Wege zum Selbsthosten, an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.">
 <meta name="author" content="Kai Pfister">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
 <meta name="theme-color" content="#0f5c4a">
@@ -16,7 +16,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dns.kaipfstr.de/">
 <meta property="og:title" content="Sichere DNS-Server: geprüfte Anbieter und Selbsthosting">
-<meta property="og:description" content="Elf öffentliche DNS-Resolver und sechs Wege zum Selbsthosten, am 6. September 2026 an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.">
+<meta property="og:description" content="Öffentliche DNS-Resolver und Wege zum Selbsthosten, an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.">
 <meta property="og:site_name" content="dns.kaipfstr.de">
 <meta property="og:locale" content="de_DE">
 <meta property="og:locale:alternate" content="en_GB">
@@ -78,6 +78,15 @@ header.top{background:var(--panel);border-bottom:1px solid var(--line);padding:3
 .lede{font-size:1.2rem;color:var(--muted);margin:0 0 1.5rem;max-width:40rem;font-style:italic}
 .meta{font-family:var(--sans);font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;
   gap:.55rem 1.1rem;align-items:center;margin:0}
+.sitenav{margin:1.6rem 0 1.3rem}
+.sitenav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
+.sitenav a{font-family:var(--sans);font-size:.9rem;font-weight:600;display:inline-block;
+  padding:.34rem .85rem;border:1px solid var(--line-strong);border-radius:8px;text-decoration:none;
+  background:var(--bg)}
+.sitenav a:hover,.sitenav a:focus-visible{border-color:var(--accent);color:var(--accent-ink)}
+.sitenav a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{text-decoration:underline}
 .langswitch{font-family:var(--sans);font-size:.85rem;font-weight:600;display:inline-block;
   border:1px solid var(--muted);border-radius:999px;padding:.3rem .9rem;text-decoration:none}
 .langswitch:hover{border-color:var(--accent);background:var(--panel)}
@@ -147,18 +156,49 @@ ul.src li{margin:0 0 .42rem;padding-left:1.1rem;text-indent:-1.1rem}
 blockquote{margin:1.3rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:3px solid var(--accent);
   color:var(--muted);font-style:italic}
 
+/* Pruefseite */
+.check{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:1.4rem 1.5rem;margin:1.4rem 0}
+.check h3{margin-top:0}
+.check .ask{font-style:italic;color:var(--muted);margin:0 0 1rem}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+  padding:.9rem 1rem;overflow-x:auto;margin:0 0 1.1rem;font-family:var(--mono);
+  font-size:.86rem;line-height:1.55;tab-size:2}
+pre code{background:none;border:0;padding:0;font-size:1em;word-break:normal;white-space:pre}
+.note{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .9rem;margin:1rem 0 0;
+  font-size:.95rem;color:var(--muted)}
+
+/* Glossar */
+.terms{margin:1.4rem 0}
+.term{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1rem 1.2rem;margin:.7rem 0}
+.term h3{margin:0 0 .4rem;font-size:1.05rem;display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+.term p{margin:0 0 .5rem}
+.term p:last-child{margin-bottom:0}
+.term .pit{font-size:.94rem;color:var(--muted);border-left:3px solid var(--warn-line);
+  padding-left:.8rem;margin-top:.6rem}
+.jump{font-family:var(--sans);font-size:.86rem;margin:1.2rem 0 2rem;line-height:2}
+.jump a{display:inline-block;border:1px solid var(--line-strong);border-radius:6px;
+  padding:.1rem .5rem;text-decoration:none;margin-right:.25rem}
+.jump a:hover{border-color:var(--accent)}
+
 footer{border-top:1px solid var(--line);margin-top:4.5rem;padding:2.4rem 0 3.5rem;
   font-family:var(--sans);font-size:.87rem;color:var(--muted)}
 footer a{color:var(--accent-ink)}
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://dns.kaipfstr.de/#website","url":"https://dns.kaipfstr.de/","name":"dns.kaipfstr.de","inLanguage":["de","en"],"publisher":{"@id":"https://dns.kaipfstr.de/#person"}},{"@type":"Person","@id":"https://dns.kaipfstr.de/#person","name":"Kai Pfister","url":"https://github.com/Wasserpuncher"},{"@type":"WebPage","@id":"https://dns.kaipfstr.de/#webpage","url":"https://dns.kaipfstr.de/","name":"Sichere DNS-Server: geprüfte Anbieter und Selbsthosting","description":"Elf öffentliche DNS-Resolver und sechs Wege zum Selbsthosten, am 6. September 2026 an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.","inLanguage":"de","isPartOf":{"@id":"https://dns.kaipfstr.de/#website"},"author":{"@id":"https://dns.kaipfstr.de/#person"},"dateModified":"2026-09-06","breadcrumb":{"@id":"https://dns.kaipfstr.de/#breadcrumb"},"license":"https://opensource.org/licenses/MIT"},{"@type":"BreadcrumbList","@id":"https://dns.kaipfstr.de/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Sichere DNS-Server: geprüfte Anbieter und Selbsthosting","item":"https://dns.kaipfstr.de/"}]},{"@type":"ItemList","@id":"https://dns.kaipfstr.de/#providers","name":"Geprüfte öffentliche DNS-Resolver","numberOfItems":11,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Organization","name":"Quad9","url":"https://quad9.net/service/service-addresses-and-features/"}},{"@type":"ListItem","position":2,"item":{"@type":"Organization","name":"DNS4EU","url":"https://www.joindns4.eu/for-public"}},{"@type":"ListItem","position":3,"item":{"@type":"Organization","name":"DNS.SB","url":"https://dns.sb/"}},{"@type":"ListItem","position":4,"item":{"@type":"Organization","name":"UncensoredDNS","url":"https://blog.uncensoreddns.org/"}},{"@type":"ListItem","position":5,"item":{"@type":"Organization","name":"Digitalcourage e. V.","url":"https://digitalcourage.de/support/zensurfreier-dns-server"}},{"@type":"ListItem","position":6,"item":{"@type":"Organization","name":"Digitale Gesellschaft","url":"https://www.digitale-gesellschaft.ch/dns/"}},{"@type":"ListItem","position":7,"item":{"@type":"Organization","name":"Artikel10 e. V.","url":"https://dns.artikel10.org/"}},{"@type":"ListItem","position":8,"item":{"@type":"Organization","name":"dnsforge.de","url":"https://dnsforge.de/"}},{"@type":"ListItem","position":9,"item":{"@type":"Organization","name":"Freifunk München","url":"https://dns-setup.ffmuc.net/"}},{"@type":"ListItem","position":10,"item":{"@type":"Organization","name":"RESTENA","url":"https://www.restena.lu/en/service/public-dns-resolver"}},{"@type":"ListItem","position":11,"item":{"@type":"Organization","name":"Applied Privacy","url":"https://applied-privacy.net/services/dns/"}}]},{"@type":"FAQPage","@id":"https://dns.kaipfstr.de/#faq","inLanguage":"de","mainEntity":[{"@type":"Question","name":"Macht mich ein anderer DNS-Server anonym?","acceptedAnswer":{"@type":"Answer","text":"Nein. Er verlagert die Sichtbarkeit vom Zugangsanbieter zum neuen Resolver. Die Ziel-IP-Adressen Ihrer Verbindungen und, ohne Encrypted Client Hello, der Servername im TLS-Handshake bleiben sichtbar. Anonymität ist ein anderes Problem und braucht andere Werkzeuge."}},{"@type":"Question","name":"DNSSEC oder verschlüsseltes DNS, was brauche ich?","acceptedAnswer":{"@type":"Answer","text":"Beides, denn sie lösen verschiedene Probleme. DNSSEC prüft, ob die Antwort echt ist. DoT, DoH und DoQ verbergen die Frage. RFC 4033 sagt zu DNSSEC ausdrücklich: „These extensions do not provide confidentiality.“"}},{"@type":"Question","name":"Warum funktioniert die IP-Adresse von Digitale Gesellschaft, Artikel10 oder Applied Privacy nicht in meinem Router?","acceptedAnswer":{"@type":"Answer","text":"Weil diese Dienste bewusst kein Klartext-DNS auf Port 53 anbieten. Die genannten Adressen antworten nur über DoT auf Port 853 oder DoH auf Port 443. Sie gehören in ein Feld für verschlüsseltes DNS, nicht in das gewöhnliche DNS-Feld."}},{"@type":"Question","name":"Ist ein selbst betriebener Resolver privater?","acceptedAnswer":{"@type":"Answer","text":"Teilweise. Bei echter Rekursion entfällt der zentrale Resolver, der alles sieht. Dafür laufen die Anfragen an Root-, TLD- und autoritative Server, und in einem sehr kleinen Netz sind sie leichter einer Person zuzuordnen. Der Gewinn liegt also in der Verteilung, nicht in der Unsichtbarkeit."}},{"@type":"Question","name":"Reicht es, DoH im Browser einzuschalten?","acceptedAnswer":{"@type":"Answer","text":"Für den Browser ja, für das Gerät nein. Alles andere, vom E-Mail-Programm bis zum Betriebssystem-Update, nutzt weiterhin den systemweit eingestellten Resolver. Wer das ganze Gerät schützen will, stellt DNS im Betriebssystem oder im Router ein."}},{"@type":"Question","name":"Warum steht Mullvad hier als Warnung und nicht als Empfehlung?","acceptedAnswer":{"@type":"Answer","text":"Weil der öffentliche verschlüsselte DNS-Dienst am 2. November 2026 abgeschaltet wird. Das hat Mullvad am 3. September 2026 selbst angekündigt. Eine Adresse zu empfehlen, die in wenigen Wochen nicht mehr antwortet, wäre keine Hilfe."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://dns.kaipfstr.de/#website","url":"https://dns.kaipfstr.de/","name":"dns.kaipfstr.de","inLanguage":["de","en"],"publisher":{"@id":"https://dns.kaipfstr.de/#person"}},{"@type":"Person","@id":"https://dns.kaipfstr.de/#person","name":"Kai Pfister","url":"https://github.com/Wasserpuncher"},{"@type":"WebPage","@id":"https://dns.kaipfstr.de/#webpage","url":"https://dns.kaipfstr.de/","name":"Sichere DNS-Server: geprüfte Anbieter und Selbsthosting","description":"Öffentliche DNS-Resolver und Wege zum Selbsthosten, an der Primärquelle geprüft: Adressen, Trägerschaft, Einschränkungen.","inLanguage":"de","isPartOf":{"@id":"https://dns.kaipfstr.de/#website"},"author":{"@id":"https://dns.kaipfstr.de/#person"},"dateModified":"2026-09-07","breadcrumb":{"@id":"https://dns.kaipfstr.de/#breadcrumb"},"license":"https://opensource.org/licenses/MIT"},{"@type":"BreadcrumbList","@id":"https://dns.kaipfstr.de/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Sichere DNS-Server: geprüfte Anbieter und Selbsthosting","item":"https://dns.kaipfstr.de/"}]},{"@type":"ItemList","@id":"https://dns.kaipfstr.de/#providers","name":"Geprüfte öffentliche DNS-Resolver","numberOfItems":12,"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Organization","name":"Quad9","url":"https://quad9.net/service/service-addresses-and-features/"}},{"@type":"ListItem","position":2,"item":{"@type":"Organization","name":"DNS4EU","url":"https://www.joindns4.eu/for-public"}},{"@type":"ListItem","position":3,"item":{"@type":"Organization","name":"DNS.SB","url":"https://dns.sb/"}},{"@type":"ListItem","position":4,"item":{"@type":"Organization","name":"UncensoredDNS","url":"https://blog.uncensoreddns.org/"}},{"@type":"ListItem","position":5,"item":{"@type":"Organization","name":"Digitalcourage e. V.","url":"https://digitalcourage.de/support/zensurfreier-dns-server"}},{"@type":"ListItem","position":6,"item":{"@type":"Organization","name":"Digitale Gesellschaft","url":"https://www.digitale-gesellschaft.ch/dns/"}},{"@type":"ListItem","position":7,"item":{"@type":"Organization","name":"Artikel10 e. V.","url":"https://dns.artikel10.org/"}},{"@type":"ListItem","position":8,"item":{"@type":"Organization","name":"dnsforge.de","url":"https://dnsforge.de/"}},{"@type":"ListItem","position":9,"item":{"@type":"Organization","name":"Freifunk München","url":"https://dns-setup.ffmuc.net/"}},{"@type":"ListItem","position":10,"item":{"@type":"Organization","name":"RESTENA","url":"https://www.restena.lu/en/service/public-dns-resolver"}},{"@type":"ListItem","position":11,"item":{"@type":"Organization","name":"Applied Privacy","url":"https://applied-privacy.net/services/dns/"}},{"@type":"ListItem","position":12,"item":{"@type":"Organization","name":"LibreDNS","url":"https://libredns.gr/"}}]},{"@type":"FAQPage","@id":"https://dns.kaipfstr.de/#faq","inLanguage":"de","mainEntity":[{"@type":"Question","name":"Macht mich ein anderer DNS-Server anonym?","acceptedAnswer":{"@type":"Answer","text":"Nein. Er verlagert die Sichtbarkeit vom Zugangsanbieter zum neuen Resolver. Die Ziel-IP-Adressen Ihrer Verbindungen und, ohne Encrypted Client Hello, der Servername im TLS-Handshake bleiben sichtbar. Anonymität ist ein anderes Problem und braucht andere Werkzeuge."}},{"@type":"Question","name":"DNSSEC oder verschlüsseltes DNS, was brauche ich?","acceptedAnswer":{"@type":"Answer","text":"Beides, denn sie lösen verschiedene Probleme. DNSSEC prüft, ob die Antwort echt ist. DoT, DoH und DoQ verbergen die Frage. RFC 4033 sagt zu DNSSEC ausdrücklich: „These extensions do not provide confidentiality.“"}},{"@type":"Question","name":"Warum funktioniert die IP-Adresse von Digitale Gesellschaft, Artikel10 oder Applied Privacy nicht in meinem Router?","acceptedAnswer":{"@type":"Answer","text":"Weil diese Dienste bewusst kein Klartext-DNS auf Port 53 anbieten. Die genannten Adressen antworten nur über DoT auf Port 853 oder DoH auf Port 443. Sie gehören in ein Feld für verschlüsseltes DNS, nicht in das gewöhnliche DNS-Feld."}},{"@type":"Question","name":"Ist ein selbst betriebener Resolver privater?","acceptedAnswer":{"@type":"Answer","text":"Teilweise. Bei echter Rekursion entfällt der zentrale Resolver, der alles sieht. Dafür laufen die Anfragen an Root-, TLD- und autoritative Server, und in einem sehr kleinen Netz sind sie leichter einer Person zuzuordnen. Der Gewinn liegt also in der Verteilung, nicht in der Unsichtbarkeit."}},{"@type":"Question","name":"Reicht es, DoH im Browser einzuschalten?","acceptedAnswer":{"@type":"Answer","text":"Für den Browser ja, für das Gerät nein. Alles andere, vom E-Mail-Programm bis zum Betriebssystem-Update, nutzt weiterhin den systemweit eingestellten Resolver. Wer das ganze Gerät schützen will, stellt DNS im Betriebssystem oder im Router ein."}},{"@type":"Question","name":"Warum steht Mullvad hier als Warnung und nicht als Empfehlung?","acceptedAnswer":{"@type":"Answer","text":"Weil der öffentliche verschlüsselte DNS-Dienst am 2. November 2026 abgeschaltet wird. Das hat Mullvad am 3. September 2026 selbst angekündigt. Eine Adresse zu empfehlen, die in wenigen Wochen nicht mehr antwortet, wäre keine Hilfe."}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Zum Inhalt springen</a>
 <header class="top"><div class="wrap">
-<p class="eyebrow">dns.kaipfstr.de</p>
+<p class="eyebrow"><a href="https://dns.kaipfstr.de/">dns.kaipfstr.de</a></p>
 <h1>Sichere DNS-Server</h1>
 <p class="lede">Welchen Namensauflöser Sie benutzen, entscheidet, wer mitliest.</p>
+<nav class="sitenav" aria-label="Seiten"><ul>
+<li><a href="https://dns.kaipfstr.de/" aria-current="page">Anbieter</a></li>
+<li><a href="https://dns.kaipfstr.de/pruefen/">Selbst prüfen</a></li>
+<li><a href="https://dns.kaipfstr.de/glossar/">Glossar</a></li>
+</ul></nav>
 <p class="meta"><a class="langswitch" href="https://dns.kaipfstr.de/en/" hreflang="en" lang="en">English version</a><span>Stand: 6. September 2026</span></p>
 </div></header>
 <main id="main"><div class="wrap">
@@ -169,6 +209,7 @@ footer a{color:var(--accent-ink)}
 <li><a href="#auswahl">Woran man einen guten Anbieter erkennt</a></li>
 <li><a href="#anbieter">Die Anbieter im Einzelnen</a></li>
 <li><a href="#warnung">Nicht mehr verwenden</a></li>
+<li><a href="#nichtgelistet">Geprüft, aber nicht aufgenommen</a></li>
 <li><a href="#kommerziell">Die großen kommerziellen Dienste</a></li>
 <li><a href="#selbst">Selbst betreiben</a></li>
 <li><a href="#einrichten">Einrichten</a></li>
@@ -210,7 +251,7 @@ footer a{color:var(--accent-ink)}
 <article class="card"><h3>DNS over QUIC <span class="tag">DoQ</span> <span class="tag">RFC 9250</span></h3>
 <p class="srcnote">UDP 853</p>
 <p>Der jüngste der drei verschlüsselten Transporte, standardisiert im Mai 2022. RFC 9250 beschreibt den Vorteil so: „<span lang="en">The encryption provided by QUIC has similar properties to those provided by TLS, while QUIC transport eliminates the head-of-line blocking issues inherent with TCP and provides more efficient packet-loss recovery than UDP.</span>“</p>
-<p>In der Praxis heißt das: gleiche Vertraulichkeit wie DoT, aber schnellerer Verbindungsaufbau und weniger Verzögerung bei Paketverlust. Quad9 und UncensoredDNS haben DoQ ausdrücklich angekündigt; dnsforge.de, Freifunk München und AdGuard DNS nennen ebenfalls DoQ-Endpunkte.</p>
+<p>In der Praxis heißt das: gleiche Vertraulichkeit wie DoT, aber schnellerer Verbindungsaufbau und weniger Verzögerung bei Paketverlust. Quad9 beantwortete DoQ-Abfragen im Test zuverlässig. UncensoredDNS, dnsforge.de und Freifunk München kündigen DoQ ebenfalls an; bei UncensoredDNS blieb eine echte Abfrage im Test allerdings unbeantwortet.</p>
 </article>
 <article class="card"><h3>Signaturen, keine Verschlüsselung <span class="tag">DNSSEC</span> <span class="tag">RFC 4033, 4034, 4035</span></h3>
 <p class="srcnote">unabhängig vom Transport</p>
@@ -250,7 +291,7 @@ footer a{color:var(--accent-ink)}
 </section>
 <section id="anbieter"><h2>Die Anbieter im Einzelnen</h2>
 <h3>Überblick</h3>
-<div class="tablewrap" tabindex="0" role="region" aria-label="Überblick"><table><caption>Die elf geprüften Resolver im Überblick</caption><thead><tr><th scope="col">Dienst</th><th scope="col">Trägerschaft</th><th scope="col">Sitz</th><th scope="col">Ungefilterte Adresse</th><th scope="col">Klartext-DNS</th></tr></thead><tbody><tr><th scope="row"><a href="#p-quad9">Quad9</a></th><td>Gemeinnützige Stiftung</td><td>CH</td><td class="no">mit Vorbehalt</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-dns4eu">DNS4EU</a></th><td>Privatwirtschaftliches Unternehmen, hervorgegangen aus einem EU-kofinanzierten Projekt</td><td>CZ</td><td class="no">mit Vorbehalt</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-dnssb">DNS.SB</a></th><td>Privatwirtschaftliches Unternehmen</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-uncensoreddns">UncensoredDNS</a></th><td>Privatperson, unentgeltlich betrieben</td><td>DK</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-digitalcourage">Digitalcourage e. V.</a></th><td>Gemeinnütziger eingetragener Verein</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-digiges">Digitale Gesellschaft</a></th><td>Gemeinnütziger Verein</td><td>CH</td><td class="yes">ja</td><td class="no">nein</td></tr><tr><th scope="row"><a href="#p-artikel10">Artikel10 e. V.</a></th><td>Eingetragener Verein</td><td>DE</td><td class="yes">ja</td><td class="no">nein</td></tr><tr><th scope="row"><a href="#p-dnsforge">dnsforge.de</a></th><td>Privates Projekt, spendenfinanziert</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-ffmuc">Freifunk München</a></th><td>Eingetragener Verein</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-restena">RESTENA</a></th><td>Stiftung, nationales Forschungs- und Bildungsnetz Luxemburgs</td><td>LU</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-appliedprivacy">Applied Privacy</a></th><td>Gemeinnütziger Verein</td><td>AT</td><td class="yes">ja</td><td class="no">nein</td></tr></tbody></table></div><p class="srcnote">„Mit Vorbehalt“ heißt: Es gibt eine Adresse ohne Inhaltsfilter, aber der Betreiber setzt gerichtlich oder gesetzlich angeordnete Sperren auch dort um. Die Einzelheiten stehen in der jeweiligen Karte. „Klartext-DNS“ meint, ob der Dienst auf Port 53 unverschlüsselt antwortet; wo nicht, ist er nur über DoT oder DoH nutzbar.</p>
+<div class="tablewrap" tabindex="0" role="region" aria-label="Überblick"><table><caption>Die elf geprüften Resolver im Überblick</caption><thead><tr><th scope="col">Dienst</th><th scope="col">Trägerschaft</th><th scope="col">Sitz</th><th scope="col">DNSSEC</th><th scope="col">Ungefiltert</th><th scope="col">Klartext-DNS</th></tr></thead><tbody><tr><th scope="row"><a href="#p-quad9">Quad9</a></th><td>Gemeinnützige Stiftung</td><td>CH</td><td class="yes">ja</td><td class="no">mit Vorbehalt</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-dns4eu">DNS4EU</a></th><td>Privatwirtschaftliches Unternehmen, hervorgegangen aus einem EU-kofinanzierten Projekt</td><td>CZ</td><td class="yes">ja</td><td class="no">mit Vorbehalt</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-dnssb">DNS.SB</a></th><td>Privatwirtschaftliches Unternehmen</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-uncensoreddns">UncensoredDNS</a></th><td>Privatperson, unentgeltlich betrieben</td><td>DK</td><td class="yes">ja</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-digitalcourage">Digitalcourage e. V.</a></th><td>Gemeinnütziger eingetragener Verein</td><td>DE</td><td class="no">nur gemessen</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-digiges">Digitale Gesellschaft</a></th><td>Gemeinnütziger Verein</td><td>CH</td><td class="yes">ja</td><td class="yes">ja</td><td class="no">nein</td></tr><tr><th scope="row"><a href="#p-artikel10">Artikel10 e. V.</a></th><td>Eingetragener Verein</td><td>DE</td><td class="no">nur gemessen</td><td class="yes">ja</td><td class="no">nein</td></tr><tr><th scope="row"><a href="#p-dnsforge">dnsforge.de</a></th><td>Privates Projekt, spendenfinanziert</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-ffmuc">Freifunk München</a></th><td>Eingetragener Verein</td><td>DE</td><td class="yes">ja</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-restena">RESTENA</a></th><td>Stiftung, nationales Forschungs- und Bildungsnetz Luxemburgs</td><td>LU</td><td class="yes">ja</td><td class="yes">ja</td><td class="yes">ja</td></tr><tr><th scope="row"><a href="#p-appliedprivacy">Applied Privacy</a></th><td>Gemeinnütziger Verein</td><td>AT</td><td class="yes">ja</td><td class="yes">ja</td><td class="no">nein</td></tr><tr><th scope="row"><a href="#p-libredns">LibreDNS</a></th><td>Freiwilligenkollektiv ohne eigene Rechtsform</td><td>GR</td><td class="no">nein</td><td class="yes">ja</td><td class="no">nein</td></tr></tbody></table></div><p class="srcnote">„Mit Vorbehalt“ heißt: Es gibt eine Adresse ohne Inhaltsfilter, aber der Betreiber setzt gerichtlich oder gesetzlich angeordnete Sperren auch dort um. Die Einzelheiten stehen in der jeweiligen Karte. „Klartext-DNS“ meint, ob der Dienst auf Port 53 unverschlüsselt antwortet; wo nicht, ist er nur über DoT oder DoH nutzbar.</p>
 <article class="card" id="p-quad9">
 <h3>Quad9 <span class="tag">CH</span></h3>
 <dl class="facts">
@@ -402,7 +443,7 @@ footer a{color:var(--accent-ink)}
 <dt>Betreiber</dt><dd>Thomas Steen Rasmussen, Dänemark. Privatperson, keine Rechtsform.</dd>
 <dt>Trägerschaft</dt><dd>Privatperson, unentgeltlich betrieben</dd>
 <dt>DNSSEC</dt><dd>Validierend.</dd>
-<dt>DNS over QUIC</dt><dd>Ja. Der Betreiber kündigte am 23. Oktober 2025 volle QUIC-Unterstützung an: „Starting today UncensoredDNS fully supports QUIC based DNS lookups.“ Auf beiden Endpunkten wurde die QUIC-Kennung „doq“ am 6. September 2026 ausgehandelt.</dd>
+<dt>DNS over QUIC</dt><dd>Angekündigt, im Test aber ohne Antwort. Der Betreiber schrieb am 23. Oktober 2025: „Starting today UncensoredDNS fully supports QUIC based DNS lookups.“ Die QUIC-Kennung „doq“ wird tatsächlich ausgehandelt. Eine echte DoQ-Abfrage mit kdig blieb am 7. September 2026 von einem deutschen Anschluss aus jedoch dreimal unbeantwortet, während dieselbe Abfrage gegen Quad9 und AdGuard DNS funktionierte. Das ist ein Momentbefund von einem einzigen Anschluss, kein Beweis, dass der Dienst kein DoQ kann. DoT desselben Servers arbeitete einwandfrei.</dd>
 <dt>Filterung</dt><dd>Keine. Der Dienst existiert ausdrücklich als Gegenentwurf zur Filterung. Der Betreiber schreibt: „<span lang="en">I am strongly against using DNS as a tool to filter content on the internet.</span>“</dd>
 <dt>Protokollierung</dt><dd>Die FAQ sagt: „<span lang="en">Absolutely nothing is being logged, neither about the users nor the usage of this service. I do keep graphs of the total number of queries, but no personally identifiable information is saved.</span>“</dd>
 </dl>
@@ -674,9 +715,49 @@ footer a{color:var(--accent-ink)}
 <li><a href="https://applied-privacy.net/services/dns/" rel="noopener nofollow">Foundation for Applied Privacy: DNS Privacy Services</a></li>
 <li><a href="https://applied-privacy.net/privacy-policy/" rel="noopener nofollow">Foundation for Applied Privacy: Privacy Policy</a></li>
 </ul></article>
+<article class="card" id="p-libredns">
+<h3>LibreDNS <span class="tag">GR</span></h3>
+<dl class="facts">
+<dt>Betreiber</dt><dd>LibreOps, ein Kollektiv namentlich benannter Freiwilliger aus Griechenland. Server bei Hetzner in Nürnberg.</dd>
+<dt>Trägerschaft</dt><dd>Freiwilligenkollektiv ohne eigene Rechtsform</dd>
+<dt>DNSSEC</dt><dd>Nein, und das ist der wichtigste Punkt bei diesem Dienst. LibreDNS validiert nicht. Die eigene Dokumentation vermerkt bei allen DNS-Stamps „<span lang="en">DNSSEC: no</span>“, die veröffentlichte Konfiguration setzt „<span lang="en">dnssec=process-no-validate</span>“, und eine Messung am 7. September 2026 bestätigte es: Die absichtlich fehlerhaft signierten Testdomains wurden normal beantwortet, während ein validierender Resolver sie ablehnte.</dd>
+<dt>DNS over QUIC</dt><dd>Nicht dokumentiert.</dd>
+<dt>Filterung</dt><dd>Zwei getrennte Rekursoren. Der Standardendpunkt filtert nicht. Der zweite Endpunkt blockt Werbung und Tracker anhand der öffentlichen Liste von StevenBlack.</dd>
+<dt>Protokollierung</dt><dd>Die Website sagt: „<span lang="en">We keep no logs. Logs are disabled for our DNS daemon.</span>“ Anders als bei allen anderen Diensten dieser Liste lässt sich das gegenprüfen: Die vollständige Konfiguration liegt öffentlich, und dort ist die Zugriffsprotokollierung des Webservers abgeschaltet und der Resolver auf „quiet“ gesetzt.</dd>
+</dl>
+<h4>Endpunkte</h4>
+<div class="ep"><p class="epname">Nur verschlüsselt, ohne Filter</p><dl>
+<dt>IPv4</dt><dd><code>116.202.176.26</code></dd>
+<dt>IPv6</dt><dd><code>2a01:4f8:1c0c:8274::1</code></dd>
+<dt>DoH</dt><dd><code>https://doh.libredns.gr/dns-query</code></dd>
+<dt>DoT</dt><dd><code>dot.libredns.gr</code></dd>
+</dl></div>
+<div class="ep"><p class="epname">Nur verschlüsselt, mit Werbefilter</p><dl>
+<dt>DoH</dt><dd><code>https://doh.libredns.gr/noads</code></dd>
+<dt>DoT</dt><dd><code>noads.libredns.gr</code></dd>
+</dl></div>
+<h4>Wofür er spricht</h4><ul class="pro">
+<li>Die vollständige Betriebskonfiguration liegt offen. Die No-Log-Zusage lässt sich dadurch technisch nachvollziehen, statt sie nur zu glauben. Das bietet sonst kein Dienst auf dieser Seite.</li>
+<li>Die Betreiber sind namentlich benannt, nicht anonym und nicht hinter einer Briefkastenfirma.</li>
+<li>Finanzierung ausschließlich über Spenden, mit öffentlich einsehbarem Kassenbuch bei Open Collective. Keine Tarife, keine Werbung, kein Datengeschäft.</li>
+<li>Server in Deutschland und damit im EU-Rechtsraum, obwohl das Kollektiv aus Griechenland kommt.</li>
+</ul>
+<h4>Was dagegen spricht</h4><ul class="con">
+<li>Keine DNSSEC-Validierung. Wer LibreDNS benutzt, ist gegen gefälschte DNS-Antworten oberhalb des Resolvers nicht geschützt. Für eine Seite über sichere Namensauflösung ist das der schwerste Einwand gegen diesen Dienst, und er wiegt schwerer als die vorbildliche Transparenz.</li>
+<li>Ein einziger Server an einem einzigen Standort. Kein Anycast, keine geografische Redundanz, kein Ersatzziel.</li>
+<li>Kein Klartext-DNS auf Port 53. Der Dienst ist nur über DoH und DoT erreichbar.</li>
+<li>Kein Rechtsträger. Das Kollektiv nutzt Open Collective Europe als Zahlstelle für Spenden; das macht die Stiftung aber nicht zur Betreiberin und begründet keine Haftung für den Dienst.</li>
+<li>Nur zwei DoH-Endpunkte und zwei DoT-Namen stehen auf der Website selbst. Weitere Varianten kursieren im Projektwiki und in Apple-Konfigurationsprofilen.</li>
+</ul>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://libredns.gr/" rel="noopener nofollow">LibreDNS: Endpunkte und Datenschutzaussage</a></li>
+<li><a href="https://libreops.cc/about/" rel="noopener nofollow">LibreOps: das Kollektiv dahinter</a></li>
+<li><a href="https://gitlab.com/libreops/libredns/libredns-cfg" rel="noopener nofollow">LibreDNS: vollständige Betriebskonfiguration</a></li>
+<li><a href="https://opencollective.com/libreops" rel="noopener nofollow">LibreOps bei Open Collective: offenes Kassenbuch</a></li>
+</ul></article>
 </section>
 <section id="warnung"><h2>Nicht mehr verwenden</h2>
-<article class="card stop" id="p-mullvad"><h3>Mullvad Encrypted DNS <span class="tag">Abschaltung am 2. November 2026</span></h3>
+<article class="card warn" id="p-mullvad"><h3>Mullvad Encrypted DNS <span class="tag">Abschaltung am 2. November 2026</span></h3>
 <p>Mullvad hat am 3. September 2026 angekündigt, den öffentlichen verschlüsselten DNS-Dienst einzustellen und stattdessen Quad9 finanziell zu unterstützen. Der Blogbeitrag trägt den Titel „<span lang="en">Shutting down our public encrypted DNS servers and sponsoring Quad9 instead</span>“ und nennt als Datum der Abschaltung den 2. November 2026.</p>
 <p>Wer die Adressen 194.242.2.2 bis 194.242.2.9 oder die Hostnamen unter dns.mullvad.net eingetragen hat, sollte jetzt wechseln, nicht erst im November. Der Dienst wird hier nicht mehr empfohlen, sondern nur noch dokumentiert, damit niemand eine Adresse konfiguriert, die in wenigen Wochen nicht mehr antwortet.</p>
 <p>Zwei Einschränkungen zur Genauigkeit. Erstens spricht der Blogbeitrag ausdrücklich von den öffentlichen DoH-Servern. Ob die standortfesten Einzelserver und die in das VPN eingebauten Resolver denselben Zeitplan haben, sagt er nicht. Zweitens hatte Quad9 das angekündigte Sponsoring am 6. September 2026 auf keiner eigenen Seite bestätigt. Die Ankündigung ist bislang einseitig.</p>
@@ -689,6 +770,24 @@ footer a{color:var(--accent-ink)}
 <p>Am 6. September 2026 antwortete keine der ehemaligen Adressen mehr, weder 193.110.81.0 noch 185.253.5.0 und auch keine der Varianten ZERO, KIDS oder OPEN. Wer diese Adressen noch eingetragen hat, sollte sie entfernen. Nicht nur, weil sie ausgefallen sind, sondern weil IP-Bereiche später neu vergeben werden können.</p>
 <h4>Belege</h4><ul class="src">
 <li><a href="https://web.archive.org/web/20251018114400/https://www.dns0.eu/" rel="noopener nofollow">Internet Archive: dns0.eu mit Abschaltungshinweis, 18.10.2025</a></li>
+</ul></article>
+<article class="card stop" id="p-ahadns"><h3>AhaDNS <span class="tag">Praktisch eingestellt</span></h3>
+<p>AhaDNS wird in vielen Listen weiterhin als datenschutzfreundliche Alternative geführt. Am 7. September 2026 antwortete kein einziger der zehn auf der eigenen Website dokumentierten Standorte mehr.</p>
+<p>Von den zehn angegebenen Endpunkten existieren acht nicht einmal mehr als Namenseintrag; die autoritative Abfrage liefert für sie NXDOMAIN. Die verbleibenden zwei, die Standorte Niederlande und Los Angeles, lösen zwar noch auf, nehmen aber keine Verbindung mehr an: Der eine antwortet auf keinem Port, der andere weist die Ports 53, 443 und 853 aktiv zurück.</p>
+<p>Die Website nennt die Adressen unverändert weiter. Eine Abschaltungsmeldung gibt es nicht. Wer die Adressen eingetragen hat, sollte sie entfernen.</p>
+<h4>Belege</h4><ul class="src">
+<li><a href="https://ahadns.com/dns-over-tls/" rel="noopener nofollow">AhaDNS: die weiterhin genannten DoT-Endpunkte</a></li>
+<li><a href="https://ahadns.com/dns-over-https/" rel="noopener nofollow">AhaDNS: die weiterhin genannten DoH-Endpunkte</a></li>
+</ul></article>
+</section>
+<section id="nichtgelistet"><h2>Geprüft, aber nicht aufgenommen</h2>
+<p>Ein Verzeichnis, das nur zeigt, was es empfiehlt, verschweigt die Hälfte der Arbeit. Dieser Abschnitt nennt Dienste, die geprüft und aus einem benennbaren Grund nicht aufgenommen wurden.</p>
+<article class="card"><h3>CIRA Canadian Shield <span class="tag">Vertraglich auf Kanada beschränkt</span></h3>
+<p>Fachlich wäre dieser Dienst ein Vorbild. Betreiberin ist die Canadian Internet Registration Authority, eine gemeinnützige Körperschaft nach kanadischem Bundesrecht, die zugleich die Landesdomain .ca führt. Der Dienst finanziert sich quer aus den Registrierungsgebühren, nennt eine ausdrückliche Aufbewahrungsgrenze von 24 Stunden, validiert DNSSEC nachweislich und bietet eine wirklich ungefilterte Variante.</p>
+<p>Er steht trotzdem nicht in der Liste. Die Nutzungsbedingungen verlangen eine Zusicherung: „<span lang="en">You represent and warrant that a) you are an individual resident of Canada</span>“. Wer den Dienst von Deutschland aus einträgt, gibt damit eine Erklärung ab, die nicht stimmt. Technisch erreichbar ist er, das ändert an der Rechtslage nichts. Dazu kommt: Es gibt keinen europäischen Standort, die Antwortzeit lag im Test bei rund 100 Millisekunden.</p>
+<p>Für Leserinnen und Leser mit Wohnsitz in Kanada ist er eine sehr gute Wahl. Für alle anderen wäre eine Empfehlung eine Aufforderung zum Vertragsbruch.</p>
+<ul class="src">
+<li><a href="https://www.cira.ca/en/canadian-shield/tandc/" rel="noopener nofollow">CIRA Canadian Shield: Nutzungsbedingungen</a></li>
 </ul></article>
 </section>
 <section id="kommerziell"><h2>Die großen kommerziellen Dienste</h2>
@@ -707,6 +806,21 @@ footer a{color:var(--accent-ink)}
 <dl class="facts"><dt>Adressen</dt><dd>94.140.14.14 gefiltert, 94.140.14.140 ungefiltert</dd></dl>
 <p>AdGuard Software Limited mit Sitz in Limassol, Zypern. Der Dienst bietet gefilterte und ungefilterte Adressen sowie DoH, DoT, DoQ und DNSCrypt. Die verwendete Filterliste liegt als öffentliches Repository mit offenem Fehlerregister vor, Fehlklassifikationen sind also nachvollziehbar meldbar.</p>
 <ul class="src"><li><a href="https://adguard-dns.io/en/public-dns.html" rel="noopener nofollow">AdGuard DNS: Public DNS</a></li></ul>
+</article>
+<article class="card"><h3>Cisco OpenDNS</h3>
+<dl class="facts"><dt>Adressen</dt><dd>208.67.222.222 und 208.67.220.220, FamilyShield 208.67.222.123 und 208.67.220.123</dd></dl>
+<p>Cisco Systems, Inc., börsennotierter US-Konzern. Der freie Dienst ist der Einstieg in das kostenpflichtige Cisco Umbrella. Bemerkenswert ist, was fehlt: Eine eigene Datenschutzerklärung für den DNS-Dienst gibt es nicht mehr, die frühere Adresse zeigt nur noch die allgemeine Cisco-Erklärung. Damit fehlen eine No-Log-Zusage und jede veröffentlichte Aufbewahrungsfrist für Abfragedaten. DNSSEC wird validiert. In Frankreich und Portugal hat Cisco den Dienst nach Gerichtsentscheidungen nicht gefiltert, sondern landesweit ganz abgeschaltet.</p>
+<ul class="src"><li><a href="https://www.opendns.com/setupguide/" rel="noopener nofollow">OpenDNS: Einrichtung und Adressen</a></li></ul>
+</article>
+<article class="card"><h3>NextDNS</h3>
+<dl class="facts"><dt>Adressen</dt><dd>Konto erforderlich; die Adressen hängen an der eigenen Konfigurations-ID</dd></dl>
+<p>NextDNS Inc., Delaware, USA. Der Dienst ist kein fertiger Resolver, sondern ein Baukasten: Filterlisten, Sperrzeiten und Protokollierung stellt man selbst ein. Die Datenschutzerklärung sagt wörtlich: „<span lang="en">If not specifically requested by the user, no data is logged.</span>“ Wer Auswertungen möchte, schaltet die Protokollierung selbst ein und wählt Aufbewahrungsdauer und Region. Gegen den Dienst spricht die Trägerschaft: eine gewinnorientierte US-Gesellschaft ohne Transparenzbericht, ohne unabhängiges Audit und mit einer Datenschutzerklärung ohne Datum und ohne Versionsverlauf. Auch bei europäischer Log-Region bleibt der Betreiber ein US-Unternehmen.</p>
+<ul class="src"><li><a href="https://nextdns.io/privacy" rel="noopener nofollow">NextDNS: Datenschutzerklärung</a></li></ul>
+</article>
+<article class="card"><h3>Control D</h3>
+<dl class="facts"><dt>Adressen</dt><dd>Kostenlose Profile: 76.76.2.0 ungefiltert, 76.76.2.1 Malware, 76.76.2.2 Werbung und Tracker</dd></dl>
+<p>Control D bietet ohne Konto mehrere feste Profile mit eigenen Adressen und DoH-Pfaden, darunter ein ungefiltertes. Das Unternehmen unterhält ein öffentliches Compliance-Portal mit herunterladbaren Prüfberichten nach SOC 2 und ISO 27001, was unter den hier genannten Diensten ungewöhnlich ist. Die Kehrseite steht im selben Portal: „<span lang="en">If Analytics is enabled, we log DNS queries and metadata (e.g. source IP, hostname, MAC address).</span>“ Ob die Auswertung im Auslieferungszustand aus ist, sagt die Dokumentation nicht.</p>
+<ul class="src"><li><a href="https://controld.com/free-dns" rel="noopener nofollow">Control D: kostenlose Profile</a></li></ul>
 </article>
 </section>
 <section id="selbst"><h2>Selbst betreiben</h2>
@@ -833,11 +947,20 @@ footer a{color:var(--accent-ink)}
 <li><a href="https://www.restena.lu/" rel="noopener nofollow">Fondation Restena: Website</a></li>
 <li><a href="https://applied-privacy.net/services/dns/" rel="noopener nofollow">Foundation for Applied Privacy: DNS Privacy Services</a></li>
 <li><a href="https://applied-privacy.net/privacy-policy/" rel="noopener nofollow">Foundation for Applied Privacy: Privacy Policy</a></li>
+<li><a href="https://libredns.gr/" rel="noopener nofollow">LibreDNS: Endpunkte und Datenschutzaussage</a></li>
+<li><a href="https://libreops.cc/about/" rel="noopener nofollow">LibreOps: das Kollektiv dahinter</a></li>
+<li><a href="https://gitlab.com/libreops/libredns/libredns-cfg" rel="noopener nofollow">LibreDNS: vollständige Betriebskonfiguration</a></li>
+<li><a href="https://opencollective.com/libreops" rel="noopener nofollow">LibreOps bei Open Collective: offenes Kassenbuch</a></li>
 <li><a href="https://mullvad.net/en/blog/shutting-down-our-public-encrypted-dns-servers-and-sponsoring-quad9-instead" rel="noopener nofollow">Mullvad: Shutting down our public encrypted DNS servers, 03.09.2026</a></li>
 <li><a href="https://web.archive.org/web/20251018114400/https://www.dns0.eu/" rel="noopener nofollow">Internet Archive: dns0.eu mit Abschaltungshinweis, 18.10.2025</a></li>
+<li><a href="https://ahadns.com/dns-over-tls/" rel="noopener nofollow">AhaDNS: die weiterhin genannten DoT-Endpunkte</a></li>
+<li><a href="https://ahadns.com/dns-over-https/" rel="noopener nofollow">AhaDNS: die weiterhin genannten DoH-Endpunkte</a></li>
 <li><a href="https://developers.cloudflare.com/1.1.1.1/privacy/public-dns-resolver/" rel="noopener nofollow">Cloudflare: Public DNS Resolver Privacy</a></li>
 <li><a href="https://developers.google.com/speed/public-dns/privacy" rel="noopener nofollow">Google Public DNS: Privacy</a></li>
 <li><a href="https://adguard-dns.io/en/public-dns.html" rel="noopener nofollow">AdGuard DNS: Public DNS</a></li>
+<li><a href="https://www.opendns.com/setupguide/" rel="noopener nofollow">OpenDNS: Einrichtung und Adressen</a></li>
+<li><a href="https://nextdns.io/privacy" rel="noopener nofollow">NextDNS: Datenschutzerklärung</a></li>
+<li><a href="https://controld.com/free-dns" rel="noopener nofollow">Control D: kostenlose Profile</a></li>
 <li><a href="https://nlnetlabs.nl/projects/unbound/about/" rel="noopener nofollow">NLnet Labs: Unbound</a></li>
 <li><a href="https://www.knot-resolver.cz/" rel="noopener nofollow">CZ.NIC: Knot Resolver</a></li>
 <li><a href="https://docs.pi-hole.net/guides/dns/unbound/" rel="noopener nofollow">Pi-hole: Unbound als rekursiver Upstream</a></li>

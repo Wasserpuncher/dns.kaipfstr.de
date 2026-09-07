@@ -17,14 +17,66 @@ import re
 import content as C
 
 BASE = C.DOMAIN
-OUT_DE = "index.html"
-OUT_EN = os.path.join("en", "index.html")
-URL_DE = BASE + "/"
-URL_EN = BASE + "/en/"
+
+# Jede Seite existiert in beiden Sprachen unter einer eigenen, sprechenden URL.
+# Deutsch liegt auf der obersten Ebene, Englisch unter /en/. Beide Fassungen
+# verweisen wechselseitig per hreflang aufeinander und tragen ein eigenes
+# canonical, damit Suchmaschinen sie getrennt indexieren.
+PAGES = ["index", "verify", "glossary"]
+SLUGS = {
+    "index": {"de": "", "en": ""},
+    "verify": {"de": "pruefen", "en": "verify"},
+    "glossary": {"de": "glossar", "en": "glossary"},
+}
+
+
+def page_url(page, lang):
+    slug = SLUGS[page][lang]
+    prefix = "" if lang == "de" else "en/"
+    tail = (slug + "/") if slug else ""
+    return BASE + "/" + prefix + tail
+
+
+def page_path(page, lang):
+    slug = SLUGS[page][lang]
+    parts = ([] if lang == "de" else ["en"]) + ([slug] if slug else []) + ["index.html"]
+    return os.path.join(*parts)
+
+
+URL_DE = page_url("index", "de")
+URL_EN = page_url("index", "en")
 
 T = {
     "de": {
         "lang": "de", "locale": "de_DE", "other_locale": "en_GB",
+        "skip": "Zum Inhalt springen",
+        "nav_site": "Seiten",
+        "pages": {
+            "index": {
+                "nav": "Anbieter",
+                "h1": "Sichere DNS-Server",
+                "lede": "Welchen Namensauflöser Sie benutzen, entscheidet, wer mitliest.",
+                "title": "Sichere DNS-Server: geprüfte Anbieter und Selbsthosting",
+                "desc": ("Öffentliche DNS-Resolver und Wege zum Selbsthosten, an der Primärquelle "
+                         "geprüft: Adressen, Trägerschaft, Einschränkungen."),
+            },
+            "verify": {
+                "nav": "Selbst prüfen",
+                "h1": "Selbst prüfen",
+                "lede": "Vertrauen ist gut. Ein Terminal ist besser.",
+                "title": "DNS selbst prüfen: DNSSEC, DoT, DoH und ECS auf der Kommandozeile",
+                "desc": ("Mit welchen Befehlen Sie nachmessen, ob Ihr Resolver wirklich DNSSEC "
+                         "validiert, verschlüsselt antwortet und Ihre Adresse nicht weitergibt."),
+            },
+            "glossary": {
+                "nav": "Glossar",
+                "h1": "Glossar",
+                "lede": "Die Begriffe, die in jeder Anleitung vorkommen und selten erklärt werden.",
+                "title": "DNS-Glossar: die Fachbegriffe knapp und belegt erklärt",
+                "desc": ("Von Stub-Resolver bis Encrypted Client Hello: kurze, mit RFCs belegte "
+                         "Definitionen und die häufigsten Missverständnisse."),
+            },
+        },
         "title": "Sichere DNS-Server: geprüfte Anbieter und Selbsthosting",
         "brand": "Sichere DNS-Server",
         "desc": ("Elf öffentliche DNS-Resolver und sechs Wege zum Selbsthosten, am 6. September 2026 "
@@ -35,6 +87,7 @@ T = {
         "toc": [("was", "Was DNS verrät"), ("grenzen", "Was verschlüsseltes DNS nicht leistet"),
                 ("protokolle", "Die Protokolle"), ("auswahl", "Woran man einen guten Anbieter erkennt"),
                 ("anbieter", "Die Anbieter im Einzelnen"), ("warnung", "Nicht mehr verwenden"),
+                ("nichtgelistet", "Geprüft, aber nicht aufgenommen"),
                 ("kommerziell", "Die großen kommerziellen Dienste"), ("selbst", "Selbst betreiben"),
                 ("einrichten", "Einrichten"), ("recht", "Rechtlicher Rahmen in Deutschland"),
                 ("faq", "Häufige Fragen"), ("methode", "Wie diese Seite geprüft wurde"),
@@ -45,6 +98,7 @@ T = {
         "h_auswahl": "Woran man einen guten Anbieter erkennt",
         "h_anbieter": "Die Anbieter im Einzelnen",
         "h_warnung": "Nicht mehr verwenden",
+        "h_nichtgelistet": "Geprüft, aber nicht aufgenommen",
         "h_kommerziell": "Die großen kommerziellen Dienste",
         "h_selbst": "Selbst betreiben",
         "h_einrichten": "Einrichten",
@@ -52,6 +106,7 @@ T = {
         "h_faq": "Häufige Fragen",
         "h_methode": "Wie diese Seite geprüft wurde",
         "h_quellen": "Quellen",
+        "h_testdomains": "Warum die Testdomains keine Webseite haben",
         "l_operator": "Betreiber", "l_carrier": "Trägerschaft", "l_endpoints": "Endpunkte",
         "l_doq": "DNS over QUIC", "l_dnssec": "DNSSEC", "l_filter": "Filterung",
         "l_logging": "Protokollierung", "l_strengths": "Wofür er spricht",
@@ -62,8 +117,8 @@ T = {
         "overview": "Überblick",
         "table_caption": "Die elf geprüften Resolver im Überblick",
         "th_name": "Dienst", "th_carrier": "Trägerschaft", "th_country": "Sitz",
-        "th_filter": "Ungefilterte Adresse", "th_plain": "Klartext-DNS",
-        "yes": "ja", "no": "nein", "limited": "mit Vorbehalt",
+        "th_dnssec": "DNSSEC", "th_filter": "Ungefiltert", "th_plain": "Klartext-DNS",
+        "yes": "ja", "no": "nein", "limited": "mit Vorbehalt", "measured": "nur gemessen",
         "table_note": ("„Mit Vorbehalt“ heißt: Es gibt eine Adresse ohne Inhaltsfilter, aber der Betreiber setzt "
                        "gerichtlich oder gesetzlich angeordnete Sperren auch dort um. Die Einzelheiten stehen in "
                        "der jeweiligen Karte. „Klartext-DNS“ meint, ob der Dienst auf Port 53 unverschlüsselt "
@@ -72,10 +127,41 @@ T = {
         "footer_note": ("Diese Seite ist eine technische Darstellung und keine Rechtsberatung. Sie führt kein Skript aus, "
                         "setzt kein Cookie und lädt nichts von fremden Servern."),
         "src_intro": "Alle Quellen wurden am 6. September 2026 abgerufen.",
+        "verify_src": "Die Normtexte und Testdienste, auf die sich dieser Abschnitt stützt.",
+        "glossary_src": "Jede oben genannte Norm im Volltext beim RFC Editor.",
+        "pitfall": "Häufiges Missverständnis:",
         "source_link": "Quelltext auf GitHub",
     },
     "en": {
         "lang": "en", "locale": "en_GB", "other_locale": "de_DE",
+        "skip": "Skip to content",
+        "nav_site": "Pages",
+        "pages": {
+            "index": {
+                "nav": "Providers",
+                "h1": "Secure DNS servers",
+                "lede": "Which resolver you use decides who gets to read every name you look up.",
+                "title": "Secure DNS servers: verified providers and self-hosting",
+                "desc": ("Public DNS resolvers and ways to self-host, checked against the primary "
+                         "source: addresses, who runs them, caveats."),
+            },
+            "verify": {
+                "nav": "Verify it yourself",
+                "h1": "Verify it yourself",
+                "lede": "Trust is good. A terminal is better.",
+                "title": "Verify DNS yourself: DNSSEC, DoT, DoH and ECS from the command line",
+                "desc": ("The commands that show whether your resolver really validates DNSSEC, "
+                         "answers over an encrypted transport and withholds your address."),
+            },
+            "glossary": {
+                "nav": "Glossary",
+                "h1": "Glossary",
+                "lede": "The terms every guide uses and few of them explain.",
+                "title": "DNS glossary: the technical terms, briefly and with sources",
+                "desc": ("From stub resolver to Encrypted Client Hello: short definitions backed by "
+                         "RFCs, plus the most common misconceptions."),
+            },
+        },
         "title": "Secure DNS servers: verified providers and self-hosting",
         "brand": "Secure DNS servers",
         "desc": ("Eleven public DNS resolvers and six ways to self-host, checked against the primary "
@@ -86,6 +172,7 @@ T = {
         "toc": [("was", "What DNS reveals"), ("grenzen", "What encrypted DNS does not do"),
                 ("protokolle", "The protocols"), ("auswahl", "How to recognise a good provider"),
                 ("anbieter", "The providers in detail"), ("warnung", "Do not use these any more"),
+                ("nichtgelistet", "Checked, but not included"),
                 ("kommerziell", "The large commercial services"), ("selbst", "Running your own"),
                 ("einrichten", "Setting it up"), ("recht", "The legal framework in Germany"),
                 ("faq", "Frequently asked questions"), ("methode", "How this page was checked"),
@@ -96,6 +183,7 @@ T = {
         "h_auswahl": "How to recognise a good provider",
         "h_anbieter": "The providers in detail",
         "h_warnung": "Do not use these any more",
+        "h_nichtgelistet": "Checked, but not included",
         "h_kommerziell": "The large commercial services",
         "h_selbst": "Running your own",
         "h_einrichten": "Setting it up",
@@ -103,6 +191,7 @@ T = {
         "h_faq": "Frequently asked questions",
         "h_methode": "How this page was checked",
         "h_quellen": "Sources",
+        "h_testdomains": "Why the test domains have no website",
         "l_operator": "Operator", "l_carrier": "Legal form", "l_endpoints": "Endpoints",
         "l_doq": "DNS over QUIC", "l_dnssec": "DNSSEC", "l_filter": "Filtering",
         "l_logging": "Logging", "l_strengths": "What speaks for it",
@@ -113,8 +202,8 @@ T = {
         "overview": "Overview",
         "table_caption": "The eleven verified resolvers at a glance",
         "th_name": "Service", "th_carrier": "Legal form", "th_country": "Based in",
-        "th_filter": "Unfiltered address", "th_plain": "Plaintext DNS",
-        "yes": "yes", "no": "no", "limited": "with caveats",
+        "th_dnssec": "DNSSEC", "th_filter": "Unfiltered", "th_plain": "Plaintext DNS",
+        "yes": "yes", "no": "no", "limited": "with caveats", "measured": "measured only",
         "table_note": ("“With caveats” means there is an address without a content filter, but the operator also "
                        "implements court-ordered or statutory blocks on it. The details are in the respective card. "
                        "“Plaintext DNS” indicates whether the service answers unencrypted on port 53; where it does "
@@ -123,6 +212,9 @@ T = {
         "footer_note": ("This page is a technical description, not legal advice. It runs no script, sets no cookie "
                         "and loads nothing from third-party servers."),
         "src_intro": "All sources were retrieved on 6 September 2026.",
+        "verify_src": "The standards and test services this section relies on.",
+        "glossary_src": "Every standard named above, in full text at the RFC Editor.",
+        "pitfall": "Common misconception:",
         "source_link": "Source code on GitHub",
     },
 }
@@ -145,6 +237,21 @@ def src_title(entry, lang):
     url, de = entry[0], entry[1]
     en = entry[2] if len(entry) > 2 else de
     return url, (en if lang == "en" else de)
+
+
+def term_id(term):
+    """Stabiler Anker aus einem Begriff, ohne Sonderzeichen."""
+    s = term.lower()
+    for a, x in (("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")):
+        s = s.replace(a, x)
+    s = re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+    return s
+
+
+def para_html(text):
+    """Wie para(), aber fuer Texte, die absichtlich Auszeichnung enthalten."""
+    return "\n".join("<p>" + " ".join(block.split()) + "</p>"
+                     for block in re.split(r"\n\s*\n", text.strip()))
 
 
 def pick(d, key, lang):
@@ -263,6 +370,15 @@ header.top{background:var(--panel);border-bottom:1px solid var(--line);padding:3
 .lede{font-size:1.2rem;color:var(--muted);margin:0 0 1.5rem;max-width:40rem;font-style:italic}
 .meta{font-family:var(--sans);font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;
   gap:.55rem 1.1rem;align-items:center;margin:0}
+.sitenav{margin:1.6rem 0 1.3rem}
+.sitenav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
+.sitenav a{font-family:var(--sans);font-size:.9rem;font-weight:600;display:inline-block;
+  padding:.34rem .85rem;border:1px solid var(--line-strong);border-radius:8px;text-decoration:none;
+  background:var(--bg)}
+.sitenav a:hover,.sitenav a:focus-visible{border-color:var(--accent);color:var(--accent-ink)}
+.sitenav a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{text-decoration:underline}
 .langswitch{font-family:var(--sans);font-size:.85rem;font-weight:600;display:inline-block;
   border:1px solid var(--muted);border-radius:999px;padding:.3rem .9rem;text-decoration:none}
 .langswitch:hover{border-color:var(--accent);background:var(--panel)}
@@ -331,6 +447,32 @@ ul.src li{margin:0 0 .42rem;padding-left:1.1rem;text-indent:-1.1rem}
 
 blockquote{margin:1.3rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:3px solid var(--accent);
   color:var(--muted);font-style:italic}
+
+/* Pruefseite */
+.check{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:1.4rem 1.5rem;margin:1.4rem 0}
+.check h3{margin-top:0}
+.check .ask{font-style:italic;color:var(--muted);margin:0 0 1rem}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+  padding:.9rem 1rem;overflow-x:auto;margin:0 0 1.1rem;font-family:var(--mono);
+  font-size:.86rem;line-height:1.55;tab-size:2}
+pre code{background:none;border:0;padding:0;font-size:1em;word-break:normal;white-space:pre}
+.note{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .9rem;margin:1rem 0 0;
+  font-size:.95rem;color:var(--muted)}
+
+/* Glossar */
+.terms{margin:1.4rem 0}
+.term{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1rem 1.2rem;margin:.7rem 0}
+.term h3{margin:0 0 .4rem;font-size:1.05rem;display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+.term p{margin:0 0 .5rem}
+.term p:last-child{margin-bottom:0}
+.term .pit{font-size:.94rem;color:var(--muted);border-left:3px solid var(--warn-line);
+  padding-left:.8rem;margin-top:.6rem}
+.jump{font-family:var(--sans);font-size:.86rem;margin:1.2rem 0 2rem;line-height:2}
+.jump a{display:inline-block;border:1px solid var(--line-strong);border-radius:6px;
+  padding:.1rem .5rem;text-decoration:none;margin-right:.25rem}
+.jump a:hover{border-color:var(--accent)}
 
 footer{border-top:1px solid var(--line);margin-top:4.5rem;padding:2.4rem 0 3.5rem;
   font-family:var(--sans);font-size:.87rem;color:var(--muted)}
@@ -438,19 +580,24 @@ def overview_table(lang, t):
         cls = {"yes": "yes", "limited": "no", "no": "no"}[unf]
         label = {"yes": t["yes"], "limited": t["limited"], "no": t["no"]}[unf]
         plain = p["plain53"]
+        dcls = {"yes": "yes", "measured": "no", "no": "no"}[p["dnssec_ok"]]
+        dlabel = {"yes": t["yes"], "measured": t["measured"], "no": t["no"]}[p["dnssec_ok"]]
         rows.append(
             "<tr><th scope=\"row\"><a href=\"#p-%s\">%s</a></th><td>%s</td><td>%s</td>"
-            "<td class=\"%s\">%s</td><td class=\"%s\">%s</td></tr>" % (
+            "<td class=\"%s\">%s</td><td class=\"%s\">%s</td><td class=\"%s\">%s</td></tr>" % (
                 e(p["id"]), e(p["name"]), e(pick(p, "carrier", lang)), e(p["flag"]),
+                dcls, e(dlabel),
                 cls, e(label),
                 "yes" if plain else "no", t["yes"] if plain else t["no"]))
     return ('<div class="tablewrap" tabindex="0" role="region" aria-label="%s">' % e(t["overview"])
             + '<table><caption>%s</caption><thead><tr>'
             '<th scope="col">%s</th><th scope="col">%s</th><th scope="col">%s</th>'
-            '<th scope="col">%s</th><th scope="col">%s</th></tr></thead><tbody>%s</tbody></table></div>'
+            '<th scope="col">%s</th><th scope="col">%s</th><th scope="col">%s</th>'
+            '</tr></thead><tbody>%s</tbody></table></div>'
             '<p class="srcnote">%s</p>' % (
                 e(t["table_caption"]),
-                t["th_name"], t["th_carrier"], t["th_country"], t["th_filter"], t["th_plain"],
+                t["th_name"], t["th_carrier"], t["th_country"], t["th_dnssec"],
+                t["th_filter"], t["th_plain"],
                 "".join(rows), e(t["table_note"])))
 
 
@@ -512,24 +659,9 @@ company’s own declaration. That does not make them bad; it merely makes them a
 }
 
 
-def build_page(lang):
-    t = T[lang]
-    url = URL_DE if lang == "de" else URL_EN
+def body_index(lang, t):
     o = []
     A = o.append
-
-    A('<a class="skip" href="#main">%s</a>' % ("Zum Inhalt springen" if lang == "de" else "Skip to content"))
-    A('<header class="top"><div class="wrap">')
-    A('<p class="eyebrow">dns.kaipfstr.de</p>')
-    A("<h1>%s</h1>" % e(t["brand"]))
-    A('<p class="lede">%s</p>' % e(t["tagline"]))
-    A('<p class="meta"><a class="langswitch" href="%s" hreflang="%s" lang="%s">%s</a>'
-      "<span>%s: %s</span></p>" % (
-          e(t["switch_url"]), "en" if lang == "de" else "de", "en" if lang == "de" else "de",
-          e(t["switch"]), e(t["updated"]), e(t["updated_val"])))
-    A("</div></header>")
-
-    A('<main id="main"><div class="wrap">')
 
     A('<nav class="toc" aria-label="%s"><h2>%s</h2><ol>' % (e(t["nav"]), e(t["nav"])))
     for anchor, label in t["toc"]:
@@ -568,11 +700,25 @@ def build_page(lang):
 
     A('<section id="warnung"><h2>%s</h2>' % e(t["h_warnung"]))
     for d in C.DISCONTINUED:
-        A('<article class="card stop" id="p-%s"><h3>%s <span class="tag">%s</span></h3>' % (
+        A('<article class="card %s" id="p-%s"><h3>%s <span class="tag">%s</span></h3>' % (
+            d.get("severity", "stop"),
             e(d["id"]), e(d["name"]), e(d["state_en"] if lang == "en" else d["state"])))
         A(para(d["en"] if lang == "en" else d["de"]))
         A('<h4>%s</h4><ul class="src">' % t["l_sources"])
         for entry in d["sources"]:
+            u, ti = src_title(entry, lang)
+            A('<li><a href="%s" rel="noopener nofollow">%s</a></li>' % (e(u), e(ti)))
+        A("</ul></article>")
+    A("</section>")
+
+    A('<section id="nichtgelistet"><h2>%s</h2>' % e(t["h_nichtgelistet"]))
+    A(para(NOT_LISTED_INTRO[lang]))
+    for n in C.NOT_LISTED:
+        A('<article class="card"><h3>%s <span class="tag">%s</span></h3>' % (
+            e(n["name"]), e(pick(n, "reason", lang))))
+        A(para(n["en"] if lang == "en" else n["de"]))
+        A('<ul class="src">')
+        for entry in n["sources"]:
             u, ti = src_title(entry, lang)
             A('<li><a href="%s" rel="noopener nofollow">%s</a></li>' % (e(u), e(ti)))
         A("</ul></article>")
@@ -667,29 +813,221 @@ def build_page(lang):
         A('<li><a href="%s" rel="noopener nofollow">%s</a></li>' % (e(u), e(ti)))
     A("</ul></section>")
 
-    A("</div></main>")
+    return "\n".join(o)
 
+
+NOT_LISTED_INTRO = {
+    "de": """Ein Verzeichnis, das nur zeigt, was es empfiehlt, verschweigt die Hälfte der Arbeit. Dieser Abschnitt nennt
+Dienste, die geprüft und aus einem benennbaren Grund nicht aufgenommen wurden.""",
+    "en": """A directory that shows only what it recommends conceals half the work. This section names services that were
+checked and left out for a reason that can be stated.""",
+}
+
+
+VERIFY_INTRO = {
+    "de": """Jede Empfehlung auf dieser Seite beruht auf Aussagen der Betreiber und auf Messungen. Aussagen kann man
+zitieren, Messungen kann man wiederholen. Dieser Abschnitt zeigt, wie.
+
+Alle Befehle wurden am 7. September 2026 auf einem gewöhnlichen Linux-Rechner ausgeführt, und die beschriebenen
+Ausgaben sind das, was dabei tatsächlich herauskam. Wo eine Ausgabe abweichen kann, steht es dabei. Sie brauchen nichts
+als <code>dig</code>, <code>curl</code> und <code>openssl</code>; alle drei sind auf den meisten Systemen vorhanden.
+Unter Windows liefert das Windows-Subsystem für Linux dieselben Werkzeuge.
+
+Ein Hinweis vorweg, der die häufigste Fehlerquelle betrifft: Fragen Sie immer den Resolver direkt, mit <code>@</code>
+und seiner Adresse. Ohne <code>@</code> antwortet der lokale Dienst Ihres Betriebssystems, und dessen Antwort sagt über
+den eigentlichen Resolver wenig aus.""",
+    "en": """Every recommendation on this site rests on operator statements and on measurements. Statements can be quoted;
+measurements can be repeated. This section shows how.
+
+All commands were run on 7 September 2026 on an ordinary Linux machine, and the outputs described are what actually
+came back. Where output can differ, it says so. You need nothing but <code>dig</code>, <code>curl</code> and
+<code>openssl</code>; all three are present on most systems. On Windows, the Windows Subsystem for Linux provides the
+same tools.
+
+One note up front, because it is the most common source of error: always query the resolver directly, using
+<code>@</code> and its address. Without <code>@</code> you get an answer from your operating system's local service,
+and that answer says little about the resolver itself.""",
+}
+
+VERIFY_SOURCES = [
+    ("https://www.rfc-editor.org/rfc/rfc4035.txt", "RFC 4035, Protocol Modifications for the DNS Security Extensions"),
+    ("https://www.rfc-editor.org/rfc/rfc8914.txt", "RFC 8914, Extended DNS Errors"),
+    ("https://www.rfc-editor.org/rfc/rfc8484.txt", "RFC 8484, DNS Queries over HTTPS"),
+    ("https://www.rfc-editor.org/rfc/rfc7830.txt", "RFC 7830, The EDNS(0) Padding Option"),
+    ("https://www.rfc-editor.org/rfc/rfc9156.txt", "RFC 9156, DNS Query Name Minimisation to Improve Privacy"),
+    ("https://internet.nl/", "internet.nl: Betreiber des Tests auf QNAME-Minimierung",
+     "internet.nl: operator of the QNAME minimisation test"),
+    ("https://www.knot-dns.cz/docs/latest/html/man_kdig.html", "kdig: Handbuchseite", "kdig: manual page"),
+]
+
+TESTDOMAIN_NOTE = {
+    "de": """Ein Hinweis zu den Testdomains: <code>sigok.ippacket.stream</code>, <code>sigfail.ippacket.stream</code>,
+<code>dnssec-failed.org</code> und <code>qnamemintest.internet.nl</code> haben keine Webseite, die man aufrufen könnte.
+Sie existieren nur im DNS. Bei <code>dnssec-failed.org</code> ist das sogar zwingend: Wenn Ihr Resolver richtig
+arbeitet, kann er den Namen gar nicht auflösen, und dann lässt sich auch keine Seite öffnen. Das Ausbleiben der Seite
+ist hier der Beweis, nicht der Fehler.""",
+    "en": """A note on the test domains: <code>sigok.ippacket.stream</code>, <code>sigfail.ippacket.stream</code>,
+<code>dnssec-failed.org</code> and <code>qnamemintest.internet.nl</code> have no website you could visit. They exist
+only in the DNS. With <code>dnssec-failed.org</code> that is even necessary: if your resolver is doing its job it
+cannot resolve the name at all, so no page can open. Here the absence of the page is the proof, not the fault.""",
+}
+
+GLOSSARY_INTRO = {
+    "de": """Anleitungen zu DNS setzen ihre Begriffe gern als bekannt voraus. Diese Seite tut das nicht. Jeder Eintrag hier
+ist an der einschlägigen Norm geprüft, und wo ein Begriff regelmäßig missverstanden wird, steht das Missverständnis
+gleich daneben.
+
+Die Reihenfolge geht von den Grundlagen zu den Erweiterungen.""",
+    "en": """Guides about DNS like to assume their terms are understood. This page does not. Every entry here is checked
+against the relevant standard, and wherever a term is regularly misunderstood, the misunderstanding is noted right
+beside it.
+
+The order runs from the fundamentals to the extensions.""",
+}
+
+
+def body_verify(lang, t):
+    o = []
+    A = o.append
+    A(para_html(VERIFY_INTRO[lang]))
+    for gid, gde, gen, ide, ien in C.CHECK_GROUPS:
+        A('<section id="%s"><h2>%s</h2>' % (gid, e(gen if lang == "en" else gde)))
+        A("<p>%s</p>" % (ien if lang == "en" else ide))
+        for ch in C.CHECKS:
+            if ch["group"] != gid:
+                continue
+            A('<article class="check">')
+            A("<h3>%s</h3>" % e(pick(ch, "title", lang)))
+            A('<p class="ask">%s</p>' % e(pick(ch, "question", lang)))
+            A("<pre><code>%s</code></pre>" % e(ch["command"]))
+            A("<p>%s</p>" % pick(ch, "expected", lang))
+            note = pick(ch, "note", lang)
+            if note:
+                A('<p class="note">%s</p>' % note)
+            A("</article>")
+        A("</section>")
+    A('<section id="testdomains"><h2>%s</h2>' % e(t["h_testdomains"]))
+    A(para_html(TESTDOMAIN_NOTE[lang]))
+    A("</section>")
+    A('<section id="verify-sources"><h2>%s</h2>' % e(t["h_quellen"]))
+    A("<p>%s</p>" % e(t["verify_src"]))
+    A('<ul class="src">')
+    for entry in VERIFY_SOURCES:
+        u, ti = src_title(entry, lang)
+        A('<li><a href="%s" rel="noopener nofollow">%s</a></li>' % (e(u), e(ti)))
+    A("</ul></section>")
+    return "\n".join(o)
+
+
+def body_glossary(lang, t):
+    o = []
+    A = o.append
+    A(para(GLOSSARY_INTRO[lang]))
+    A('<nav class="jump" aria-label="%s">' % e(t["nav"]))
+    for g in C.GLOSSARY:
+        A('<a href="#t-%s">%s</a>' % (term_id(g["term"]), e(g["term"])))
+    A("</nav>")
+    for gid, gde, gen in C.GLOSSARY_GROUPS:
+        A('<section id="%s"><h2>%s</h2><div class="terms">' % (gid, e(gen if lang == "en" else gde)))
+        for g in C.GLOSSARY:
+            if g["group"] != gid:
+                continue
+            A('<article class="term" id="t-%s">' % term_id(g["term"]))
+            rfc = ('<span class="tag">%s</span>' % e(g["rfc"])) if g.get("rfc") else ""
+            A("<h3>%s %s</h3>" % (e(g["term"]), rfc))
+            A("<p>%s</p>" % e(pick(g, "short", lang)))
+            pit = pick(g, "pitfall", lang)
+            if pit:
+                A('<p class="pit"><strong>%s</strong> %s</p>' % (e(t["pitfall"]), e(pit)))
+            A("</article>")
+        A("</div></section>")
+
+    # Jede im Glossar genannte RFC-Nummer wird auch verlinkt, sonst waere die
+    # Angabe eine Behauptung ohne Beleg.
+    nums = []
+    for g in C.GLOSSARY:
+        for n in re.findall(r"\d{3,4}", g.get("rfc") or ""):
+            if n not in nums:
+                nums.append(n)
+    A('<section id="glossary-sources"><h2>%s</h2>' % e(t["h_quellen"]))
+    A("<p>%s</p>" % e(t["glossary_src"]))
+    A('<ul class="src">')
+    for n in sorted(nums, key=int):
+        A('<li><a href="https://www.rfc-editor.org/rfc/rfc%s.txt" rel="noopener nofollow">RFC %s</a></li>' % (n, n))
+    A("</ul></section>")
+    return "\n".join(o)
+
+
+def chrome(page, lang, t, inner):
+    """Kopf, Navigation und Fuss, fuer jede Seite gleich."""
+    other = "en" if lang == "de" else "de"
+    o = []
+    A = o.append
+    A('<a class="skip" href="#main">%s</a>' % e(t["skip"]))
+    A('<header class="top"><div class="wrap">')
+    A('<p class="eyebrow"><a href="%s">dns.kaipfstr.de</a></p>' % page_url("index", lang))
+    A("<h1>%s</h1>" % e(t["pages"][page]["h1"]))
+    A('<p class="lede">%s</p>' % e(t["pages"][page]["lede"]))
+    A('<nav class="sitenav" aria-label="%s"><ul>' % e(t["nav_site"]))
+    for p in PAGES:
+        cur = ' aria-current="page"' if p == page else ""
+        A('<li><a href="%s"%s>%s</a></li>' % (page_url(p, lang), cur, e(t["pages"][p]["nav"])))
+    A("</ul></nav>")
+    A('<p class="meta"><a class="langswitch" href="%s" hreflang="%s" lang="%s">%s</a>'
+      "<span>%s: %s</span></p>" % (
+          page_url(page, other), other, other, e(t["switch"]), e(t["updated"]), e(t["updated_val"])))
+    A("</div></header>")
+    A('<main id="main"><div class="wrap">')
+    A(inner)
+    A("</div></main>")
     A('<footer><div class="wrap"><p>%s</p>' % e(t["footer_note"]))
     A('<p><a href="%s" hreflang="%s" lang="%s">%s</a> &middot; '
       '<a href="https://github.com/Wasserpuncher/dns.kaipfstr.de" rel="noopener">%s</a></p>'
-      % (e(t["switch_url"]), "en" if lang == "de" else "de", "en" if lang == "de" else "de",
-         e(t["switch"]), e(t["source_link"])))
+      % (page_url(page, other), other, other, e(t["switch"]), e(t["source_link"])))
     A("</div></footer>")
-    return "\n".join(o), t, url
+    return "\n".join(o)
 
 
-def json_ld(lang, t, url):
-    other = URL_EN if lang == "de" else URL_DE
+def json_ld(page, lang, t, url):
     def q(s):
         return json_escape(s)
-    items = ",".join(
-        '{"@type":"ListItem","position":%d,"item":{"@type":"Organization","name":"%s","url":"%s"}}'
-        % (i + 1, q(p["name"]), q(p["sources"][0][0]))
-        for i, p in enumerate(C.PROVIDERS))
-    faqs = ",".join(
-        '{"@type":"Question","name":"%s","acceptedAnswer":{"@type":"Answer","text":"%s"}}'
-        % (q(a if lang == "en" else qd), q(d if lang == "en" else dd))
-        for qd, a, dd, d in C.FAQ)
+    meta = t["pages"][page]
+    extra = ""
+    if page == "index":
+        items = ",".join(
+            '{"@type":"ListItem","position":%d,"item":{"@type":"Organization","name":"%s","url":"%s"}}'
+            % (i + 1, q(p["name"]), q(p["sources"][0][0]))
+            for i, p in enumerate(C.PROVIDERS))
+        faqs = ",".join(
+            '{"@type":"Question","name":"%s","acceptedAnswer":{"@type":"Answer","text":"%s"}}'
+            % (q(a if lang == "en" else qd), q(d if lang == "en" else dd))
+            for qd, a, dd, d in C.FAQ)
+        extra = (',{"@type":"ItemList","@id":"%s#providers","name":"%s","numberOfItems":%d,'
+                 '"itemListOrder":"https://schema.org/ItemListUnordered","itemListElement":[%s]}'
+                 ',{"@type":"FAQPage","@id":"%s#faq","inLanguage":"%s","mainEntity":[%s]}'
+                 % (url, q("Geprüfte öffentliche DNS-Resolver" if lang == "de" else "Verified public DNS resolvers"),
+                    len(C.PROVIDERS), items, url, t["lang"], faqs))
+    elif page == "verify":
+        steps = ",".join(
+            '{"@type":"HowToStep","position":%d,"name":"%s","text":"%s"}'
+            % (i + 1, q(pick(ch, "title", lang)), q(pick(ch, "question", lang)))
+            for i, ch in enumerate(C.CHECKS))
+        extra = (',{"@type":"HowTo","@id":"%s#howto","name":"%s","inLanguage":"%s","step":[%s]}'
+                 % (url, q(meta["h1"]), t["lang"], steps))
+    elif page == "glossary":
+        defs = ",".join(
+            '{"@type":"DefinedTerm","@id":"%s#t-%s","name":"%s","description":"%s","inDefinedTermSet":{"@id":"%s#set"}}'
+            % (url, q(term_id(g["term"])), q(g["term"]), q(pick(g, "short", lang)), url)
+            for g in C.GLOSSARY)
+        extra = (',{"@type":"DefinedTermSet","@id":"%s#set","name":"%s","inLanguage":"%s","hasDefinedTerm":[%s]}'
+                 % (url, q(meta["h1"]), t["lang"], defs))
+
+    crumbs = ('{"@type":"ListItem","position":1,"name":"%s","item":"%s"}' % (q(meta["title"]), url)
+              if page == "index" and lang == "de" else
+              '{"@type":"ListItem","position":1,"name":"dns.kaipfstr.de","item":"%s"},'
+              '{"@type":"ListItem","position":2,"name":"%s","item":"%s"}'
+              % (page_url("index", lang), q(meta["title"]), url))
+
     return (
         '{"@context":"https://schema.org","@graph":['
         '{"@type":"WebSite","@id":"%(base)s/#website","url":"%(base)s/","name":"dns.kaipfstr.de",'
@@ -699,23 +1037,10 @@ def json_ld(lang, t, url):
         '"description":"%(desc)s","inLanguage":"%(lang)s","isPartOf":{"@id":"%(base)s/#website"},'
         '"author":{"@id":"%(base)s/#person"},"dateModified":"%(mod)s",'
         '"breadcrumb":{"@id":"%(url)s#breadcrumb"},"license":"https://opensource.org/licenses/MIT"},'
-        '{"@type":"BreadcrumbList","@id":"%(url)s#breadcrumb","itemListElement":[%(crumbs)s]},'
-        '{"@type":"ItemList","@id":"%(url)s#providers","name":"%(listname)s",'
-        '"numberOfItems":%(n)d,"itemListOrder":"https://schema.org/ItemListUnordered",'
-        '"itemListElement":[%(items)s]},'
-        '{"@type":"FAQPage","@id":"%(url)s#faq","inLanguage":"%(lang)s","mainEntity":[%(faqs)s]}'
-        "]}" % {
-            "base": BASE, "url": url, "other": other,
-            "title": q(t["title"]), "desc": q(t["desc"]), "lang": t["lang"],
-            "mod": "2026-09-06",
-            "listname": q("Geprüfte öffentliche DNS-Resolver" if lang == "de"
-                          else "Verified public DNS resolvers"),
-            "n": len(C.PROVIDERS), "items": items, "faqs": faqs,
-            "crumbs": ('{"@type":"ListItem","position":1,"name":"%s","item":"%s"}' % (q(t["title"]), BASE + "/")
-                       if lang == "de" else
-                       '{"@type":"ListItem","position":1,"name":"dns.kaipfstr.de","item":"%s"},'
-                       '{"@type":"ListItem","position":2,"name":"%s","item":"%s"}'
-                       % (BASE + "/", q(t["title"]), url)),
+        '{"@type":"BreadcrumbList","@id":"%(url)s#breadcrumb","itemListElement":[%(crumbs)s]}'
+        "%(extra)s]}" % {
+            "base": BASE, "url": url, "title": q(meta["title"]), "desc": q(meta["desc"]),
+            "lang": t["lang"], "mod": C.MODIFIED, "crumbs": crumbs, "extra": extra,
         })
 
 
@@ -733,9 +1058,9 @@ HEAD = """<meta charset="utf-8">
 <meta name="theme-color" content="#0f5c4a">
 <meta name="referrer" content="no-referrer">
 <link rel="canonical" href="{URL}">
-<link rel="alternate" hreflang="de" href="{URL_DE}">
-<link rel="alternate" hreflang="en" href="{URL_EN}">
-<link rel="alternate" hreflang="x-default" href="{URL_DE}">
+<link rel="alternate" hreflang="de" href="{ALT_DE}">
+<link rel="alternate" hreflang="en" href="{ALT_EN}">
+<link rel="alternate" hreflang="x-default" href="{ALT_DE}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{URL}">
 <meta property="og:title" content="{TITLE}">
@@ -748,46 +1073,52 @@ HEAD = """<meta charset="utf-8">
 <script type="application/ld+json">{JSONLD}</script>"""
 
 
-def write_page(lang):
-    body, t, url = build_page(lang)
+BODIES = {"index": body_index, "verify": body_verify, "glossary": body_glossary}
+
+
+def write_page(page, lang):
+    t = T[lang]
+    meta = t["pages"][page]
+    url = page_url(page, lang)
+    body = chrome(page, lang, t, BODIES[page](lang, t))
     head = (HEAD
-            .replace("{TITLE}", html.escape(t["title"], quote=True))
-            .replace("{DESC}", html.escape(t["desc"], quote=True))
-            .replace("{URL_DE}", URL_DE)
-            .replace("{URL_EN}", URL_EN)
+            .replace("{TITLE}", html.escape(meta["title"], quote=True))
+            .replace("{DESC}", html.escape(meta["desc"], quote=True))
+            .replace("{ALT_DE}", page_url(page, "de"))
+            .replace("{ALT_EN}", page_url(page, "en"))
             .replace("{URL}", url)
             .replace("{LOCALE_ALT}", t["other_locale"])
             .replace("{LOCALE}", t["locale"])
             .replace("{CSS}", CSS)
-            .replace("{JSONLD}", json_ld(lang, t, url)))
+            .replace("{JSONLD}", json_ld(page, lang, t, url)))
     doc = ('<!DOCTYPE html>\n<html lang="%s" dir="ltr">\n<head>\n%s\n</head>\n<body>\n%s\n</body>\n</html>\n'
            % (t["lang"], head, mark_quote_languages(body, t["lang"])))
-    path = OUT_DE if lang == "de" else OUT_EN
-    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    path = page_path(page, lang)
+    if os.path.dirname(path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as fh:
         fh.write(doc)
     return path, len(doc)
 
 
-SITEMAP = """<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url>
-    <loc>{DE}</loc>
-    <lastmod>{MOD}</lastmod>
-    <xhtml:link rel="alternate" hreflang="de" href="{DE}"/>
-    <xhtml:link rel="alternate" hreflang="en" href="{EN}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{DE}"/>
-  </url>
-  <url>
-    <loc>{EN}</loc>
-    <lastmod>{MOD}</lastmod>
-    <xhtml:link rel="alternate" hreflang="de" href="{DE}"/>
-    <xhtml:link rel="alternate" hreflang="en" href="{EN}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{DE}"/>
-  </url>
-</urlset>
-"""
+def sitemap():
+    """Jede URL nennt sich selbst und alle Sprachvarianten, wie es Google verlangt."""
+    out = ['<?xml version="1.0" encoding="UTF-8"?>',
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+           '        xmlns:xhtml="http://www.w3.org/1999/xhtml">']
+    for page in PAGES:
+        de, en = page_url(page, "de"), page_url(page, "en")
+        for url in (de, en):
+            out.append("  <url>")
+            out.append("    <loc>%s</loc>" % url)
+            out.append("    <lastmod>%s</lastmod>" % C.MODIFIED)
+            out.append('    <xhtml:link rel="alternate" hreflang="de" href="%s"/>' % de)
+            out.append('    <xhtml:link rel="alternate" hreflang="en" href="%s"/>' % en)
+            out.append('    <xhtml:link rel="alternate" hreflang="x-default" href="%s"/>' % de)
+            out.append("  </url>")
+    out.append("</urlset>")
+    return "\n".join(out) + "\n"
+
 
 ICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="dns.kaipfstr.de">
 <rect width="64" height="64" rx="13" fill="#0f5c4a"/>
@@ -799,15 +1130,18 @@ ICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
 
 
 def main():
-    for lang in ("de", "en"):
-        path, size = write_page(lang)
-        print("%-16s %6.1f KB" % (path, size / 1024))
+    total = 0
+    for page in PAGES:
+        for lang in ("de", "en"):
+            path, size = write_page(page, lang)
+            total += size
+            print("%-22s %6.1f KB" % (path, size / 1024))
     with open("sitemap.xml", "w", encoding="utf-8") as fh:
-        fh.write(SITEMAP.replace("{DE}", URL_DE).replace("{EN}", URL_EN).replace("{MOD}", "2026-09-06"))
-    print("sitemap.xml")
+        fh.write(sitemap())
+    print("%-22s %6d URLs" % ("sitemap.xml", 2 * len(PAGES)))
     with open("icon.svg", "w", encoding="utf-8") as fh:
         fh.write(ICON)
-    print("icon.svg")
+    print("%-22s %6.1f KB total" % ("icon.svg", total / 1024))
 
 
 if __name__ == "__main__":

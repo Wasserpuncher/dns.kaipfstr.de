@@ -1,0 +1,47 @@
+name: Seite prüfen
+
+# Die Seite behauptet von sich, belegt und widerspruchsfrei zu sein.
+# Dieser Lauf macht die Behauptung nachprüfbar, bei jedem Commit.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    # Einmal im Monat, um verrottete Quell-URLs zu bemerken, bevor es jemand anders tut.
+    - cron: "17 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Seite neu erzeugen
+        run: python3 build.py
+
+      - name: Erzeugtes HTML stimmt mit dem eingecheckten überein
+        # Fängt den häufigsten Fehler dieser Bauart ab: content.py geändert,
+        # aber vergessen, build.py laufen zu lassen.
+        run: |
+          if ! git diff --exit-code --stat; then
+            echo "::error::Das eingecheckte HTML passt nicht zu content.py und build.py. Bitte 'python3 build.py' ausführen und das Ergebnis mit committen."
+            exit 1
+          fi
+
+      - name: Struktur, Inhalt und Konsistenz prüfen
+        run: python3 check.py
+
+      - name: Quell-URLs prüfen
+        # Nur im Monatslauf und von Hand, damit fremde Server nicht bei jedem Push
+        # angefasst werden und ein fremder Ausfall keinen Commit blockiert.
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: python3 check.py --links

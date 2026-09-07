@@ -15,6 +15,7 @@ Stand aller Abrufe / All sources retrieved: 2026-09-06
 """
 
 RETRIEVED = "2026-09-06"
+MODIFIED = "2026-09-07"
 DOMAIN = "https://dns.kaipfstr.de"
 
 # ---------------------------------------------------------------------------
@@ -24,6 +25,7 @@ DOMAIN = "https://dns.kaipfstr.de"
 PROVIDERS = [
     {
         "id": "quad9",
+        "dnssec_ok": "yes",
         "unfiltered": "limited",
         "plain53": True,
         "name": "Quad9",
@@ -89,6 +91,7 @@ PROVIDERS = [
     },
     {
         "id": "dns4eu",
+        "dnssec_ok": "yes",
         "unfiltered": "limited",
         "plain53": True,
         "name": "DNS4EU",
@@ -160,6 +163,7 @@ PROVIDERS = [
     },
     {
         "id": "dnssb",
+        "dnssec_ok": "yes",
         "unfiltered": "yes",
         "plain53": True,
         "name": "DNS.SB",
@@ -213,6 +217,7 @@ PROVIDERS = [
     },
     {
         "id": "uncensoreddns",
+        "dnssec_ok": "yes",
         "unfiltered": "yes",
         "plain53": True,
         "name": "UncensoredDNS",
@@ -229,8 +234,8 @@ PROVIDERS = [
              ["89.233.43.71"], ["2a01:3a0:53:53::"],
              "https://unicast.uncensoreddns.org/dns-query", "unicast.uncensoreddns.org"),
         ],
-        "doq": "Ja. Der Betreiber kündigte am 23. Oktober 2025 volle QUIC-Unterstützung an: „Starting today UncensoredDNS fully supports QUIC based DNS lookups.“ Auf beiden Endpunkten wurde die QUIC-Kennung „doq“ am 6. September 2026 ausgehandelt.",
-        "doq_en": "Yes. The operator announced full QUIC support on 23 October 2025: “Starting today UncensoredDNS fully supports QUIC based DNS lookups.” On both endpoints the QUIC identifier “doq” was negotiated on 6 September 2026.",
+        "doq": "Angekündigt, im Test aber ohne Antwort. Der Betreiber schrieb am 23. Oktober 2025: „Starting today UncensoredDNS fully supports QUIC based DNS lookups.“ Die QUIC-Kennung „doq“ wird tatsächlich ausgehandelt. Eine echte DoQ-Abfrage mit kdig blieb am 7. September 2026 von einem deutschen Anschluss aus jedoch dreimal unbeantwortet, während dieselbe Abfrage gegen Quad9 und AdGuard DNS funktionierte. Das ist ein Momentbefund von einem einzigen Anschluss, kein Beweis, dass der Dienst kein DoQ kann. DoT desselben Servers arbeitete einwandfrei.",
+        "doq_en": "Announced, but unanswered in our test. On 23 October 2025 the operator wrote: “Starting today UncensoredDNS fully supports QUIC based DNS lookups.” The QUIC identifier “doq” is indeed negotiated. A real DoQ query with kdig, however, went unanswered three times on 7 September 2026 from a German connection, while the same query against Quad9 and AdGuard DNS succeeded. This is a point-in-time observation from a single connection, not proof that the service cannot do DoQ. DoT on the same server worked flawlessly.",
         "dnssec": "Validierend.",
         "dnssec_en": "Validating.",
         "filtering": "Keine. Der Dienst existiert ausdrücklich als Gegenentwurf zur Filterung. Der Betreiber schreibt: „I am strongly against using DNS as a tool to filter content on the internet.“",
@@ -267,6 +272,7 @@ PROVIDERS = [
     },
     {
         "id": "digitalcourage",
+        "dnssec_ok": "measured",
         "unfiltered": "yes",
         "plain53": True,
         "name": "Digitalcourage e. V.",
@@ -315,6 +321,7 @@ PROVIDERS = [
     },
     {
         "id": "digiges",
+        "dnssec_ok": "yes",
         "unfiltered": "yes",
         "plain53": False,
         "name": "Digitale Gesellschaft",
@@ -366,6 +373,7 @@ PROVIDERS = [
     },
     {
         "id": "artikel10",
+        "dnssec_ok": "measured",
         "unfiltered": "yes",
         "plain53": False,
         "name": "Artikel10 e. V.",
@@ -414,6 +422,7 @@ PROVIDERS = [
     },
     {
         "id": "dnsforge",
+        "dnssec_ok": "yes",
         "unfiltered": "yes",
         "plain53": True,
         "name": "dnsforge.de",
@@ -478,6 +487,7 @@ PROVIDERS = [
     },
     {
         "id": "ffmuc",
+        "dnssec_ok": "yes",
         "unfiltered": "yes",
         "plain53": True,
         "name": "Freifunk München",
@@ -528,6 +538,7 @@ PROVIDERS = [
     },
     {
         "id": "restena",
+        "dnssec_ok": "yes",
         "unfiltered": "yes",
         "plain53": True,
         "name": "RESTENA",
@@ -576,6 +587,7 @@ PROVIDERS = [
     },
     {
         "id": "appliedprivacy",
+        "dnssec_ok": "yes",
         "unfiltered": "yes",
         "plain53": False,
         "name": "Applied Privacy",
@@ -624,6 +636,66 @@ PROVIDERS = [
             ("https://applied-privacy.net/privacy-policy/", "Foundation for Applied Privacy: Privacy Policy", "Foundation for Applied Privacy: Privacy Policy"),
         ],
     },
+    {
+        "id": "libredns",
+        "dnssec_ok": "no",
+        "unfiltered": "yes",
+        "plain53": False,
+        "name": "LibreDNS",
+        "flag": "GR",
+        "operator": "LibreOps, ein Kollektiv namentlich benannter Freiwilliger aus Griechenland. Server bei Hetzner in Nürnberg.",
+        "operator_en": "LibreOps, a collective of named volunteers from Greece. Servers at Hetzner in Nuremberg, Germany.",
+        "carrier": "Freiwilligenkollektiv ohne eigene Rechtsform",
+        "carrier_en": "Volunteer collective without a legal entity of its own",
+        "endpoints": [
+            ("Nur verschlüsselt, ohne Filter", "Encrypted only, unfiltered",
+             ["116.202.176.26"], ["2a01:4f8:1c0c:8274::1"],
+             "https://doh.libredns.gr/dns-query", "dot.libredns.gr"),
+            ("Nur verschlüsselt, mit Werbefilter", "Encrypted only, with ad blocking",
+             [], [],
+             "https://doh.libredns.gr/noads", "noads.libredns.gr"),
+        ],
+        "doq": "Nicht dokumentiert.",
+        "doq_en": "Not documented.",
+        "dnssec": "Nein, und das ist der wichtigste Punkt bei diesem Dienst. LibreDNS validiert nicht. Die eigene Dokumentation vermerkt bei allen DNS-Stamps „DNSSEC: no“, die veröffentlichte Konfiguration setzt „dnssec=process-no-validate“, und eine Messung am 7. September 2026 bestätigte es: Die absichtlich fehlerhaft signierten Testdomains wurden normal beantwortet, während ein validierender Resolver sie ablehnte.",
+        "dnssec_en": "No, and that is the most important point about this service. LibreDNS does not validate. Its own documentation records “DNSSEC: no” for every DNS stamp, the published configuration sets “dnssec=process-no-validate”, and a measurement on 7 September 2026 confirmed it: deliberately mis-signed test domains were answered normally, while a validating resolver refused them.",
+        "filtering": "Zwei getrennte Rekursoren. Der Standardendpunkt filtert nicht. Der zweite Endpunkt blockt Werbung und Tracker anhand der öffentlichen Liste von StevenBlack.",
+        "filtering_en": "Two separate recursors. The default endpoint does not filter. The second one blocks advertising and trackers using the public StevenBlack list.",
+        "logging": "Die Website sagt: „We keep no logs. Logs are disabled for our DNS daemon.“ Anders als bei allen anderen Diensten dieser Liste lässt sich das gegenprüfen: Die vollständige Konfiguration liegt öffentlich, und dort ist die Zugriffsprotokollierung des Webservers abgeschaltet und der Resolver auf „quiet“ gesetzt.",
+        "logging_en": "The website states: “We keep no logs. Logs are disabled for our DNS daemon.” Unlike every other service in this list, that can be checked: the complete configuration is public, and in it the web server access log is switched off and the resolver is set to “quiet”.",
+        "strengths": [
+            "Die vollständige Betriebskonfiguration liegt offen. Die No-Log-Zusage lässt sich dadurch technisch nachvollziehen, statt sie nur zu glauben. Das bietet sonst kein Dienst auf dieser Seite.",
+            "Die Betreiber sind namentlich benannt, nicht anonym und nicht hinter einer Briefkastenfirma.",
+            "Finanzierung ausschließlich über Spenden, mit öffentlich einsehbarem Kassenbuch bei Open Collective. Keine Tarife, keine Werbung, kein Datengeschäft.",
+            "Server in Deutschland und damit im EU-Rechtsraum, obwohl das Kollektiv aus Griechenland kommt.",
+        ],
+        "strengths_en": [
+            "The complete operating configuration is public. That makes the no-log commitment technically verifiable rather than merely believable. No other service on this page offers that.",
+            "The operators are named individuals, not anonymous and not behind a shell company.",
+            "Funded solely by donations, with a publicly readable ledger on Open Collective. No tariffs, no advertising, no data business.",
+            "Servers in Germany and therefore within EU jurisdiction, even though the collective is based in Greece.",
+        ],
+        "caveats": [
+            "Keine DNSSEC-Validierung. Wer LibreDNS benutzt, ist gegen gefälschte DNS-Antworten oberhalb des Resolvers nicht geschützt. Für eine Seite über sichere Namensauflösung ist das der schwerste Einwand gegen diesen Dienst, und er wiegt schwerer als die vorbildliche Transparenz.",
+            "Ein einziger Server an einem einzigen Standort. Kein Anycast, keine geografische Redundanz, kein Ersatzziel.",
+            "Kein Klartext-DNS auf Port 53. Der Dienst ist nur über DoH und DoT erreichbar.",
+            "Kein Rechtsträger. Das Kollektiv nutzt Open Collective Europe als Zahlstelle für Spenden; das macht die Stiftung aber nicht zur Betreiberin und begründet keine Haftung für den Dienst.",
+            "Nur zwei DoH-Endpunkte und zwei DoT-Namen stehen auf der Website selbst. Weitere Varianten kursieren im Projektwiki und in Apple-Konfigurationsprofilen.",
+        ],
+        "caveats_en": [
+            "No DNSSEC validation. Anyone using LibreDNS is unprotected against forged DNS answers above the resolver. For a page about secure name resolution that is the gravest objection to this service, and it outweighs the exemplary transparency.",
+            "A single server in a single location. No anycast, no geographic redundancy, no fallback target.",
+            "No plaintext DNS on port 53. The service is reachable only over DoH and DoT.",
+            "No legal entity. The collective uses Open Collective Europe as a fiscal host for donations; that does not make the foundation the operator and creates no liability for the service.",
+            "Only two DoH endpoints and two DoT names appear on the website itself. Further variants circulate in the project wiki and in Apple configuration profiles.",
+        ],
+        "sources": [
+            ("https://libredns.gr/", "LibreDNS: Endpunkte und Datenschutzaussage", "LibreDNS: endpoints and privacy statement"),
+            ("https://libreops.cc/about/", "LibreOps: das Kollektiv dahinter", "LibreOps: the collective behind it"),
+            ("https://gitlab.com/libreops/libredns/libredns-cfg", "LibreDNS: vollständige Betriebskonfiguration", "LibreDNS: complete operating configuration"),
+            ("https://opencollective.com/libreops", "LibreOps bei Open Collective: offenes Kassenbuch", "LibreOps on Open Collective: open ledger"),
+        ],
+    },
 ]
 
 # ---------------------------------------------------------------------------
@@ -633,6 +705,7 @@ PROVIDERS = [
 DISCONTINUED = [
     {
         "id": "mullvad",
+        "severity": "warn",
         "name": "Mullvad Encrypted DNS",
         "state": "Abschaltung am 2. November 2026",
         "state_en": "Shutting down on 2 November 2026",
@@ -668,6 +741,7 @@ sponsorship on any of its own pages. The announcement is so far one-sided.""",
     },
     {
         "id": "dns0eu",
+        "severity": "stop",
         "name": "dns0.eu",
         "state": "Eingestellt seit Oktober 2025",
         "state_en": "Discontinued since October 2025",
@@ -694,6 +768,38 @@ and none of the ZERO, KIDS or OPEN variants. Anyone still using these addresses 
 Not only because they are down, but because IP ranges can later be reassigned to someone else.""",
         "sources": [
             ("https://web.archive.org/web/20251018114400/https://www.dns0.eu/", "Internet Archive: dns0.eu mit Abschaltungshinweis, 18.10.2025", "Internet Archive: dns0.eu showing the shutdown notice, 18 October 2025"),
+        ],
+    },
+    {
+        "id": "ahadns",
+        "severity": "stop",
+        "name": "AhaDNS",
+        "state": "Praktisch eingestellt",
+        "state_en": "Effectively discontinued",
+        "de": """AhaDNS wird in vielen Listen weiterhin als datenschutzfreundliche Alternative geführt. Am 7. September 2026
+antwortete kein einziger der zehn auf der eigenen Website dokumentierten Standorte mehr.
+
+Von den zehn angegebenen Endpunkten existieren acht nicht einmal mehr als Namenseintrag; die autoritative Abfrage
+liefert für sie NXDOMAIN. Die verbleibenden zwei, die Standorte Niederlande und Los Angeles, lösen zwar noch auf,
+nehmen aber keine Verbindung mehr an: Der eine antwortet auf keinem Port, der andere weist die Ports 53, 443 und 853
+aktiv zurück.
+
+Die Website nennt die Adressen unverändert weiter. Eine Abschaltungsmeldung gibt es nicht. Wer die Adressen eingetragen
+hat, sollte sie entfernen.""",
+        "en": """AhaDNS still appears in many lists as a privacy-friendly alternative. On 7 September 2026 not one of the ten locations
+documented on its own website answered any more.
+
+Of the ten endpoints listed, eight no longer exist even as a name entry; the authoritative query returns NXDOMAIN for
+them. The remaining two, the Netherlands and Los Angeles locations, still resolve but accept no connection: one answers
+on no port at all, the other actively refuses ports 53, 443 and 853.
+
+The website continues to list the addresses unchanged. There is no shutdown notice. Anyone who has configured these
+addresses should remove them.""",
+        "sources": [
+            ("https://ahadns.com/dns-over-tls/", "AhaDNS: die weiterhin genannten DoT-Endpunkte",
+             "AhaDNS: the DoT endpoints still listed"),
+            ("https://ahadns.com/dns-over-https/", "AhaDNS: die weiterhin genannten DoH-Endpunkte",
+             "AhaDNS: the DoH endpoints still listed"),
         ],
     },
 ]
@@ -744,6 +850,57 @@ offenem Fehlerregister vor, Fehlklassifikationen sind also nachvollziehbar meldb
 as well as DoH, DoT, DoQ and DNSCrypt. The filter list used is available as a public repository with an open
 issue tracker, so anyone can report a misclassification in public and follow what happens to it.""",
         "source": ("https://adguard-dns.io/en/public-dns.html", "AdGuard DNS: Public DNS", "AdGuard DNS: Public DNS"),
+    },
+    {
+        "name": "Cisco OpenDNS",
+        "addresses": "208.67.222.222 und 208.67.220.220, FamilyShield 208.67.222.123 und 208.67.220.123",
+        "addresses_en": "208.67.222.222 and 208.67.220.220, FamilyShield 208.67.222.123 and 208.67.220.123",
+        "de": """Cisco Systems, Inc., börsennotierter US-Konzern. Der freie Dienst ist der Einstieg in das kostenpflichtige
+Cisco Umbrella. Bemerkenswert ist, was fehlt: Eine eigene Datenschutzerklärung für den DNS-Dienst gibt es nicht mehr,
+die frühere Adresse zeigt nur noch die allgemeine Cisco-Erklärung. Damit fehlen eine No-Log-Zusage und jede
+veröffentlichte Aufbewahrungsfrist für Abfragedaten. DNSSEC wird validiert. In Frankreich und Portugal hat Cisco den
+Dienst nach Gerichtsentscheidungen nicht gefiltert, sondern landesweit ganz abgeschaltet.""",
+        "en": """Cisco Systems, Inc., a listed US corporation. The free service is the entry point to the paid Cisco Umbrella.
+What is missing is notable: there is no longer a dedicated privacy policy for the DNS service, and the former address
+now shows only the general Cisco statement. That leaves no no-log commitment and no published retention period for
+query data. DNSSEC is validated. In France and Portugal, following court decisions, Cisco did not filter the service
+but shut it down countrywide.""",
+        "source": ("https://www.opendns.com/setupguide/", "OpenDNS: Einrichtung und Adressen",
+                   "OpenDNS: setup and addresses"),
+    },
+    {
+        "name": "NextDNS",
+        "addresses": "Konto erforderlich; die Adressen hängen an der eigenen Konfigurations-ID",
+        "addresses_en": "Account required; the addresses depend on your own configuration ID",
+        "de": """NextDNS Inc., Delaware, USA. Der Dienst ist kein fertiger Resolver, sondern ein Baukasten: Filterlisten,
+Sperrzeiten und Protokollierung stellt man selbst ein. Die Datenschutzerklärung sagt wörtlich: „If not specifically
+requested by the user, no data is logged.“ Wer Auswertungen möchte, schaltet die Protokollierung selbst ein und wählt
+Aufbewahrungsdauer und Region. Gegen den Dienst spricht die Trägerschaft: eine gewinnorientierte US-Gesellschaft ohne
+Transparenzbericht, ohne unabhängiges Audit und mit einer Datenschutzerklärung ohne Datum und ohne Versionsverlauf.
+Auch bei europäischer Log-Region bleibt der Betreiber ein US-Unternehmen.""",
+        "en": """NextDNS Inc., Delaware, USA. The service is not a finished resolver but a construction kit: you configure the
+filter lists, schedules and logging yourself. The privacy policy states verbatim: “If not specifically requested by the
+user, no data is logged.” Anyone wanting analytics switches logging on themselves and picks the retention period and
+region. What speaks against it is who runs it: a for-profit US corporation with no transparency report, no independent
+audit and a privacy policy carrying no date and no version history. Even with a European log region, the operator
+remains a US company.""",
+        "source": ("https://nextdns.io/privacy", "NextDNS: Datenschutzerklärung", "NextDNS: privacy policy"),
+    },
+    {
+        "name": "Control D",
+        "addresses": "Kostenlose Profile: 76.76.2.0 ungefiltert, 76.76.2.1 Malware, 76.76.2.2 Werbung und Tracker",
+        "addresses_en": "Free profiles: 76.76.2.0 unfiltered, 76.76.2.1 malware, 76.76.2.2 ads and trackers",
+        "de": """Control D bietet ohne Konto mehrere feste Profile mit eigenen Adressen und DoH-Pfaden, darunter ein
+ungefiltertes. Das Unternehmen unterhält ein öffentliches Compliance-Portal mit herunterladbaren Prüfberichten nach
+SOC 2 und ISO 27001, was unter den hier genannten Diensten ungewöhnlich ist. Die Kehrseite steht im selben Portal:
+„If Analytics is enabled, we log DNS queries and metadata (e.g. source IP, hostname, MAC address).“ Ob die Auswertung
+im Auslieferungszustand aus ist, sagt die Dokumentation nicht.""",
+        "en": """Control D offers several fixed profiles without an account, each with its own addresses and DoH paths, including
+an unfiltered one. The company runs a public compliance portal with downloadable SOC 2 and ISO 27001 attestation
+reports, which is unusual among the services named here. The flip side appears in the same portal: “If Analytics is
+enabled, we log DNS queries and metadata (e.g. source IP, hostname, MAC address).” Whether analytics is off in the
+delivered state is not stated in the documentation.""",
+        "source": ("https://controld.com/free-dns", "Control D: kostenlose Profile", "Control D: free profiles"),
     },
 ]
 
@@ -988,13 +1145,13 @@ resolver from the rest of the system, which regularly causes confusion in practi
 head-of-line blocking issues inherent with TCP and provides more efficient packet-loss recovery than UDP.“
 
 In der Praxis heißt das: gleiche Vertraulichkeit wie DoT, aber schnellerer Verbindungsaufbau und weniger Verzögerung bei
-Paketverlust. Quad9 und UncensoredDNS haben DoQ ausdrücklich angekündigt; dnsforge.de, Freifunk München und AdGuard DNS nennen ebenfalls DoQ-Endpunkte.""",
+Paketverlust. Quad9 beantwortete DoQ-Abfragen im Test zuverlässig. UncensoredDNS, dnsforge.de und Freifunk München kündigen DoQ ebenfalls an; bei UncensoredDNS blieb eine echte Abfrage im Test allerdings unbeantwortet.""",
         "en": """The most recent of the three encrypted transports, standardised in May 2022. RFC 9250 describes the benefit as
 follows: “The encryption provided by QUIC has similar properties to those provided by TLS, while QUIC transport eliminates
 the head-of-line blocking issues inherent with TCP and provides more efficient packet-loss recovery than UDP.”
 
-In practice that means the same confidentiality as DoT, but faster connection setup and less delay under packet loss. Quad9 and UncensoredDNS have announced DoQ explicitly; dnsforge.de, Freifunk München and AdGuard DNS also list DoQ
-endpoints.""",
+In practice that means the same confidentiality as DoT, but faster connection setup and less delay under packet loss. Quad9 answered DoQ queries reliably in our test. UncensoredDNS, dnsforge.de and Freifunk München announce DoQ as well,
+though at UncensoredDNS a real query went unanswered in our test.""",
     },
     {
         "abbr": "DNSSEC",
@@ -1310,4 +1467,636 @@ FAQ = [
      "Why is Mullvad listed here as a warning rather than a recommendation?",
      "Weil der öffentliche verschlüsselte DNS-Dienst am 2. November 2026 abgeschaltet wird. Das hat Mullvad am 3. September 2026 selbst angekündigt. Eine Adresse zu empfehlen, die in wenigen Wochen nicht mehr antwortet, wäre keine Hilfe.",
      "Because the public encrypted DNS service will be shut down on 2 November 2026. Mullvad announced this itself on 3 September 2026. Recommending an address that will stop answering within weeks would be no help."),
+]
+
+# ---------------------------------------------------------------------------
+# Glossar. Jede Definition ist an der einschlaegigen Norm geprueft.
+# ---------------------------------------------------------------------------
+
+GLOSSARY = [
+    {
+        "group": "basics",
+        "term": "Stub-Resolver",
+        "short": "Ein Resolver, der die Namensauflösung nicht selbst vollständig durchführen kann und die eigentliche Auflösung an einen rekursiven Resolver abgibt. Er sitzt typischerweise im Betriebssystem oder in der Anwendung und stellt nur die Anfrage.",
+        "short_en": "A resolver that cannot perform all resolution itself and depends on a recursive resolver to undertake the actual resolution function. It typically lives in the operating system or the application and only issues the query.",
+        "pitfall": "Häufig wird angenommen, der Stub-Resolver im Betriebssystem laufe selbst die Kette von den Root-Servern abwärts ab. Tatsächlich delegiert er die gesamte Auflösungsarbeit an einen rekursiven Resolver.",
+        "pitfall_en": "People often assume the operating system stub resolver walks the delegation chain from the root servers itself. In fact it hands the entire resolution work to a recursive resolver.",
+        "rfc": "RFC 9499, 1123",
+    },
+    {
+        "group": "basics",
+        "term": "Rekursiver Resolver",
+        "short": "Ein Resolver im rekursiven Modus, der eine Anfrage entweder aus dem lokalen Cache beantwortet oder selbst weitere Server befragt, bis die endgültige Antwort vorliegt. In der Regel speichert er die erhaltenen Antworten im Cache zwischen.",
+        "short_en": "A resolver that acts in recursive mode, either answering from a local cache or querying other servers until it has the final answer. In general it is expected to cache the answers it receives.",
+        "pitfall": "Das Wort rekursiv beschreibt nur den Dienst gegenüber dem Client, nicht das Vorgehen nach außen. Gegenüber den autoritativen Servern arbeitet derselbe Resolver iterativ, er folgt also Verweisen Schritt für Schritt.",
+        "pitfall_en": "The word recursive describes only the service offered to the client, not the outward behaviour. Toward the authoritative servers the same resolver works iteratively, following referrals step by step.",
+        "rfc": "RFC 9499, 1034",
+    },
+    {
+        "group": "basics",
+        "term": "Autoritativer Nameserver",
+        "short": "Ein Server, der den Inhalt einer DNS-Zone aus lokalem Wissen kennt und Anfragen zu dieser Zone ohne Rückfrage bei anderen Servern beantworten kann. Er setzt in solchen Antworten das AA-Bit im Header auf 1.",
+        "short_en": "A server that knows the content of a DNS zone from local knowledge and can answer queries about that zone without needing to query other servers. It sets the AA flag in the response header to 1 for such answers.",
+        "pitfall": "Nicht jede Antwort eines autoritativen Servers ist autoritativ: Verweise auf delegierte Kindzonen kommen mit AA-Bit 0. Außerdem kann ein Server autoritativ antworten, ohne dass die Elternzone ihm die Autorität delegiert hat.",
+        "pitfall_en": "Not every answer from an authoritative server is authoritative: referrals to delegated child zones come with the AA bit set to 0. A server can also answer authoritatively without the parent zone having delegated authority to it.",
+        "rfc": "RFC 9499, 2182",
+    },
+    {
+        "group": "basics",
+        "term": "Root-Server",
+        "short": "Ein autoritativer Nameserver, der Anfragen zum Inhalt der Root-Zone beantwortet und damit den Einstiegspunkt in das Root-Server-System bildet. Die dreizehn Buchstabenidentitäten A bis M werden von zwölf unabhängigen Organisationen betrieben.",
+        "short_en": "An authoritative name server that answers queries for the contents of the root zone and forms an entry point into the root server system. The thirteen letter identities A through M are operated by twelve independent organisations.",
+        "pitfall": "Dreizehn Buchstaben bedeuten nicht dreizehn Maschinen: Am 2026-09-07 bestand das System laut root-servers.org aus 2005 betriebsbereiten Instanzen. Der Begriff Mirror ist in diesem Zusammenhang veraltet, korrekt heißt es Instanz.",
+        "pitfall_en": "Thirteen letters do not mean thirteen machines: on 2026-09-07 root-servers.org reported 2005 operational instances. The term mirror is deprecated here, the correct word is instance.",
+        "rfc": "RFC 9499, 8109",
+    },
+    {
+        "group": "basics",
+        "term": "TLD (Top-Level Domain)",
+        "short": "Eine Zone, die genau eine Ebene unterhalb der Root liegt, zum Beispiel com oder jp. Die meisten TLDs sind delegierungszentrierte Zonen, also Zonen, die überwiegend aus Delegierungen an Kindzonen bestehen.",
+        "short_en": "A zone that is one layer below the root, such as com or jp. Most TLDs are delegation-centric zones, that is zones consisting mostly of delegations to child zones.",
+        "pitfall": "Aus Sicht des DNS-Protokolls ist eine TLD nichts Besonderes, sie ist eine Zone wie jede andere. Die Unterscheidungen in ccTLD, gTLD und weitere sind reine Policy-Kategorien.",
+        "pitfall_en": "From the point of view of the DNS protocol a TLD is nothing special, it is a zone like any other. The split into ccTLD, gTLD and others is purely a matter of policy.",
+        "rfc": "RFC 9499",
+    },
+    {
+        "group": "basics",
+        "term": "Anycast",
+        "short": "Die Praxis, eine bestimmte Dienstadresse an mehreren getrennten, autonomen Standorten verfügbar zu machen, sodass gesendete Datagramme zu einem dieser Standorte geroutet werden. Jeder dieser Standorte heißt Instanz.",
+        "short_en": "The practice of making a particular service address available in multiple, discrete, autonomous locations, such that datagrams sent are routed to one of several available locations. Each such location is called an instance.",
+        "pitfall": "Anycast ist kein Lastverteiler und garantiert nicht die geografisch nächste Instanz, denn das Routing entscheidet nach Topologie, nicht nach Entfernung. Unter Anycast-Instanzen gibt es keine Hierarchie, jede hat dieselbe Autorität.",
+        "pitfall_en": "Anycast is not a load balancer and does not guarantee the geographically closest instance, since routing decides by topology rather than distance. There is no hierarchy among anycast instances, each has the same level of authority.",
+        "rfc": "RFC 4786, 9499",
+    },
+    {
+        "group": "basics",
+        "term": "Unicast",
+        "short": "Eine Adresse, die genau eine Schnittstelle bezeichnet; ein an eine Unicast-Adresse gesendetes Paket wird an genau diese Schnittstelle zugestellt. Im DNS-Kontext steht Unicast für den Fall, dass eine Serveradresse an nur einem Standort angekündigt wird.",
+        "short_en": "An identifier for a single interface; a packet sent to a unicast address is delivered to the interface identified by that address. In a DNS context unicast means a server address announced from only one location.",
+        "pitfall": "Unicast identifiziert eine Schnittstelle, nicht einen Host; ein Host kann mehrere Unicast-Adressen tragen. Die in RFC 4291 zitierte Definition stammt aus der IPv6-Adressarchitektur, das Konzept ist aber nicht auf IPv6 beschränkt.",
+        "pitfall_en": "Unicast identifies an interface, not a host; one host can carry several unicast addresses. The definition quoted from RFC 4291 comes from the IPv6 addressing architecture, but the concept is not limited to IPv6.",
+        "rfc": "RFC 4291",
+    },
+    {
+        "group": "basics",
+        "term": "Cache",
+        "short": "Eine Struktur, die die Ergebnisse früherer Antworten speichert, damit gleiche Anfragen nicht erneut entfernt aufgelöst werden müssen. Resolver sind dafür verantwortlich, alte Einträge nach Ablauf der TTL zu verwerfen.",
+        "short_en": "A structure which stores the results from previous responses so that identical requests need not be resolved remotely again. Resolvers are responsible for discarding old RRs whose TTL has expired.",
+        "pitfall": "Ein Cache hält Einträge nicht zwingend bis zum Ablauf der TTL; laut RFC 9499 kann ein RRset vorher aus dem Cache entfernt werden. Auch negative Antworten werden zwischengespeichert, das ist Negative Caching nach RFC 2308.",
+        "pitfall_en": "A cache does not necessarily keep entries until the TTL expires; RFC 9499 notes an RRset can be flushed from the cache before the end of the TTL interval. Negative answers are cached too, which is negative caching per RFC 2308.",
+        "rfc": "RFC 1034, 1123",
+    },
+    {
+        "group": "basics",
+        "term": "TTL (Time to Live)",
+        "short": "Die maximale Lebensdauer eines Resource Record, also das Zeitintervall in Sekunden, das der Record zwischengespeichert werden darf, bevor die Quelle erneut befragt werden sollte. Der Wert ist eine vorzeichenlose Zahl von 0 bis 2147483647.",
+        "short_en": "The maximum time to live of a resource record, that is the time interval in seconds the record may be cached before the source of the information should again be consulted. The value is an unsigned number from 0 to 2147483647.",
+        "pitfall": "Die TTL ist eine Obergrenze und keine Garantie: Ein Cache-Betreiber kann sie aus betrieblichen Gründen verkürzen, und ein RRset kann vorzeitig verworfen werden. Alle Records eines RRset müssen dieselbe TTL tragen (RFC 2181, Abschnitt 5.2).",
+        "pitfall_en": "The TTL is an upper bound, not a guarantee: a cache operator may shorten it for operational reasons and an RRset can be flushed early. All records in an RRset are required to carry the same TTL (RFC 2181, Section 5.2).",
+        "rfc": "RFC 9499, 1035, 2181",
+    },
+    {
+        "group": "basics",
+        "term": "NXDOMAIN",
+        "short": "Der DNS-Antwortcode 3 (Name Error), der besagt, dass der in der Anfrage genannte Domainname nicht existiert. Da Namen einen Baum bilden, bedeutet das Nichtexistieren eines Knotens auch das Nichtexistieren des gesamten darunter liegenden Teilbaums.",
+        "short_en": "DNS response code 3 (Name Error), signifying that the domain name referenced in the query does not exist. Since names form a tree, nonexistence of a node implies nonexistence of the entire subtree rooted at that node.",
+        "pitfall": "NXDOMAIN heißt, dass der Name selbst nicht existiert, nicht dass nur der abgefragte Record-Typ fehlt; letzteres ist eine NODATA-Antwort mit RCODE 0 und leerer Answer-Section. Ebenfalls falsch ist die Annahme, unterhalb eines NXDOMAIN-Namens könnten noch Namen existieren, denn RFC 8020 schließt das aus.",
+        "pitfall_en": "NXDOMAIN means the name itself does not exist, not merely that the queried record type is missing; the latter is a NODATA answer with RCODE 0 and an empty answer section. It is likewise wrong to assume names can still exist beneath an NXDOMAIN name, since RFC 8020 rules that out.",
+        "rfc": "RFC 1035, 2308, 8020, 9499",
+    },
+    {
+        "group": "basics",
+        "term": "Resource Record (RR)",
+        "short": "Der einzelne Dateneintrag des DNS, bestehend aus Owner-Name, Typ, Klasse, TTL und RDATA; die Menge der Informationen zu einem Namen setzt sich aus solchen Records zusammen. Records mit gleichem Owner-Name, gleicher Klasse und gleichem Typ bilden ein RRset.",
+        "short_en": "The individual DNS data entry, consisting of owner name, type, class, TTL and RDATA; the information associated with a name is composed of such records. Records with the same owner name, class and type form an RRset.",
+        "pitfall": "Die Reihenfolge der Records in einer Menge ist ohne Bedeutung und muss von Servern und Resolvern nicht erhalten bleiben. Ein RRset wird zudem immer als Ganzes behandelt, und alle seine Records müssen dieselbe TTL haben.",
+        "pitfall_en": "The order of RRs in a set is not significant and need not be preserved by name servers or resolvers. An RRset is also always handled as a whole, and all of its records must carry the same TTL.",
+        "rfc": "RFC 1034, 1035, 2181, 9499",
+    },
+    {
+        "group": "protocols",
+        "term": "DNSSEC",
+        "short": "DNSSEC ist eine Erweiterung des DNS, die per digitaler Signatur die Herkunft und die Unversehrtheit von DNS-Daten nachweisbar macht, spezifiziert in RFC 4033, RFC 4034 und RFC 4035. RFC 9364 (BCP 237) erklärt den Einsatz von DNSSEC zur Ursprungsauthentifizierung von DNS-Daten zur Best Current Practice.",
+        "short_en": "DNSSEC is a set of DNS extensions that add data origin authentication and data integrity to DNS answers through digital signatures, specified in RFC 4033, RFC 4034 and RFC 4035. RFC 9364 (BCP 237) states that using DNSSEC for origin authentication of DNS data is the best current practice.",
+        "pitfall": "DNSSEC verschlüsselt nichts. RFC 4033 Abschnitt 3 stellt ausdrücklich fest: „These extensions do not provide confidentiality.“, das heißt Anfragen und Antworten bleiben für jeden auf dem Weg mitlesbar, DNSSEC macht sie nur fälschungssicher.",
+        "pitfall_en": "DNSSEC does not encrypt anything. RFC 4033 Section 3 states plainly „These extensions do not provide confidentiality.“, so queries and answers remain readable on the wire; DNSSEC only makes them tamper evident.",
+        "rfc": "RFC 4033, 4034, 4035, 9364",
+    },
+    {
+        "group": "protocols",
+        "term": "DNSSEC-Validierung",
+        "short": "DNSSEC-Validierung ist der Vorgang, bei dem ein Resolver die Signaturen einer Antwort kryptografisch prüft und dazu eine Authentifizierungskette aus DNSKEY- und DS-Datensätzen bis zu einem konfigurierten Trust Anchor aufbaut. Das Protokollverhalten validierender Resolver ist in RFC 4035 festgelegt.",
+        "short_en": "DNSSEC validation is the process in which a resolver cryptographically verifies the signatures on an answer by building an authentication chain of DNSKEY and DS RRsets up to a configured trust anchor. The protocol behaviour of validating resolvers is defined in RFC 4035.",
+        "pitfall": "Validierung schützt nur Zonen, die auch tatsächlich signiert sind. Für unsignierte Zonen kann ein Resolver nur beweisen, dass keine Signatur existiert, nicht dass die Antwort echt ist.",
+        "pitfall_en": "validation only protects zones that are actually signed. For unsigned zones a resolver can only prove that no signature exists, not that the answer is genuine.",
+        "rfc": "RFC 4035, 6840",
+    },
+    {
+        "group": "protocols",
+        "term": "AD-Flag",
+        "short": "Das AD-Bit (Authentic Data) im DNS-Header wird von einem sicherheitsbewussten rekursiven Nameserver gesetzt, wenn er alle RRsets in Answer- und Authority-Abschnitt als authentisch validiert hat. RFC 4035 Abschnitt 3.2.3 verbietet das Setzen des Bits, solange nicht alle betroffenen RRsets als authentisch gelten.",
+        "short_en": "The AD (Authentic Data) bit in the DNS header is set by a security-aware recursive name server when it has validated all RRsets in the Answer and Authority sections as authentic. RFC 4035 Section 3.2.3 forbids setting the bit unless all relevant RRsets are considered authentic.",
+        "pitfall": "Ein gesetztes AD-Bit ist kein Beweis. RFC 4033 Abschnitt 7 nennt es nur einen Hinweis und verlangt, dass der Stub-Resolver „must trust both the recursive name servers in question and the communication channels between itself and those name servers“, denn auf einem ungesicherten Kanal kann jeder Angreifer das Bit setzen.",
+        "pitfall_en": "a set AD bit is not proof. RFC 4033 Section 7 calls it only a hint and requires that the stub resolver „must trust both the recursive name servers in question and the communication channels between itself and those name servers“, because on an unsecured channel any attacker can set the bit.",
+        "rfc": "RFC 4035, 6840, 4033",
+    },
+    {
+        "group": "protocols",
+        "term": "Trust Anchor",
+        "short": "Ein Trust Anchor ist laut RFC 4033 „A configured DNSKEY RR or DS RR hash of a DNSKEY RR“, den ein validierender Resolver als Startpunkt der Authentifizierungskette verwendet. RFC 5011 beschreibt, wie Trust Anchors automatisiert und authentifiziert ausgetauscht werden können.",
+        "short_en": "A trust anchor is, per RFC 4033, „A configured DNSKEY RR or DS RR hash of a DNSKEY RR“ that a validating resolver uses as the starting point for building the authentication chain. RFC 5011 describes how trust anchors can be updated automatically and authenticated.",
+        "pitfall": "Ein Trust Anchor ist kein X.509-Zertifikat und stammt nicht aus dem Browser- oder Betriebssystem-Zertifikatsspeicher. In der Praxis ist meist genau ein Anker konfiguriert, nämlich der der DNS-Root-Zone.",
+        "pitfall_en": "a trust anchor is not an X.509 certificate and does not come from the browser or operating system certificate store. In practice usually exactly one anchor is configured, that of the DNS root zone.",
+        "rfc": "RFC 4033, 5011",
+    },
+    {
+        "group": "protocols",
+        "term": "Root Zone KSK",
+        "short": "Der Root Zone Key Signing Key ist der von der IANA verwaltete DNSSEC-Schlüssel, mit dem der Schlüsselsatz der DNS-Root-Zone signiert wird und der als Vertrauensanker fast aller validierenden Resolver dient. Aktiv signierend ist KSK-2017 mit Key Tag 20326 („Signing since 2018-10-11“); der Nachfolger KSK-2024 mit Key Tag 38696 steht laut IANA in „Pre-Publication“ und soll ab dem 11. Oktober 2026 signieren.",
+        "short_en": "The Root Zone Key Signing Key is the IANA managed DNSSEC key that signs the key set of the DNS root zone and serves as the trust anchor for nearly all validating resolvers. The actively signing key is KSK-2017 with key tag 20326 („Signing since 2018-10-11“); its successor KSK-2024 with key tag 38696 is listed by IANA as „Pre-Publication“ and is scheduled to sign the zone from 11 October 2026.",
+        "pitfall": "Der KSK signiert nicht die einzelnen Root-Einträge, sondern nur den DNSKEY-Satz der Root-Zone; die eigentlichen Daten signiert der Zone Signing Key. Stand 2026-09-07 hat der Rollover auf KSK-2024 noch nicht stattgefunden.",
+        "pitfall_en": "the KSK does not sign individual root records, only the root zone DNSKEY RRset; the actual data is signed by the Zone Signing Key. As of 2026-09-07 the rollover to KSK-2024 has not yet taken place.",
+        "rfc": "RFC 5011, 4034",
+    },
+    {
+        "group": "protocols",
+        "term": "DoT",
+        "short": "DNS over TLS (DoT) transportiert DNS-Nachrichten in einer TLS-Sitzung über den fest zugewiesenen Port 853 und verhindert damit Mitlesen und Manipulation auf dem Weg. RFC 8310 ergänzt zwei Nutzungsprofile, Strict Privacy mit zwingender Serverauthentifizierung und Opportunistic Privacy ohne diese Garantie.",
+        "short_en": "DNS over TLS (DoT) carries DNS messages inside a TLS session on the dedicated port 853, preventing eavesdropping and on-path tampering. RFC 8310 adds two usage profiles, Strict Privacy with mandatory server authentication and Opportunistic Privacy without that guarantee.",
+        "pitfall": "DoT im opportunistischen Profil authentifiziert den Server nicht und schützt daher nicht gegen einen aktiven Angreifer. Nur das Strict-Privacy-Profil nach RFC 8310 verweigert die Auflösung, wenn Verschlüsselung und Authentifizierung nicht zustande kommen.",
+        "pitfall_en": "DoT in the opportunistic profile does not authenticate the server and therefore does not protect against an active attacker. Only the Strict Privacy profile of RFC 8310 refuses to resolve when encryption and authentication cannot be established.",
+        "rfc": "RFC 7858, 8310",
+    },
+    {
+        "group": "protocols",
+        "term": "DoH",
+        "short": "DNS over HTTPS (DoH) bildet jedes DNS-Anfrage-Antwort-Paar auf einen HTTP-Austausch über HTTPS ab, sodass DNS-Verkehr verschlüsselt und von anderem HTTPS-Verkehr kaum unterscheidbar ist. Der Medientyp ist application/dns-message, üblich ist der Pfad-Template-Endpunkt eines konfigurierten DoH-Servers.",
+        "short_en": "DNS over HTTPS (DoH) maps each DNS query and response pair into an HTTP exchange over HTTPS, so DNS traffic is encrypted and hard to distinguish from other HTTPS traffic. The media type is application/dns-message, addressed via the URI template of a configured DoH server.",
+        "pitfall": "DoH verbirgt die besuchte Seite nicht vollständig. Erstens sieht der DoH-Betreiber weiterhin alle Anfragen im Klartext und kann sie laut RFC 8484 Abschnitt 8.2 zusätzlich über HTTP-Cookies, Header-Fingerprinting und IP-Adresse korrelieren; zweitens verrät die anschließende Verbindung selbst das Ziel, denn nach RFC 8744 wird „The SNI extension ... carried in cleartext in the TLS 'ClientHello' message“ und die Server-IP bleibt sichtbar.",
+        "pitfall_en": "DoH does not fully hide which site you visit. First, the DoH operator still sees every query in the clear and can correlate it via HTTP cookies, header fingerprinting and IP address (RFC 8484 Section 8.2); second, the subsequent connection itself reveals the destination, since per RFC 8744 „The SNI extension is carried in cleartext in the TLS 'ClientHello' message“ and the server IP address remains visible.",
+        "rfc": "RFC 8484",
+    },
+    {
+        "group": "protocols",
+        "term": "DoQ",
+        "short": "DNS over QUIC (DoQ) überträgt DNS über dedizierte QUIC-Verbindungen auf UDP-Port 853 mit dem ALPN-Token „doq“ und bietet ähnliche Vertraulichkeit wie DoT ohne das Head-of-Line-Blocking von TCP. RFC 9250 beschreibt DoQ als Allzwecktransport für Stub-zu-Resolver, Resolver-zu-autoritativ und Zonentransfer.",
+        "short_en": "DNS over QUIC (DoQ) carries DNS over dedicated QUIC connections on UDP port 853 with the ALPN token „doq“, offering confidentiality similar to DoT without TCP head of line blocking. RFC 9250 describes DoQ as a general purpose transport for stub to recursive, recursive to authoritative and zone transfer.",
+        "pitfall": "DoQ auf UDP-Port 853 ist nicht dasselbe wie DoT, das TCP-Port 853 nutzt, und es ist auch nicht DNS over HTTP/3. Beide Seiten müssen DoQ ausdrücklich per ALPN aushandeln.",
+        "pitfall_en": "DoQ on UDP port 853 is not the same as DoT, which uses TCP port 853, and it is not DNS over HTTP/3 either. Both endpoints must explicitly negotiate DoQ via ALPN.",
+        "rfc": "RFC 9250",
+    },
+    {
+        "group": "protocols",
+        "term": "DNSCrypt",
+        "short": "DNSCrypt ist ein herstelleroffenes, aber nicht von der IETF standardisiertes Protokoll, das laut dnscrypt.info „encrypts, authenticates and optionally anonymizes communications between your DNS client and resolver“. Version 2 der Spezifikation nutzt die Konstruktion X25519-XChaCha20Poly1305 sowie Ed25519 für die Signatur der Resolver-Zertifikate.",
+        "short_en": "DNSCrypt is an open but non IETF protocol that, per dnscrypt.info, „encrypts, authenticates and optionally anonymizes communications between your DNS client and resolver“. Version 2 of the specification uses the X25519-XChaCha20Poly1305 construction and Ed25519 for signing resolver certificates.",
+        "pitfall": "DNSCrypt ist kein RFC und kein IETF-Standard, sondern liegt nur als individueller Internet-Draft und als eigene Protokollspezifikation vor. Es ist außerdem nicht mit DNSSEC verwandt, denn es sichert den Transportweg, nicht die Zonendaten.",
+        "pitfall_en": "DNSCrypt is not an RFC and not an IETF standard; it exists only as an individual Internet-Draft and its own protocol specification. It is also unrelated to DNSSEC, since it secures the transport path rather than the zone data.",
+        "rfc": None,
+    },
+    {
+        "group": "protocols",
+        "term": "Oblivious DoH",
+        "short": "Oblivious DNS over HTTPS (ODoH) schiebt einen Proxy zwischen Client und DoH-Target, sodass der Proxy die IP-Adresse des Clients kennt, aber nicht den Inhalt, und das Target den Inhalt entschlüsselt, aber nur die Proxy-IP sieht. Das Verfahren ist in RFC 9230 als Experimental veröffentlicht.",
+        "short_en": "Oblivious DNS over HTTPS (ODoH) inserts a proxy between client and DoH target, so the proxy knows the client IP address but not the content, while the target decrypts the content but only sees the proxy IP. The mechanism is published as Experimental in RFC 9230.",
+        "pitfall": "Der Schutz hängt daran, dass Proxy und Target nicht zusammenarbeiten oder demselben Betreiber gehören. Kolludieren beide, ist die Trennung von Identität und Inhalt aufgehoben.",
+        "pitfall_en": "the protection depends on proxy and target not colluding or belonging to the same operator. If they collude, the separation of identity and content collapses.",
+        "rfc": "RFC 9230",
+    },
+    {
+        "group": "protocols",
+        "term": "EDNS(0)",
+        "short": "EDNS(0) erweitert das DNS-Drahtformat rückwärtskompatibel über ein OPT-Pseudo-RR (Typ 41) im Additional-Abschnitt, das größere UDP-Nachrichten als 512 Byte, zusätzliche Flag-Bits und einen erweiterten RCODE-Bereich ermöglicht. Das OPT-Record trägt keine Zonendaten, sondern ausschließlich Steuerinformation.",
+        "short_en": "EDNS(0) extends the DNS wire format in a backward compatible way through an OPT pseudo RR (type 41) in the additional section, enabling UDP messages larger than 512 bytes, extra flag bits and an extended RCODE space. The OPT record carries no DNS data, only control information.",
+        "pitfall": "Die vom Client angegebene UDP-Payload-Größe ist nur eine Angabe der eigenen Empfangsfähigkeit, keine Garantie, dass Pfad-MTU und Firewalls Pakete dieser Größe durchlassen. EDNS(0) ist außerdem kein Sicherheitsmechanismus, sondern nur der Trägermechanismus für Optionen wie Padding, ECS oder DNS Cookies.",
+        "pitfall_en": "the UDP payload size a client advertises only states its own receive capability; it does not guarantee that path MTU and firewalls will pass packets of that size. EDNS(0) is also not a security mechanism, only the carrier for options such as Padding, ECS or DNS Cookies.",
+        "rfc": "RFC 6891, 2671, 2673",
+    },
+    {
+        "group": "protocols",
+        "term": "EDNS Client Subnet",
+        "short": "EDNS Client Subnet (ECS) ist eine EDNS(0)-Option, mit der ein Resolver einen gekürzten Teil des Client-Netzpräfixes an autoritative Server weiterreicht, damit diese geografisch passende Antworten liefern und der Cache-Gültigkeitsbereich bekannt wird. RFC 7871 ist Informational und beschreibt ein bereits im Einsatz befindliches Verfahren.",
+        "short_en": "EDNS Client Subnet (ECS) is an EDNS(0) option with which a resolver passes a truncated part of the client network prefix to authoritative servers so they can return geographically appropriate answers and signal the cache scope. RFC 7871 is Informational and documents a mechanism already in active use.",
+        "pitfall": "ECS untergräbt einen Teil des Datenschutzgewinns von verschlüsseltem DNS, weil Netzinformationen des Nutzers an jeden beteiligten autoritativen Server weitergereicht werden. RFC 7871 empfiehlt daher ausdrücklich, die Option in Nameserver-Software standardmäßig zu deaktivieren.",
+        "pitfall_en": "ECS undermines part of the privacy gain of encrypted DNS, because the user network information is passed to every authoritative server involved. RFC 7871 therefore explicitly recommends that the option be turned off by default in nameserver software.",
+        "rfc": "RFC 7871",
+    },
+    {
+        "group": "protocols",
+        "term": "QNAME-Minimierung",
+        "short": "Bei der QNAME-Minimierung sendet ein Resolver einem autoritativen Server nicht mehr den vollständigen Namen und Typ, sondern nur den um ein Label längeren Teil des Namens, für den dieser Server zuständig ist. RFC 9156 ist Standards Track und ersetzt RFC 7816.",
+        "short_en": "With QNAME minimisation a resolver no longer sends the full original QNAME and QTYPE to an upstream authoritative server, but only the name stripped to one label more than the longest name for which that server is known to be authoritative. RFC 9156 is Standards Track and obsoletes RFC 7816.",
+        "pitfall": "QNAME-Minimierung schützt nur gegenüber den vorgelagerten autoritativen Servern wie den Root- und TLD-Servern. Der eigene rekursive Resolver sieht weiterhin den vollständigen angefragten Namen.",
+        "pitfall_en": "QNAME minimisation only protects against upstream authoritative servers such as the root and TLD servers. Your own recursive resolver still sees the full name being queried.",
+        "rfc": "RFC 9156, 7816",
+    },
+    {
+        "group": "protocols",
+        "term": "Padding",
+        "short": "Die EDNS(0)-Padding-Option (Optionscode 12) erlaubt es Client und Server, DNS-Nachrichten um eine variable Zahl von Oktetten aufzufüllen, um Rückschlüsse aus der Nachrichtenlänge zu erschweren. RFC 8467 empfiehlt experimentell Blocklängen-Padding auf ein Vielfaches von 128 Oktetten für Anfragen und 468 Oktetten für Antworten.",
+        "short_en": "The EDNS(0) Padding option (option code 12) lets clients and servers pad DNS messages by a variable number of octets so that message length reveals less. RFC 8467 recommends, experimentally, block length padding to a multiple of 128 octets for queries and 468 octets for responses.",
+        "pitfall": "Padding ist nur sinnvoll innerhalb eines verschlüsselten Transports wie DoT, DoH oder DoQ. Auf unverschlüsseltem DNS bringt es keinen Datenschutzgewinn, weil der Inhalt ohnehin lesbar ist.",
+        "pitfall_en": "padding is only useful inside an encrypted transport such as DoT, DoH or DoQ. On cleartext DNS it yields no privacy gain, because the content is readable anyway.",
+        "rfc": "RFC 7830, 8467",
+    },
+    {
+        "group": "protocols",
+        "term": "Encrypted Client Hello",
+        "short": "Encrypted Client Hello (ECH) ist eine TLS-Erweiterung, die das ClientHello unter einem öffentlichen Serverschlüssel verschlüsselt und damit sensible Felder wie SNI und die ALPN-Liste verbirgt. Die dafür nötige Konfiguration wird üblicherweise über den DNS-Ressourcendatensatz HTTPS/SVCB bezogen.",
+        "short_en": "Encrypted Client Hello (ECH) is a TLS extension that encrypts the ClientHello under a server public key, hiding sensitive fields such as the SNI and the ALPN list. The required configuration is normally obtained through the HTTPS/SVCB DNS resource record.",
+        "pitfall": "ECH allein verbirgt das Ziel nicht. RFC 9849 stellt fest: „ECH is not in itself sufficient to protect the identity of the server. The target domain may also be visible through other channels, such as plaintext client DNS queries or visible server IP addresses.“",
+        "pitfall_en": "ECH alone does not hide the destination. RFC 9849 states: „ECH is not in itself sufficient to protect the identity of the server. The target domain may also be visible through other channels, such as plaintext client DNS queries or visible server IP addresses.“",
+        "rfc": "RFC 9849, 9848",
+    },
+    {
+        "group": "protocols",
+        "term": "Server Name Indication",
+        "short": "Server Name Indication (SNI) ist die TLS-Erweiterung, mit der ein Client dem Server im Handshake mitteilt, welchen Hostnamen er kontaktieren will, damit ein Server mehrere virtuelle Hosts unter einer IP-Adresse bedienen kann. Sie ist in RFC 6066 Abschnitt 3 definiert.",
+        "short_en": "Server Name Indication (SNI) is the TLS extension by which a client tells the server, during the handshake, which host name it wants to reach, so that one server can host multiple virtual servers on a single IP address. It is defined in RFC 6066 Section 3.",
+        "pitfall": "Ohne ECH wird der Hostname im SNI im Klartext übertragen, obwohl die Verbindung als HTTPS gilt. RFC 8744 hält fest, dass Überwachung sich zunehmend genau auf „the cleartext SNI“ stützt, um zu erkennen, welche Dienste ein Nutzer aufruft.",
+        "pitfall_en": "without ECH the host name in the SNI travels in the clear even though the connection counts as HTTPS. RFC 8744 notes that monitoring increasingly relies on exactly „the cleartext SNI“ to identify which services a user accesses.",
+        "rfc": "RFC 6066, 8744",
+    },
+    {
+        "group": "protocols",
+        "term": "DNS-Sinkhole",
+        "short": "Ein DNS-Sinkhole ist ein Resolver, der Anfragen für unerwünschte Namen bewusst nicht wahrheitsgemäß beantwortet, sondern etwa NXDOMAIN, NODATA oder eine umgeleitete Adresse liefert, um Verbindungen zu Schadinfrastruktur oder Werbe- und Trackingdomains zu unterbinden. In BIND 9 wird dies über Response Policy Zones umgesetzt, die die ISC-Dokumentation als „a form of DNS firewall“ beschreibt.",
+        "short_en": "A DNS sinkhole is a resolver that deliberately does not answer queries for unwanted names truthfully, returning for example NXDOMAIN, NODATA or a redirected address in order to block connections to malicious infrastructure or ad and tracking domains. In BIND 9 this is implemented through Response Policy Zones, which the ISC documentation describes as „a form of DNS firewall“.",
+        "pitfall": "Ein Sinkhole blockiert nur die Namensauflösung, nicht die Verbindung selbst. Wer die IP-Adresse direkt kennt oder einen eigenen verschlüsselten Resolver im Gerät verwendet, umgeht das Sinkhole vollständig; außerdem kollidiert eine gefälschte Antwort mit DNSSEC-Validierung.",
+        "pitfall_en": "a sinkhole only blocks name resolution, not the connection itself. Anyone who knows the IP address directly or uses their own encrypted resolver in the device bypasses the sinkhole entirely; a synthesized answer also conflicts with DNSSEC validation.",
+        "rfc": None,
+    },
+    {
+        "group": "protocols",
+        "term": "Forwarder",
+        "short": "Ein Forwarder ist nach RFC 9499 „A nameserver used to resolve queries instead of directly using the authoritative nameserver chain“; Forwarding ist der Vorgang, bei dem ein Server eine Anfrage mit gesetztem RD-Bit an einen anderen Server zur Auflösung weitergibt. RFC 9499 ist BCP 219 und die aktuelle DNS-Terminologie.",
+        "short_en": "Per RFC 9499 a forwarder is „A nameserver used to resolve queries instead of directly using the authoritative nameserver chain“; forwarding is „The process of one server sending a DNS query with the RD bit set to 1 to another server to resolve that query“. RFC 9499 is BCP 219 and the current DNS terminology document.",
+        "pitfall": "Forwarding ist nicht dasselbe wie blindes Weiterreichen von Paketen, sondern eine Resolver-Funktion mit eigenem Cache. Wer einen Forwarder einsetzt, verlagert damit auch die Vertrauensfrage und die Sichtbarkeit aller Anfragen auf den Upstream-Betreiber.",
+        "pitfall_en": "forwarding is not blind relaying of packets but a resolver function with its own cache. Using a forwarder also shifts the trust question and the visibility of all queries to the upstream operator.",
+        "rfc": "RFC 9499, 2308",
+    },
+    {
+        "group": "protocols",
+        "term": "DNS-Rebinding-Schutz",
+        "short": "DNS-Rebinding-Schutz filtert Antworten aus öffentlichen Zonen heraus, die auf private oder lokale IP-Adressbereiche zeigen, damit ein Angreifer den Browser eines Nutzers nicht als Proxy in dessen internes Netz missbrauchen kann. Unbound setzt dies mit der Option private-address um, die passende A-, AAAA-, SVCB- und HTTPS-Einträge aus Antworten entfernt.",
+        "short_en": "DNS rebinding protection filters out answers from public zones that point into private or local IP address ranges, so an attacker cannot turn a user browser into a proxy into the internal network. Unbound implements this with the private-address option, which removes matching A, AAAA, SVCB and HTTPS records from answers.",
+        "pitfall": "Der Schutz greift nur für Namen aus öffentlichen Zonen und kann legitime Anwendungsfälle brechen, etwa Split-Horizon-Setups oder Dienste wie ACME-Validierung, die absichtlich private Adressen veröffentlichen. Dafür sieht Unbound ausdrücklich Ausnahmen über private-domain vor.",
+        "pitfall_en": "the protection applies only to names in public zones and can break legitimate cases such as split horizon setups or services that deliberately publish private addresses. Unbound therefore provides explicit exemptions via private-domain.",
+        "rfc": None,
+    },
+]
+
+# ---------------------------------------------------------------------------
+# Selbst pruefen. Jeder Befehl wurde am 2026-09-07 ausgefuehrt, die
+# beschriebenen Ausgaben sind beobachtet und nicht angenommen.
+# ---------------------------------------------------------------------------
+
+CHECK_GROUPS = [
+    ("dnssec", "Validiert mein Resolver DNSSEC?", "Does my resolver validate DNSSEC?",
+     """Die Frage lässt sich in drei Befehlen beantworten, und zwar zweifelsfrei. Wichtig ist, den Resolver direkt zu
+befragen, also mit <code>@</code> und seiner Adresse. Fragt man ohne <code>@</code>, antwortet der lokale Stub des
+Betriebssystems, und der verschluckt das entscheidende Merkmal oft.""",
+     """Three commands answer this question, and they answer it beyond doubt. What matters is querying the resolver
+directly, using <code>@</code> and its address. Without <code>@</code> you are asking the operating system's local stub,
+which often swallows the decisive detail."""),
+    ("identity", "Welchen Resolver benutze ich wirklich?", "Which resolver am I actually using?",
+     """Eingetragen ist eine Sache, benutzt eine andere. Router, VPN-Software, Browser mit eigenem DoH und der
+Systemdienst greifen alle ein. Diese Befehle zeigen, wer am Ende wirklich antwortet und welchen Teil Ihrer Adresse er
+dabei weitergibt.""",
+     """What is configured and what is used are two different things. Routers, VPN software, browsers with their own DoH
+and the system service all interfere. These commands show who really answers in the end, and which part of your address
+they pass on."""),
+    ("encrypted", "Kommt die Antwort wirklich verschlüsselt?", "Is the answer really encrypted?",
+     """Eine verschlüsselte Verbindung allein sagt nichts, solange niemand prüft, wer am anderen Ende sitzt. Genau das
+ist der häufigste Fehler in Anleitungen: Sie zeigen einen erfolgreichen Handschlag und nennen ihn Sicherheit.""",
+     """An encrypted connection on its own means nothing as long as nobody checks who is at the other end. That is the
+most common mistake in guides: they show a successful handshake and call it security."""),
+    ("metadata", "Was verrät meine Anfrage noch?", "What else does my query reveal?",
+     """Zwei Eigenschaften entscheiden darüber, wie viel ein Resolver über Sie preisgibt und wie viel ein Beobachter aus
+der reinen Paketgröße ableiten kann. Beide lassen sich in je einem Befehl messen.""",
+     """Two properties decide how much a resolver gives away about you, and how much an observer can infer from packet
+size alone. Each can be measured with a single command."""),
+]
+
+CHECKS = [
+    {
+        "group": "dnssec",
+        "title": "Die Positivkontrolle",
+        "title_en": "The positive control",
+        "question": "Markiert der Resolver eine korrekt signierte Antwort als geprüft?",
+        "question_en": "Does the resolver mark a correctly signed answer as verified?",
+        "command": "dig +dnssec @9.9.9.9 sigok.ippacket.stream A",
+        "expected": """In der Zeile <code>;; flags:</code> muss neben <code>qr rd ra</code> auch <code>ad</code> stehen, der Status
+muss <code>NOERROR</code> sein. Gemessen am 7. September 2026: <code>status: NOERROR</code> und
+<code>flags: qr rd ra ad</code>. Das <code>ad</code> steht für „authentic data“. RFC 4035 erlaubt einem Server, dieses
+Bit nur zu setzen, wenn er alle Datensätze der Antwort selbst geprüft hat.""",
+        "expected_en": """The line <code>;; flags:</code> must contain <code>ad</code> alongside <code>qr rd ra</code>, and the
+status must be <code>NOERROR</code>. Measured on 7 September 2026: <code>status: NOERROR</code> and
+<code>flags: qr rd ra ad</code>. The <code>ad</code> stands for “authentic data”. RFC 4035 permits a server to set this
+bit only if it has verified every record in the answer itself.""",
+        "note": "Ersetzen Sie <code>9.9.9.9</code> durch die Adresse, die Sie prüfen wollen.",
+        "note_en": "Replace <code>9.9.9.9</code> with the address you want to test.",
+    },
+    {
+        "group": "dnssec",
+        "title": "Die Negativkontrolle",
+        "title_en": "The negative control",
+        "question": "Weist der Resolver eine absichtlich falsch signierte Antwort zurück?",
+        "question_en": "Does the resolver reject a deliberately mis-signed answer?",
+        "command": "dig @9.9.9.9 sigfail.ippacket.stream A\ndig @9.9.9.9 dnssec-failed.org A",
+        "expected": """Beide müssen <code>status: SERVFAIL</code> und eine leere Antwortsektion liefern. Gemessen am
+7. September 2026: beide <code>SERVFAIL</code>. Kommt stattdessen <code>NOERROR</code> mit einer IP-Adresse zurück,
+validiert dieser Resolver nicht. Zwei unabhängige Testdomains deshalb, weil eine davon jederzeit ausfallen kann.""",
+        "expected_en": """Both must return <code>status: SERVFAIL</code> and an empty answer section. Measured on
+7 September 2026: both <code>SERVFAIL</code>. If <code>NOERROR</code> comes back with an IP address instead, this
+resolver does not validate. Two independent test domains, because either one can go away at any time.""",
+        "note": None, "note_en": None,
+    },
+    {
+        "group": "dnssec",
+        "title": "Der Beweis, dass es wirklich an DNSSEC lag",
+        "title_en": "Proof that DNSSEC was really the reason",
+        "question": "Ein SERVFAIL kann viele Ursachen haben. Wie schließe ich die anderen aus?",
+        "question_en": "A SERVFAIL can have many causes. How do I rule the others out?",
+        "command": "dig +cd @9.9.9.9 sigfail.ippacket.stream A",
+        "expected": """Mit gesetztem CD-Bit, also „checking disabled“, muss dieselbe Abfrage jetzt <code>NOERROR</code> und eine
+Adresse liefern. Gemessen am 7. September 2026: ohne <code>+cd</code> SERVFAIL, mit <code>+cd</code> NOERROR. Genau
+dieser Umschlag ist der Beweis: Der Resolver hat vorher geprüft und deshalb abgelehnt, und nicht etwa, weil die Domain
+kaputt oder der Server überlastet wäre.""",
+        "expected_en": """With the CD bit set, meaning “checking disabled”, the same query must now return <code>NOERROR</code>
+and an address. Measured on 7 September 2026: without <code>+cd</code> SERVFAIL, with <code>+cd</code> NOERROR. That
+switch is the proof: the resolver checked first and refused for that reason, not because the domain was broken or the
+server overloaded.""",
+        "note": None, "note_en": None,
+    },
+    {
+        "group": "dnssec",
+        "title": "Den Grund im Klartext lesen",
+        "title_en": "Reading the reason in plain text",
+        "question": "Sagt der Resolver auch, warum er abgelehnt hat?",
+        "question_en": "Does the resolver also say why it refused?",
+        "command": "dig @9.9.9.9 sigfail.ippacket.stream A | grep EDE",
+        "expected": """Eine Zeile der Form <code>; EDE: 6 (DNSSEC Bogus)</code>. Genau das wurde am 7. September 2026 gemessen.
+Extended DNS Errors nach RFC 8914 liefern einen maschinenlesbaren Grund statt eines nackten SERVFAIL. Erscheint keine
+EDE-Zeile, unterstützt der Resolver diese Erweiterung nicht; das ist für sich genommen kein Mangel an der Validierung.""",
+        "expected_en": """A line of the form <code>; EDE: 6 (DNSSEC Bogus)</code>. That is exactly what was measured on
+7 September 2026. Extended DNS Errors per RFC 8914 give a machine-readable reason instead of a bare SERVFAIL. If no EDE
+line appears, the resolver does not support the extension; on its own that says nothing about its validation.""",
+        "note": None, "note_en": None,
+    },
+    {
+        "group": "dnssec",
+        "title": "Der Fallstrick, an dem die meisten Tests scheitern",
+        "title_en": "The pitfall that ruins most tests",
+        "question": "Warum fehlt das ad-Flag, obwohl der Resolver validiert?",
+        "question_en": "Why is the ad flag missing even though the resolver validates?",
+        "command": "dig +dnssec sigok.ippacket.stream A\ndig +dnssec @9.9.9.9 sigok.ippacket.stream A",
+        "expected": """Der Unterschied ist das <code>@</code>. Ohne Adresse fragen Sie den lokalen Dienst des Betriebssystems.
+Auf dem Testrechner lieferte der erste Befehl am 7. September 2026 <code>flags: qr rd ra</code> ohne
+<code>ad</code>, der zweite <code>flags: qr rd ra ad</code>. Der Upstream validiert also, der lokale Stub reicht die
+Markierung nur nicht durch. Wer das nicht weiß, hält einen validierenden Resolver für kaputt.""",
+        "expected_en": """The difference is the <code>@</code>. Without an address you are asking the operating system's local
+service. On the test machine the first command returned <code>flags: qr rd ra</code> without <code>ad</code> on
+7 September 2026, the second <code>flags: qr rd ra ad</code>. So the upstream does validate, the local stub simply does
+not pass the marking through. Anyone unaware of this will mistake a validating resolver for a broken one.""",
+        "note": "Unter Linux zeigt <code>resolvectl status</code>, was der Systemdienst tut.",
+        "note_en": "On Linux, <code>resolvectl status</code> shows what the system service is doing.",
+    },
+    {
+        "group": "identity",
+        "title": "Wer antwortet, und was gibt er von mir weiter?",
+        "title_en": "Who answers, and what do they pass on about me?",
+        "question": "Sieht der autoritative Server meine Adresse, oder nur die des Resolvers?",
+        "question_en": "Does the authoritative server see my address, or only the resolver's?",
+        "command": "dig +short TXT whoami.ds.akahelp.net",
+        "expected": """Der Dienst von Akamai antwortet mit bis zu drei Paaren. <code>ns</code> ist die Adresse des Resolvers, der
+tatsächlich angefragt hat. Erscheint zusätzlich <code>ecs</code>, wurde ein Teil Ihrer eigenen Adresse mitgeschickt.
+Gemessen am 7. September 2026 über den Systemresolver: nur <code>"ns"</code>, kein <code>ecs</code>. Es wurde also
+nichts von der Client-Adresse weitergereicht.""",
+        "expected_en": """This Akamai service answers with up to three pairs. <code>ns</code> is the address of the resolver that
+actually asked. If <code>ecs</code> appears as well, part of your own address was sent along. Measured on
+7 September 2026 through the system resolver: only <code>"ns"</code>, no <code>ecs</code>. So nothing of the client
+address was passed on.""",
+        "note": None, "note_en": None,
+    },
+    {
+        "group": "identity",
+        "title": "Derselbe Anbieter, zwei Adressen, zwei Ergebnisse",
+        "title_en": "One provider, two addresses, two outcomes",
+        "question": "Wie sieht der Unterschied zwischen mit und ohne EDNS Client Subnet konkret aus?",
+        "question_en": "What does the difference between with and without EDNS Client Subnet actually look like?",
+        "command": "dig +short TXT whoami.ds.akahelp.net @9.9.9.9\ndig +short TXT whoami.ds.akahelp.net @9.9.9.11",
+        "expected": """Gemessen am 7. September 2026. Über <code>9.9.9.9</code> kam ausschließlich <code>"ns"</code> mit der
+Resolveradresse zurück. Über <code>9.9.9.11</code> kamen zusätzlich <code>"ip"</code> und
+<code>"ecs" "203.0.113.0/24/24"</code>, also das eigene Netz mit gekürzter Adresse. Derselbe Betreiber, dieselbe
+Datenschutzerklärung, ein Zeichen Unterschied in der Adresse. Das ist der sauberste Nachweis für ECS, weil alle
+anderen Bedingungen gleich bleiben.""",
+        "expected_en": """Measured on 7 September 2026. Via <code>9.9.9.9</code> only <code>"ns"</code> came back with the resolver
+address. Via <code>9.9.9.11</code> there were additionally <code>"ip"</code> and
+<code>"ecs" "203.0.113.0/24/24"</code>, meaning your own network with a truncated address. Same operator, same privacy
+policy, one character of difference in the address. This is the cleanest demonstration of ECS, because every other
+condition stays the same.""",
+        "note": "Die gezeigte Netzangabe ist ein Beispiel. In Ihrer Ausgabe steht Ihr eigenes Netz.",
+        "note_en": "The network shown is an example. Your own output will contain your own network.",
+    },
+    {
+        "group": "identity",
+        "title": "Welcher Knoten eines Anycast-Netzes antwortet",
+        "title_en": "Which node of an anycast network answers",
+        "question": "Anycast heißt: viele Server, eine Adresse. Welcher ist es gerade?",
+        "question_en": "Anycast means many servers, one address. Which one is it right now?",
+        "command": "dig +nsid @9.9.9.9 example.com A",
+        "expected": """Im Abschnitt <code>OPT PSEUDOSECTION</code> erscheint eine Zeile
+<code>; NSID: ... ("res701.qfra3")</code>. Genau das wurde am 7. September 2026 gemessen; die Kennung deutet auf einen
+Standort in Frankfurt. Fehlt die Zeile, sendet der Server keine Kennung. Der Vorteil gegenüber der älteren Abfrage
+<code>dig @server CH TXT id.server</code>: Die Kennung reist in der normalen Antwort mit.""",
+        "expected_en": """In the <code>OPT PSEUDOSECTION</code> a line appears reading
+<code>; NSID: ... ("res701.qfra3")</code>. That is what was measured on 7 September 2026; the identifier points to a
+location in Frankfurt. If the line is missing, the server sends no identifier. The advantage over the older query
+<code>dig @server CH TXT id.server</code> is that the identifier travels along with the normal answer.""",
+        "note": None, "note_en": None,
+    },
+    {
+        "group": "encrypted",
+        "title": "DNS over TLS in einem Befehl",
+        "title_en": "DNS over TLS in one command",
+        "question": "Kommt die Antwort tatsächlich durch den TLS-Kanal?",
+        "question_en": "Does the answer really arrive through the TLS channel?",
+        "command": "dig +tls @dns.quad9.net example.com A",
+        "expected": """Entscheidend ist die vorletzte Zeile. Gemessen am 7. September 2026:
+<code>;; SERVER: 149.112.112.112#853(dns.quad9.net) (TLS)</code>. Das <code>(TLS)</code> und der Port
+<code>853</code> sind der Beleg. Steht dort kein <code>(TLS)</code>, lief die Abfrage im Klartext.""",
+        "expected_en": """The decisive line is the penultimate one. Measured on 7 September 2026:
+<code>;; SERVER: 149.112.112.112#853(dns.quad9.net) (TLS)</code>. The <code>(TLS)</code> and port <code>853</code> are
+the evidence. If <code>(TLS)</code> is absent, the query ran in the clear.""",
+        "note": None, "note_en": None,
+    },
+    {
+        "group": "encrypted",
+        "title": "Der häufigste Fehler: verschlüsselt, aber ungeprüft",
+        "title_en": "The most common mistake: encrypted but unverified",
+        "question": "Verschlüsselung ohne Zertifikatsprüfung schützt gegen wen genau?",
+        "question_en": "Encryption without certificate checking protects against whom exactly?",
+        "command": "echo QUIT | openssl s_client -connect dns.quad9.net:853 \\\n  -servername dns.quad9.net -alpn dot 2>&1 \\\n  | grep -E 'subject=|Verification|ALPN protocol'",
+        "expected": """Drei Zeilen müssen zusammenkommen. Gemessen am 7. September 2026:
+<code>subject=C=CH, ST=Zurich, L=Zürich, O=Quad9, CN=dns.quad9.net</code>, dann <code>Verification: OK</code>, dann
+<code>ALPN protocol: dot</code>. Erst alle drei zusammen belegen: verschlüsselt, richtiger Gegenüber, richtiges
+Protokoll. Ein Handschlag allein belegt nur, dass irgendjemand geantwortet hat.""",
+        "expected_en": """Three lines must come together. Measured on 7 September 2026:
+<code>subject=C=CH, ST=Zurich, L=Zürich, O=Quad9, CN=dns.quad9.net</code>, then <code>Verification: OK</code>, then
+<code>ALPN protocol: dot</code>. Only all three together establish encrypted, correct counterpart, correct protocol. A
+handshake alone establishes only that somebody answered.""",
+        "note": """Mit <code>kdig</code> aus dem Paket <code>knot-dnsutils</code> (Debian, Ubuntu) beziehungsweise
+<code>knot-utils</code> (Fedora, RHEL) geht dasselbe kürzer:
+<code>kdig -d @dns.quad9.net +tls-ca +tls-host=dns.quad9.net example.com A</code>. Achtung: <code>+tls</code> allein
+prüft das Zertifikat nicht, dafür braucht es <code>+tls-ca</code>.""",
+        "note_en": """With <code>kdig</code> from the package <code>knot-dnsutils</code> (Debian, Ubuntu) or
+<code>knot-utils</code> (Fedora, RHEL) the same thing is shorter:
+<code>kdig -d @dns.quad9.net +tls-ca +tls-host=dns.quad9.net example.com A</code>. Note that <code>+tls</code> on its
+own does not verify the certificate; that requires <code>+tls-ca</code>.""",
+    },
+    {
+        "group": "encrypted",
+        "title": "Die Gegenprobe, die scheitern muss",
+        "title_en": "The counter-test that has to fail",
+        "question": "Prüft mein Werkzeug wirklich, oder nickt es alles ab?",
+        "question_en": "Does my tool really check, or does it wave everything through?",
+        "command": "echo QUIT | openssl s_client -connect 9.9.9.9:853 \\\n  -servername dns.quad9.net -alpn dot -verify_return_error \\\n  -verify_hostname wrong.example.com 2>&1 | grep -iE 'verif|error' | head -3",
+        "expected": """Dieser Befehl muss fehlschlagen. Erwartet wird eine Zeile mit einem Prüffehler zum Hostnamen. Kommt hier
+eine erfolgreiche Prüfung zurück, ist Ihre gesamte übrige Prüfung wertlos. Eine Negativkontrolle, die nicht scheitert,
+misst nichts.""",
+        "expected_en": """This command has to fail. Expected is a line reporting a verification error about the hostname. If a
+successful verification comes back here, all your other checks are worthless. A negative control that does not fail
+measures nothing.""",
+        "note": None, "note_en": None,
+    },
+    {
+        "group": "encrypted",
+        "title": "DNS over QUIC prüfen",
+        "title_en": "Checking DNS over QUIC",
+        "question": "Spricht der Endpunkt wirklich DoQ, oder nur beinahe?",
+        "question_en": "Does the endpoint really speak DoQ, or only almost?",
+        "command": "openssl s_client -quic -alpn doq -connect dns.quad9.net:853 \\\n  -servername dns.quad9.net < /dev/null 2>&1 \\\n  | grep -E 'ALPN protocol|Verification'",
+        "expected": """Gemessen am 7. September 2026: <code>Verification: OK</code> und <code>ALPN protocol: doq</code>. Achtung
+bei der Auslegung: Ein ausgehandeltes <code>doq</code> beweist nur, dass der Server das Protokoll annimmt. Ob danach
+auch eine Antwort kommt, ist eine zweite Frage. Genau dieser Unterschied trat bei UncensoredDNS auf, wo der Handschlag
+gelang, eine echte Abfrage aber unbeantwortet blieb.""",
+        "expected_en": """Measured on 7 September 2026: <code>Verification: OK</code> and <code>ALPN protocol: doq</code>. A word
+on interpretation: a negotiated <code>doq</code> proves only that the server accepts the protocol. Whether an answer
+follows is a separate question. That very difference showed up at UncensoredDNS, where the handshake succeeded but a
+real query went unanswered.""",
+        "note": "Braucht OpenSSL 3.5 oder neuer. Version prüfen mit <code>openssl version</code>.",
+        "note_en": "Requires OpenSSL 3.5 or newer. Check with <code>openssl version</code>.",
+    },
+    {
+        "group": "encrypted",
+        "title": "DNS over HTTPS, der bequeme und der genaue Weg",
+        "title_en": "DNS over HTTPS, the convenient way and the exact way",
+        "question": "Antwortet der DoH-Endpunkt so, wie RFC 8484 es vorschreibt?",
+        "question_en": "Does the DoH endpoint answer the way RFC 8484 requires?",
+        "command": "dig +https @dns.quad9.net example.com A\n\ncurl -sS -o antwort.bin -w '%{http_code} %{content_type} %{size_download}\\n' \\\n  -H 'accept: application/dns-message' \\\n  'https://dns.quad9.net/dns-query?dns=AAABAAABAAAAAAAAA3d3dwdleGFtcGxlA2NvbQAAAQAB'",
+        "expected": """Der erste Befehl ist der bequeme: <code>dig</code> spricht DoH selbst und zeigt eine lesbare Antwort.
+Der zweite zeigt, was wirklich über die Leitung geht. Gemessen am 7. September 2026:
+<code>200 application/dns-message 65</code>. Die Datei enthält eine binäre DNS-Nachricht, kein JSON. Die ersten Bytes
+lauten <code>00 00 81 80 00 01 00 02</code>: Kennung null, wie RFC 8484 es verlangt, Antwortbit gesetzt, eine Frage,
+zwei Antworten.""",
+        "expected_en": """The first command is the convenient one: <code>dig</code> speaks DoH itself and shows a readable answer.
+The second shows what actually goes over the wire. Measured on 7 September 2026:
+<code>200 application/dns-message 65</code>. The file contains a binary DNS message, not JSON. The first bytes read
+<code>00 00 81 80 00 01 00 02</code>: identifier zero as RFC 8484 requires, response bit set, one question, two
+answers.""",
+        "note": """Die Base64-Zeichenkette im Beispiel steht so im RFC 8484 selbst und fragt nach
+<code>www.example.com</code>. Manche Anbieter bieten zusätzlich eine JSON-Schnittstelle an; die ist bequem, aber kein
+Standard und funktioniert nicht überall gleich.""",
+        "note_en": """The base64 string in the example appears verbatim in RFC 8484 itself and asks for
+<code>www.example.com</code>. Some providers additionally offer a JSON interface; it is convenient, but it is not a
+standard and does not behave the same everywhere.""",
+    },
+    {
+        "group": "metadata",
+        "title": "QNAME-Minimierung",
+        "title_en": "QNAME minimisation",
+        "question": "Erfährt jeder Server auf dem Weg den vollen Namen, oder nur so viel wie nötig?",
+        "question_en": "Does every server along the way learn the full name, or only as much as it needs?",
+        "command": "dig +short TXT qnamemintest.internet.nl @9.9.9.9",
+        "expected": """Die Antwort enthält genau einen von zwei Sätzen. Gemessen am 7. September 2026:
+<code>"HOORAY - QNAME minimisation is enabled on your resolver :)!"</code>. Die Gegenaussage lautet
+<code>"NO - QNAME minimisation is NOT enabled on your resolver :("</code>. Daneben erscheinen immer die Zeile
+<code>a.b.qnamemin-test.internet.nl.</code> und ein SPF-Eintrag; die Reihenfolge wechselt.""",
+        "expected_en": """The answer contains exactly one of two sentences. Measured on 7 September 2026:
+<code>"HOORAY - QNAME minimisation is enabled on your resolver :)!"</code>. The opposite reads
+<code>"NO - QNAME minimisation is NOT enabled on your resolver :("</code>. Alongside it you always get the line
+<code>a.b.qnamemin-test.internet.nl.</code> and an SPF record; the order varies.""",
+        "note": "Der Testdienst wird von SIDN Labs und NLnet Labs betrieben.",
+        "note_en": "The test service is operated by SIDN Labs and NLnet Labs.",
+    },
+    {
+        "group": "metadata",
+        "title": "Polstert der Resolver seine Antworten?",
+        "title_en": "Does the resolver pad its answers?",
+        "question": "Verschlüsselung verbirgt den Inhalt. Verbirgt sie auch die Länge?",
+        "question_en": "Encryption hides the content. Does it hide the length as well?",
+        "command": "dig +tls +padding=468 A example.com @9.9.9.9\ndig +tls +padding=468 A example.com @1.1.1.1",
+        "expected": """Ein sehenswerter Unterschied. Gemessen am 7. September 2026: Bei <code>9.9.9.9</code> fehlte die
+PAD-Zeile, und <code>;; MSG SIZE  rcvd: 72</code> zeigte die ungepolsterte Größe. Bei <code>1.1.1.1</code> erschien
+<code>; PAD: (392 bytes)</code> und <code>;; MSG SIZE  rcvd: 468</code>. Cloudflare polsterte die Antwort auf eine
+einheitliche Länge, Quad9 an diesem Tag nicht.""",
+        "expected_en": """A difference worth seeing. Measured on 7 September 2026: at <code>9.9.9.9</code> the PAD line was
+absent and <code>;; MSG SIZE  rcvd: 72</code> showed the unpadded size. At <code>1.1.1.1</code> there appeared
+<code>; PAD: (392 bytes)</code> and <code>;; MSG SIZE  rcvd: 468</code>. Cloudflare padded the answer to a uniform
+length, Quad9 did not on that day.""",
+        "note": """Warum das zählt: RFC 9076 weist darauf hin, dass sich aus Größe und Zeitmuster verschlüsselter
+Nachrichten Rückschlüsse ziehen lassen. Polsterung nach RFC 7830 nimmt dieser Auswertung die Grundlage. Ein einzelner
+Messwert an einem Tag ist allerdings keine Aussage über den Dauerbetrieb.""",
+        "note_en": """Why this matters: RFC 9076 points out that inferences can be drawn from the size and timing patterns of
+encrypted messages. Padding per RFC 7830 removes the basis for that analysis. A single measurement on one day is not,
+however, a statement about continuous operation.""",
+    },
+]
+
+
+# ---------------------------------------------------------------------------
+# Geprueft und bewusst nicht aufgenommen. Wer nur nennt, was er empfiehlt,
+# verschweigt die Haelfte der Arbeit.
+# ---------------------------------------------------------------------------
+
+GLOSSARY_GROUPS = [
+    ("basics", "Grundbegriffe", "Fundamentals"),
+    ("protocols", "Protokolle und Erweiterungen", "Protocols and extensions"),
+]
+
+NOT_LISTED = [
+    {
+        "name": "CIRA Canadian Shield",
+        "reason": "Vertraglich auf Kanada beschränkt",
+        "reason_en": "Contractually limited to Canada",
+        "de": """Fachlich wäre dieser Dienst ein Vorbild. Betreiberin ist die Canadian Internet Registration Authority, eine
+gemeinnützige Körperschaft nach kanadischem Bundesrecht, die zugleich die Landesdomain .ca führt. Der Dienst finanziert
+sich quer aus den Registrierungsgebühren, nennt eine ausdrückliche Aufbewahrungsgrenze von 24 Stunden, validiert DNSSEC
+nachweislich und bietet eine wirklich ungefilterte Variante.
+
+Er steht trotzdem nicht in der Liste. Die Nutzungsbedingungen verlangen eine Zusicherung: „You represent and warrant
+that a) you are an individual resident of Canada“. Wer den Dienst von Deutschland aus einträgt, gibt damit eine Erklärung
+ab, die nicht stimmt. Technisch erreichbar ist er, das ändert an der Rechtslage nichts. Dazu kommt: Es gibt keinen
+europäischen Standort, die Antwortzeit lag im Test bei rund 100 Millisekunden.
+
+Für Leserinnen und Leser mit Wohnsitz in Kanada ist er eine sehr gute Wahl. Für alle anderen wäre eine Empfehlung eine
+Aufforderung zum Vertragsbruch.""",
+        "en": """On the merits this service would be a model. It is run by the Canadian Internet Registration Authority, a
+not-for-profit corporation under Canadian federal law that also operates the country domain .ca. The service is
+cross-funded from registration fees, states an explicit 24-hour retention limit, demonstrably validates DNSSEC and
+offers a genuinely unfiltered variant.
+
+It is still not in the list. The terms of use require a representation: “You represent and warrant that a) you are an
+individual resident of Canada”. Anyone configuring the service from Germany makes a declaration that is untrue. It is
+technically reachable, which changes nothing about the legal position. On top of that there is no European location;
+response time in our test was around 100 milliseconds.
+
+For readers resident in Canada it is a very good choice. For everyone else, recommending it would be an invitation to
+break a contract.""",
+        "sources": [
+            ("https://www.cira.ca/en/canadian-shield/tandc/",
+             "CIRA Canadian Shield: Nutzungsbedingungen", "CIRA Canadian Shield: terms and conditions"),
+        ],
+    },
 ]

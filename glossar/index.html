@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS-Glossar: die Fachbegriffe knapp und belegt erklärt</title>
+<meta name="description" content="Von Stub-Resolver bis Encrypted Client Hello: kurze, mit RFCs belegte Definitionen und die häufigsten Missverständnisse.">
+<meta name="author" content="Kai Pfister">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#0f5c4a">
+<meta name="referrer" content="no-referrer">
+<link rel="canonical" href="https://dns.kaipfstr.de/glossar/">
+<link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/glossar/">
+<link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/glossary/">
+<link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/glossar/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dns.kaipfstr.de/glossar/">
+<meta property="og:title" content="DNS-Glossar: die Fachbegriffe knapp und belegt erklärt">
+<meta property="og:description" content="Von Stub-Resolver bis Encrypted Client Hello: kurze, mit RFCs belegte Definitionen und die häufigsten Missverständnisse.">
+<meta property="og:site_name" content="dns.kaipfstr.de">
+<meta property="og:locale" content="de_DE">
+<meta property="og:locale:alternate" content="en_GB">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#fbfaf7; --panel:#ffffff; --ink:#22201d; --muted:#5c574f;
+  --line:#e3ded4; --line-strong:#cec7b8;
+  --accent:#0f5c4a; --accent-ink:#0b4436;
+  --warn-bg:#fdf4ec; --warn-line:#d8a06a; --warn-ink:#7a4310;
+  --stop-bg:#fcf0ef; --stop-line:#c98a84; --stop-ink:#7d2b23;
+  --good:#0f5c4a; --code-bg:#f2efe8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14161a; --panel:#1b1e24; --ink:#e6e3dd; --muted:#a5a096;
+    --line:#2c3038; --line-strong:#3d434d;
+    --accent:#5fc0a4; --accent-ink:#8ad6bf;
+    --warn-bg:#2a2118; --warn-line:#7a5628; --warn-ink:#e8b579;
+    --stop-bg:#2b1a18; --stop-line:#7d3b34; --stop-ink:#f0a49a;
+    --good:#5fc0a4; --code-bg:#22262d;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--serif);font-size:1.0625rem;line-height:1.72;
+  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:52rem;margin:0 auto;padding:0 1.25rem}
+a{color:var(--accent-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+a:hover,a:focus-visible{text-decoration-thickness:.14em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3,h4{font-family:var(--sans);line-height:1.22;text-wrap:balance;font-weight:700}
+h1{font-size:clamp(2rem,5.2vw,3.05rem);letter-spacing:-.022em;margin:0 0 .6rem}
+h2{font-size:clamp(1.42rem,3.1vw,1.95rem);letter-spacing:-.014em;margin:4.2rem 0 1.1rem;
+   padding-bottom:.45rem;border-bottom:2px solid var(--line-strong)}
+h3{font-size:1.2rem;margin:2.4rem 0 .7rem;letter-spacing:-.008em}
+h4{font-size:.83rem;margin:1.5rem 0 .35rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+p{margin:0 0 1.15rem;text-wrap:pretty;hyphens:auto}
+ul,ol{margin:0 0 1.15rem;padding-left:1.3rem}
+li{margin:0 0 .5rem}
+strong{font-weight:700}
+code,kbd{font-family:var(--mono);font-size:.855em;background:var(--code-bg);
+  padding:.13em .38em;border-radius:4px;border:1px solid var(--line);word-break:break-all}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:20;background:var(--panel);padding:.6rem 1rem;
+  border:2px solid var(--accent);border-radius:6px}
+
+/* Kopf */
+header.top{background:var(--panel);border-bottom:1px solid var(--line);padding:3.6rem 0 2.6rem}
+.eyebrow{font-family:var(--sans);font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin:0 0 .9rem}
+.lede{font-size:1.2rem;color:var(--muted);margin:0 0 1.5rem;max-width:40rem;font-style:italic}
+.meta{font-family:var(--sans);font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;
+  gap:.55rem 1.1rem;align-items:center;margin:0}
+.sitenav{margin:1.6rem 0 1.3rem}
+.sitenav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
+.sitenav a{font-family:var(--sans);font-size:.9rem;font-weight:600;display:inline-block;
+  padding:.34rem .85rem;border:1px solid var(--line-strong);border-radius:8px;text-decoration:none;
+  background:var(--bg)}
+.sitenav a:hover,.sitenav a:focus-visible{border-color:var(--accent);color:var(--accent-ink)}
+.sitenav a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{text-decoration:underline}
+.langswitch{font-family:var(--sans);font-size:.85rem;font-weight:600;display:inline-block;
+  border:1px solid var(--muted);border-radius:999px;padding:.3rem .9rem;text-decoration:none}
+.langswitch:hover{border-color:var(--accent);background:var(--panel)}
+
+/* Inhaltsverzeichnis */
+nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1.4rem 1.5rem;margin:2.6rem 0}
+nav.toc h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);
+  border:0;margin:0 0 .7rem;padding:0}
+nav.toc ol{columns:2;column-gap:2rem;margin:0;padding-left:1.15rem;font-family:var(--sans);font-size:.93rem}
+nav.toc li{margin:0 0 .35rem;break-inside:avoid}
+@media(max-width:34rem){nav.toc ol{columns:1}}
+
+/* Karten */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:1.6rem 1.65rem;margin:1.6rem 0}
+.card h3{margin-top:0;display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.tag{font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;border:1px solid var(--line-strong);border-radius:999px;
+  padding:.16rem .55rem;color:var(--muted);white-space:nowrap}
+.card.warn{background:var(--warn-bg);border-color:var(--warn-line)}
+.card.warn .tag{border-color:var(--warn-line);color:var(--warn-ink)}
+.card.stop{background:var(--stop-bg);border-color:var(--stop-line)}
+.card.stop .tag{border-color:var(--stop-line);color:var(--stop-ink)}
+
+/* Definitionslisten */
+dl.facts{margin:0 0 1rem;display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.1rem;
+  font-size:.97rem;align-items:baseline}
+dl.facts dt{font-family:var(--sans);font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);font-weight:700;padding-top:.18rem}
+dl.facts dd{margin:0}
+@media(max-width:36rem){dl.facts{grid-template-columns:1fr;gap:.1rem}
+  dl.facts dd{margin:0 0 .7rem}}
+
+/* Endpunkt-Blöcke */
+.ep{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .9rem;margin:.9rem 0}
+.ep .epname{font-family:var(--sans);font-size:.86rem;font-weight:700;margin:0 0 .35rem}
+.ep dl{display:grid;grid-template-columns:3.2rem 1fr;gap:.16rem .7rem;margin:0;font-size:.92rem}
+.ep dt{font-family:var(--sans);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);font-weight:700;padding-top:.22rem}
+.ep dd{margin:0}
+
+/* Tabelle */
+.tablewrap{overflow-x:auto;margin:1.5rem 0;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+caption{caption-side:top;text-align:left;padding:.75rem .85rem .1rem;font-family:var(--sans);
+  font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.9rem;min-width:34rem}
+th,td{padding:.62rem .85rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  border-bottom:2px solid var(--line-strong);white-space:nowrap}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+tbody th{font-weight:400}
+td.yes{color:var(--good);font-weight:700}
+td.no{color:var(--muted)}
+
+/* Listen mit Vor- und Nachteilen */
+ul.pro,ul.con{list-style:none;padding-left:1.6rem}
+ul.pro li,ul.con li{position:relative}
+ul.pro li::before{content:"+";position:absolute;left:-1.25rem;color:var(--good);font-weight:700}
+ul.con li::before{content:"!";position:absolute;left:-1.2rem;color:var(--warn-ink);font-weight:700}
+
+/* Quellen */
+ul.src{list-style:none;padding:0;font-family:var(--sans);font-size:.87rem}
+ul.src li{margin:0 0 .42rem;padding-left:1.1rem;text-indent:-1.1rem}
+.srcnote{font-family:var(--sans);font-size:.83rem;color:var(--muted)}
+
+blockquote{margin:1.3rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:3px solid var(--accent);
+  color:var(--muted);font-style:italic}
+
+/* Pruefseite */
+.check{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:1.4rem 1.5rem;margin:1.4rem 0}
+.check h3{margin-top:0}
+.check .ask{font-style:italic;color:var(--muted);margin:0 0 1rem}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+  padding:.9rem 1rem;overflow-x:auto;margin:0 0 1.1rem;font-family:var(--mono);
+  font-size:.86rem;line-height:1.55;tab-size:2}
+pre code{background:none;border:0;padding:0;font-size:1em;word-break:normal;white-space:pre}
+.note{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .9rem;margin:1rem 0 0;
+  font-size:.95rem;color:var(--muted)}
+
+/* Glossar */
+.terms{margin:1.4rem 0}
+.term{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1rem 1.2rem;margin:.7rem 0}
+.term h3{margin:0 0 .4rem;font-size:1.05rem;display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+.term p{margin:0 0 .5rem}
+.term p:last-child{margin-bottom:0}
+.term .pit{font-size:.94rem;color:var(--muted);border-left:3px solid var(--warn-line);
+  padding-left:.8rem;margin-top:.6rem}
+.jump{font-family:var(--sans);font-size:.86rem;margin:1.2rem 0 2rem;line-height:2}
+.jump a{display:inline-block;border:1px solid var(--line-strong);border-radius:6px;
+  padding:.1rem .5rem;text-decoration:none;margin-right:.25rem}
+.jump a:hover{border-color:var(--accent)}
+
+footer{border-top:1px solid var(--line);margin-top:4.5rem;padding:2.4rem 0 3.5rem;
+  font-family:var(--sans);font-size:.87rem;color:var(--muted)}
+footer a{color:var(--accent-ink)}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://dns.kaipfstr.de/#website","url":"https://dns.kaipfstr.de/","name":"dns.kaipfstr.de","inLanguage":["de","en"],"publisher":{"@id":"https://dns.kaipfstr.de/#person"}},{"@type":"Person","@id":"https://dns.kaipfstr.de/#person","name":"Kai Pfister","url":"https://github.com/Wasserpuncher"},{"@type":"WebPage","@id":"https://dns.kaipfstr.de/glossar/#webpage","url":"https://dns.kaipfstr.de/glossar/","name":"DNS-Glossar: die Fachbegriffe knapp und belegt erklärt","description":"Von Stub-Resolver bis Encrypted Client Hello: kurze, mit RFCs belegte Definitionen und die häufigsten Missverständnisse.","inLanguage":"de","isPartOf":{"@id":"https://dns.kaipfstr.de/#website"},"author":{"@id":"https://dns.kaipfstr.de/#person"},"dateModified":"2026-09-07","breadcrumb":{"@id":"https://dns.kaipfstr.de/glossar/#breadcrumb"},"license":"https://opensource.org/licenses/MIT"},{"@type":"BreadcrumbList","@id":"https://dns.kaipfstr.de/glossar/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"dns.kaipfstr.de","item":"https://dns.kaipfstr.de/"},{"@type":"ListItem","position":2,"name":"DNS-Glossar: die Fachbegriffe knapp und belegt erklärt","item":"https://dns.kaipfstr.de/glossar/"}]},{"@type":"DefinedTermSet","@id":"https://dns.kaipfstr.de/glossar/#set","name":"Glossar","inLanguage":"de","hasDefinedTerm":[{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-stub-resolver","name":"Stub-Resolver","description":"Ein Resolver, der die Namensauflösung nicht selbst vollständig durchführen kann und die eigentliche Auflösung an einen rekursiven Resolver abgibt. Er sitzt typischerweise im Betriebssystem oder in der Anwendung und stellt nur die Anfrage.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-rekursiver-resolver","name":"Rekursiver Resolver","description":"Ein Resolver im rekursiven Modus, der eine Anfrage entweder aus dem lokalen Cache beantwortet oder selbst weitere Server befragt, bis die endgültige Antwort vorliegt. In der Regel speichert er die erhaltenen Antworten im Cache zwischen.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-autoritativer-nameserver","name":"Autoritativer Nameserver","description":"Ein Server, der den Inhalt einer DNS-Zone aus lokalem Wissen kennt und Anfragen zu dieser Zone ohne Rückfrage bei anderen Servern beantworten kann. Er setzt in solchen Antworten das AA-Bit im Header auf 1.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-root-server","name":"Root-Server","description":"Ein autoritativer Nameserver, der Anfragen zum Inhalt der Root-Zone beantwortet und damit den Einstiegspunkt in das Root-Server-System bildet. Die dreizehn Buchstabenidentitäten A bis M werden von zwölf unabhängigen Organisationen betrieben.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-tld-top-level-domain","name":"TLD (Top-Level Domain)","description":"Eine Zone, die genau eine Ebene unterhalb der Root liegt, zum Beispiel com oder jp. Die meisten TLDs sind delegierungszentrierte Zonen, also Zonen, die überwiegend aus Delegierungen an Kindzonen bestehen.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-anycast","name":"Anycast","description":"Die Praxis, eine bestimmte Dienstadresse an mehreren getrennten, autonomen Standorten verfügbar zu machen, sodass gesendete Datagramme zu einem dieser Standorte geroutet werden. Jeder dieser Standorte heißt Instanz.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-unicast","name":"Unicast","description":"Eine Adresse, die genau eine Schnittstelle bezeichnet; ein an eine Unicast-Adresse gesendetes Paket wird an genau diese Schnittstelle zugestellt. Im DNS-Kontext steht Unicast für den Fall, dass eine Serveradresse an nur einem Standort angekündigt wird.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-cache","name":"Cache","description":"Eine Struktur, die die Ergebnisse früherer Antworten speichert, damit gleiche Anfragen nicht erneut entfernt aufgelöst werden müssen. Resolver sind dafür verantwortlich, alte Einträge nach Ablauf der TTL zu verwerfen.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-ttl-time-to-live","name":"TTL (Time to Live)","description":"Die maximale Lebensdauer eines Resource Record, also das Zeitintervall in Sekunden, das der Record zwischengespeichert werden darf, bevor die Quelle erneut befragt werden sollte. Der Wert ist eine vorzeichenlose Zahl von 0 bis 2147483647.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-nxdomain","name":"NXDOMAIN","description":"Der DNS-Antwortcode 3 (Name Error), der besagt, dass der in der Anfrage genannte Domainname nicht existiert. Da Namen einen Baum bilden, bedeutet das Nichtexistieren eines Knotens auch das Nichtexistieren des gesamten darunter liegenden Teilbaums.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-resource-record-rr","name":"Resource Record (RR)","description":"Der einzelne Dateneintrag des DNS, bestehend aus Owner-Name, Typ, Klasse, TTL und RDATA; die Menge der Informationen zu einem Namen setzt sich aus solchen Records zusammen. Records mit gleichem Owner-Name, gleicher Klasse und gleichem Typ bilden ein RRset.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-dnssec","name":"DNSSEC","description":"DNSSEC ist eine Erweiterung des DNS, die per digitaler Signatur die Herkunft und die Unversehrtheit von DNS-Daten nachweisbar macht, spezifiziert in RFC 4033, RFC 4034 und RFC 4035. RFC 9364 (BCP 237) erklärt den Einsatz von DNSSEC zur Ursprungsauthentifizierung von DNS-Daten zur Best Current Practice.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-dnssec-validierung","name":"DNSSEC-Validierung","description":"DNSSEC-Validierung ist der Vorgang, bei dem ein Resolver die Signaturen einer Antwort kryptografisch prüft und dazu eine Authentifizierungskette aus DNSKEY- und DS-Datensätzen bis zu einem konfigurierten Trust Anchor aufbaut. Das Protokollverhalten validierender Resolver ist in RFC 4035 festgelegt.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-ad-flag","name":"AD-Flag","description":"Das AD-Bit (Authentic Data) im DNS-Header wird von einem sicherheitsbewussten rekursiven Nameserver gesetzt, wenn er alle RRsets in Answer- und Authority-Abschnitt als authentisch validiert hat. RFC 4035 Abschnitt 3.2.3 verbietet das Setzen des Bits, solange nicht alle betroffenen RRsets als authentisch gelten.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-trust-anchor","name":"Trust Anchor","description":"Ein Trust Anchor ist laut RFC 4033 „A configured DNSKEY RR or DS RR hash of a DNSKEY RR“, den ein validierender Resolver als Startpunkt der Authentifizierungskette verwendet. RFC 5011 beschreibt, wie Trust Anchors automatisiert und authentifiziert ausgetauscht werden können.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-root-zone-ksk","name":"Root Zone KSK","description":"Der Root Zone Key Signing Key ist der von der IANA verwaltete DNSSEC-Schlüssel, mit dem der Schlüsselsatz der DNS-Root-Zone signiert wird und der als Vertrauensanker fast aller validierenden Resolver dient. Aktiv signierend ist KSK-2017 mit Key Tag 20326 („Signing since 2018-10-11“); der Nachfolger KSK-2024 mit Key Tag 38696 steht laut IANA in „Pre-Publication“ und soll ab dem 11. Oktober 2026 signieren.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-dot","name":"DoT","description":"DNS over TLS (DoT) transportiert DNS-Nachrichten in einer TLS-Sitzung über den fest zugewiesenen Port 853 und verhindert damit Mitlesen und Manipulation auf dem Weg. RFC 8310 ergänzt zwei Nutzungsprofile, Strict Privacy mit zwingender Serverauthentifizierung und Opportunistic Privacy ohne diese Garantie.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-doh","name":"DoH","description":"DNS over HTTPS (DoH) bildet jedes DNS-Anfrage-Antwort-Paar auf einen HTTP-Austausch über HTTPS ab, sodass DNS-Verkehr verschlüsselt und von anderem HTTPS-Verkehr kaum unterscheidbar ist. Der Medientyp ist application/dns-message, üblich ist der Pfad-Template-Endpunkt eines konfigurierten DoH-Servers.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-doq","name":"DoQ","description":"DNS over QUIC (DoQ) überträgt DNS über dedizierte QUIC-Verbindungen auf UDP-Port 853 mit dem ALPN-Token „doq“ und bietet ähnliche Vertraulichkeit wie DoT ohne das Head-of-Line-Blocking von TCP. RFC 9250 beschreibt DoQ als Allzwecktransport für Stub-zu-Resolver, Resolver-zu-autoritativ und Zonentransfer.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-dnscrypt","name":"DNSCrypt","description":"DNSCrypt ist ein herstelleroffenes, aber nicht von der IETF standardisiertes Protokoll, das laut dnscrypt.info „encrypts, authenticates and optionally anonymizes communications between your DNS client and resolver“. Version 2 der Spezifikation nutzt die Konstruktion X25519-XChaCha20Poly1305 sowie Ed25519 für die Signatur der Resolver-Zertifikate.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-oblivious-doh","name":"Oblivious DoH","description":"Oblivious DNS over HTTPS (ODoH) schiebt einen Proxy zwischen Client und DoH-Target, sodass der Proxy die IP-Adresse des Clients kennt, aber nicht den Inhalt, und das Target den Inhalt entschlüsselt, aber nur die Proxy-IP sieht. Das Verfahren ist in RFC 9230 als Experimental veröffentlicht.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-edns-0","name":"EDNS(0)","description":"EDNS(0) erweitert das DNS-Drahtformat rückwärtskompatibel über ein OPT-Pseudo-RR (Typ 41) im Additional-Abschnitt, das größere UDP-Nachrichten als 512 Byte, zusätzliche Flag-Bits und einen erweiterten RCODE-Bereich ermöglicht. Das OPT-Record trägt keine Zonendaten, sondern ausschließlich Steuerinformation.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-edns-client-subnet","name":"EDNS Client Subnet","description":"EDNS Client Subnet (ECS) ist eine EDNS(0)-Option, mit der ein Resolver einen gekürzten Teil des Client-Netzpräfixes an autoritative Server weiterreicht, damit diese geografisch passende Antworten liefern und der Cache-Gültigkeitsbereich bekannt wird. RFC 7871 ist Informational und beschreibt ein bereits im Einsatz befindliches Verfahren.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-qname-minimierung","name":"QNAME-Minimierung","description":"Bei der QNAME-Minimierung sendet ein Resolver einem autoritativen Server nicht mehr den vollständigen Namen und Typ, sondern nur den um ein Label längeren Teil des Namens, für den dieser Server zuständig ist. RFC 9156 ist Standards Track und ersetzt RFC 7816.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-padding","name":"Padding","description":"Die EDNS(0)-Padding-Option (Optionscode 12) erlaubt es Client und Server, DNS-Nachrichten um eine variable Zahl von Oktetten aufzufüllen, um Rückschlüsse aus der Nachrichtenlänge zu erschweren. RFC 8467 empfiehlt experimentell Blocklängen-Padding auf ein Vielfaches von 128 Oktetten für Anfragen und 468 Oktetten für Antworten.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-encrypted-client-hello","name":"Encrypted Client Hello","description":"Encrypted Client Hello (ECH) ist eine TLS-Erweiterung, die das ClientHello unter einem öffentlichen Serverschlüssel verschlüsselt und damit sensible Felder wie SNI und die ALPN-Liste verbirgt. Die dafür nötige Konfiguration wird üblicherweise über den DNS-Ressourcendatensatz HTTPS/SVCB bezogen.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-server-name-indication","name":"Server Name Indication","description":"Server Name Indication (SNI) ist die TLS-Erweiterung, mit der ein Client dem Server im Handshake mitteilt, welchen Hostnamen er kontaktieren will, damit ein Server mehrere virtuelle Hosts unter einer IP-Adresse bedienen kann. Sie ist in RFC 6066 Abschnitt 3 definiert.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-dns-sinkhole","name":"DNS-Sinkhole","description":"Ein DNS-Sinkhole ist ein Resolver, der Anfragen für unerwünschte Namen bewusst nicht wahrheitsgemäß beantwortet, sondern etwa NXDOMAIN, NODATA oder eine umgeleitete Adresse liefert, um Verbindungen zu Schadinfrastruktur oder Werbe- und Trackingdomains zu unterbinden. In BIND 9 wird dies über Response Policy Zones umgesetzt, die die ISC-Dokumentation als „a form of DNS firewall“ beschreibt.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-forwarder","name":"Forwarder","description":"Ein Forwarder ist nach RFC 9499 „A nameserver used to resolve queries instead of directly using the authoritative nameserver chain“; Forwarding ist der Vorgang, bei dem ein Server eine Anfrage mit gesetztem RD-Bit an einen anderen Server zur Auflösung weitergibt. RFC 9499 ist BCP 219 und die aktuelle DNS-Terminologie.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}},{"@type":"DefinedTerm","@id":"https://dns.kaipfstr.de/glossar/#t-dns-rebinding-schutz","name":"DNS-Rebinding-Schutz","description":"DNS-Rebinding-Schutz filtert Antworten aus öffentlichen Zonen heraus, die auf private oder lokale IP-Adressbereiche zeigen, damit ein Angreifer den Browser eines Nutzers nicht als Proxy in dessen internes Netz missbrauchen kann. Unbound setzt dies mit der Option private-address um, die passende A-, AAAA-, SVCB- und HTTPS-Einträge aus Antworten entfernt.","inDefinedTermSet":{"@id":"https://dns.kaipfstr.de/glossar/#set"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="top"><div class="wrap">
+<p class="eyebrow"><a href="https://dns.kaipfstr.de/">dns.kaipfstr.de</a></p>
+<h1>Glossar</h1>
+<p class="lede">Die Begriffe, die in jeder Anleitung vorkommen und selten erklärt werden.</p>
+<nav class="sitenav" aria-label="Seiten"><ul>
+<li><a href="https://dns.kaipfstr.de/">Anbieter</a></li>
+<li><a href="https://dns.kaipfstr.de/pruefen/">Selbst prüfen</a></li>
+<li><a href="https://dns.kaipfstr.de/glossar/" aria-current="page">Glossar</a></li>
+</ul></nav>
+<p class="meta"><a class="langswitch" href="https://dns.kaipfstr.de/en/glossary/" hreflang="en" lang="en">English version</a><span>Stand: 6. September 2026</span></p>
+</div></header>
+<main id="main"><div class="wrap">
+<p>Anleitungen zu DNS setzen ihre Begriffe gern als bekannt voraus. Diese Seite tut das nicht. Jeder Eintrag hier ist an der einschlägigen Norm geprüft, und wo ein Begriff regelmäßig missverstanden wird, steht das Missverständnis gleich daneben.</p>
+<p>Die Reihenfolge geht von den Grundlagen zu den Erweiterungen.</p>
+<nav class="jump" aria-label="Inhalt">
+<a href="#t-stub-resolver">Stub-Resolver</a>
+<a href="#t-rekursiver-resolver">Rekursiver Resolver</a>
+<a href="#t-autoritativer-nameserver">Autoritativer Nameserver</a>
+<a href="#t-root-server">Root-Server</a>
+<a href="#t-tld-top-level-domain">TLD (Top-Level Domain)</a>
+<a href="#t-anycast">Anycast</a>
+<a href="#t-unicast">Unicast</a>
+<a href="#t-cache">Cache</a>
+<a href="#t-ttl-time-to-live">TTL (Time to Live)</a>
+<a href="#t-nxdomain">NXDOMAIN</a>
+<a href="#t-resource-record-rr">Resource Record (RR)</a>
+<a href="#t-dnssec">DNSSEC</a>
+<a href="#t-dnssec-validierung">DNSSEC-Validierung</a>
+<a href="#t-ad-flag">AD-Flag</a>
+<a href="#t-trust-anchor">Trust Anchor</a>
+<a href="#t-root-zone-ksk">Root Zone KSK</a>
+<a href="#t-dot">DoT</a>
+<a href="#t-doh">DoH</a>
+<a href="#t-doq">DoQ</a>
+<a href="#t-dnscrypt">DNSCrypt</a>
+<a href="#t-oblivious-doh">Oblivious DoH</a>
+<a href="#t-edns-0">EDNS(0)</a>
+<a href="#t-edns-client-subnet">EDNS Client Subnet</a>
+<a href="#t-qname-minimierung">QNAME-Minimierung</a>
+<a href="#t-padding">Padding</a>
+<a href="#t-encrypted-client-hello">Encrypted Client Hello</a>
+<a href="#t-server-name-indication">Server Name Indication</a>
+<a href="#t-dns-sinkhole">DNS-Sinkhole</a>
+<a href="#t-forwarder">Forwarder</a>
+<a href="#t-dns-rebinding-schutz">DNS-Rebinding-Schutz</a>
+</nav>
+<section id="basics"><h2>Grundbegriffe</h2><div class="terms">
+<article class="term" id="t-stub-resolver">
+<h3>Stub-Resolver <span class="tag">RFC 9499, 1123</span></h3>
+<p>Ein Resolver, der die Namensauflösung nicht selbst vollständig durchführen kann und die eigentliche Auflösung an einen rekursiven Resolver abgibt. Er sitzt typischerweise im Betriebssystem oder in der Anwendung und stellt nur die Anfrage.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Häufig wird angenommen, der Stub-Resolver im Betriebssystem laufe selbst die Kette von den Root-Servern abwärts ab. Tatsächlich delegiert er die gesamte Auflösungsarbeit an einen rekursiven Resolver.</p>
+</article>
+<article class="term" id="t-rekursiver-resolver">
+<h3>Rekursiver Resolver <span class="tag">RFC 9499, 1034</span></h3>
+<p>Ein Resolver im rekursiven Modus, der eine Anfrage entweder aus dem lokalen Cache beantwortet oder selbst weitere Server befragt, bis die endgültige Antwort vorliegt. In der Regel speichert er die erhaltenen Antworten im Cache zwischen.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Das Wort rekursiv beschreibt nur den Dienst gegenüber dem Client, nicht das Vorgehen nach außen. Gegenüber den autoritativen Servern arbeitet derselbe Resolver iterativ, er folgt also Verweisen Schritt für Schritt.</p>
+</article>
+<article class="term" id="t-autoritativer-nameserver">
+<h3>Autoritativer Nameserver <span class="tag">RFC 9499, 2182</span></h3>
+<p>Ein Server, der den Inhalt einer DNS-Zone aus lokalem Wissen kennt und Anfragen zu dieser Zone ohne Rückfrage bei anderen Servern beantworten kann. Er setzt in solchen Antworten das AA-Bit im Header auf 1.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Nicht jede Antwort eines autoritativen Servers ist autoritativ: Verweise auf delegierte Kindzonen kommen mit AA-Bit 0. Außerdem kann ein Server autoritativ antworten, ohne dass die Elternzone ihm die Autorität delegiert hat.</p>
+</article>
+<article class="term" id="t-root-server">
+<h3>Root-Server <span class="tag">RFC 9499, 8109</span></h3>
+<p>Ein autoritativer Nameserver, der Anfragen zum Inhalt der Root-Zone beantwortet und damit den Einstiegspunkt in das Root-Server-System bildet. Die dreizehn Buchstabenidentitäten A bis M werden von zwölf unabhängigen Organisationen betrieben.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Dreizehn Buchstaben bedeuten nicht dreizehn Maschinen: Am 2026-09-07 bestand das System laut root-servers.org aus 2005 betriebsbereiten Instanzen. Der Begriff Mirror ist in diesem Zusammenhang veraltet, korrekt heißt es Instanz.</p>
+</article>
+<article class="term" id="t-tld-top-level-domain">
+<h3>TLD (Top-Level Domain) <span class="tag">RFC 9499</span></h3>
+<p>Eine Zone, die genau eine Ebene unterhalb der Root liegt, zum Beispiel com oder jp. Die meisten TLDs sind delegierungszentrierte Zonen, also Zonen, die überwiegend aus Delegierungen an Kindzonen bestehen.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Aus Sicht des DNS-Protokolls ist eine TLD nichts Besonderes, sie ist eine Zone wie jede andere. Die Unterscheidungen in ccTLD, gTLD und weitere sind reine Policy-Kategorien.</p>
+</article>
+<article class="term" id="t-anycast">
+<h3>Anycast <span class="tag">RFC 4786, 9499</span></h3>
+<p>Die Praxis, eine bestimmte Dienstadresse an mehreren getrennten, autonomen Standorten verfügbar zu machen, sodass gesendete Datagramme zu einem dieser Standorte geroutet werden. Jeder dieser Standorte heißt Instanz.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Anycast ist kein Lastverteiler und garantiert nicht die geografisch nächste Instanz, denn das Routing entscheidet nach Topologie, nicht nach Entfernung. Unter Anycast-Instanzen gibt es keine Hierarchie, jede hat dieselbe Autorität.</p>
+</article>
+<article class="term" id="t-unicast">
+<h3>Unicast <span class="tag">RFC 4291</span></h3>
+<p>Eine Adresse, die genau eine Schnittstelle bezeichnet; ein an eine Unicast-Adresse gesendetes Paket wird an genau diese Schnittstelle zugestellt. Im DNS-Kontext steht Unicast für den Fall, dass eine Serveradresse an nur einem Standort angekündigt wird.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Unicast identifiziert eine Schnittstelle, nicht einen Host; ein Host kann mehrere Unicast-Adressen tragen. Die in RFC 4291 zitierte Definition stammt aus der IPv6-Adressarchitektur, das Konzept ist aber nicht auf IPv6 beschränkt.</p>
+</article>
+<article class="term" id="t-cache">
+<h3>Cache <span class="tag">RFC 1034, 1123</span></h3>
+<p>Eine Struktur, die die Ergebnisse früherer Antworten speichert, damit gleiche Anfragen nicht erneut entfernt aufgelöst werden müssen. Resolver sind dafür verantwortlich, alte Einträge nach Ablauf der TTL zu verwerfen.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Ein Cache hält Einträge nicht zwingend bis zum Ablauf der TTL; laut RFC 9499 kann ein RRset vorher aus dem Cache entfernt werden. Auch negative Antworten werden zwischengespeichert, das ist Negative Caching nach RFC 2308.</p>
+</article>
+<article class="term" id="t-ttl-time-to-live">
+<h3>TTL (Time to Live) <span class="tag">RFC 9499, 1035, 2181</span></h3>
+<p>Die maximale Lebensdauer eines Resource Record, also das Zeitintervall in Sekunden, das der Record zwischengespeichert werden darf, bevor die Quelle erneut befragt werden sollte. Der Wert ist eine vorzeichenlose Zahl von 0 bis 2147483647.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Die TTL ist eine Obergrenze und keine Garantie: Ein Cache-Betreiber kann sie aus betrieblichen Gründen verkürzen, und ein RRset kann vorzeitig verworfen werden. Alle Records eines RRset müssen dieselbe TTL tragen (RFC 2181, Abschnitt 5.2).</p>
+</article>
+<article class="term" id="t-nxdomain">
+<h3>NXDOMAIN <span class="tag">RFC 1035, 2308, 8020, 9499</span></h3>
+<p>Der DNS-Antwortcode 3 (Name Error), der besagt, dass der in der Anfrage genannte Domainname nicht existiert. Da Namen einen Baum bilden, bedeutet das Nichtexistieren eines Knotens auch das Nichtexistieren des gesamten darunter liegenden Teilbaums.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> NXDOMAIN heißt, dass der Name selbst nicht existiert, nicht dass nur der abgefragte Record-Typ fehlt; letzteres ist eine NODATA-Antwort mit RCODE 0 und leerer Answer-Section. Ebenfalls falsch ist die Annahme, unterhalb eines NXDOMAIN-Namens könnten noch Namen existieren, denn RFC 8020 schließt das aus.</p>
+</article>
+<article class="term" id="t-resource-record-rr">
+<h3>Resource Record (RR) <span class="tag">RFC 1034, 1035, 2181, 9499</span></h3>
+<p>Der einzelne Dateneintrag des DNS, bestehend aus Owner-Name, Typ, Klasse, TTL und RDATA; die Menge der Informationen zu einem Namen setzt sich aus solchen Records zusammen. Records mit gleichem Owner-Name, gleicher Klasse und gleichem Typ bilden ein RRset.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Die Reihenfolge der Records in einer Menge ist ohne Bedeutung und muss von Servern und Resolvern nicht erhalten bleiben. Ein RRset wird zudem immer als Ganzes behandelt, und alle seine Records müssen dieselbe TTL haben.</p>
+</article>
+</div></section>
+<section id="protocols"><h2>Protokolle und Erweiterungen</h2><div class="terms">
+<article class="term" id="t-dnssec">
+<h3>DNSSEC <span class="tag">RFC 4033, 4034, 4035, 9364</span></h3>
+<p>DNSSEC ist eine Erweiterung des DNS, die per digitaler Signatur die Herkunft und die Unversehrtheit von DNS-Daten nachweisbar macht, spezifiziert in RFC 4033, RFC 4034 und RFC 4035. RFC 9364 (BCP 237) erklärt den Einsatz von DNSSEC zur Ursprungsauthentifizierung von DNS-Daten zur Best Current Practice.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> DNSSEC verschlüsselt nichts. RFC 4033 Abschnitt 3 stellt ausdrücklich fest: „<span lang="en">These extensions do not provide confidentiality.</span>“, das heißt Anfragen und Antworten bleiben für jeden auf dem Weg mitlesbar, DNSSEC macht sie nur fälschungssicher.</p>
+</article>
+<article class="term" id="t-dnssec-validierung">
+<h3>DNSSEC-Validierung <span class="tag">RFC 4035, 6840</span></h3>
+<p>DNSSEC-Validierung ist der Vorgang, bei dem ein Resolver die Signaturen einer Antwort kryptografisch prüft und dazu eine Authentifizierungskette aus DNSKEY- und DS-Datensätzen bis zu einem konfigurierten Trust Anchor aufbaut. Das Protokollverhalten validierender Resolver ist in RFC 4035 festgelegt.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Validierung schützt nur Zonen, die auch tatsächlich signiert sind. Für unsignierte Zonen kann ein Resolver nur beweisen, dass keine Signatur existiert, nicht dass die Antwort echt ist.</p>
+</article>
+<article class="term" id="t-ad-flag">
+<h3>AD-Flag <span class="tag">RFC 4035, 6840, 4033</span></h3>
+<p>Das AD-Bit (Authentic Data) im DNS-Header wird von einem sicherheitsbewussten rekursiven Nameserver gesetzt, wenn er alle RRsets in Answer- und Authority-Abschnitt als authentisch validiert hat. RFC 4035 Abschnitt 3.2.3 verbietet das Setzen des Bits, solange nicht alle betroffenen RRsets als authentisch gelten.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Ein gesetztes AD-Bit ist kein Beweis. RFC 4033 Abschnitt 7 nennt es nur einen Hinweis und verlangt, dass der Stub-Resolver „<span lang="en">must trust both the recursive name servers in question and the communication channels between itself and those name servers</span>“, denn auf einem ungesicherten Kanal kann jeder Angreifer das Bit setzen.</p>
+</article>
+<article class="term" id="t-trust-anchor">
+<h3>Trust Anchor <span class="tag">RFC 4033, 5011</span></h3>
+<p>Ein Trust Anchor ist laut RFC 4033 „<span lang="en">A configured DNSKEY RR or DS RR hash of a DNSKEY RR</span>“, den ein validierender Resolver als Startpunkt der Authentifizierungskette verwendet. RFC 5011 beschreibt, wie Trust Anchors automatisiert und authentifiziert ausgetauscht werden können.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Ein Trust Anchor ist kein X.509-Zertifikat und stammt nicht aus dem Browser- oder Betriebssystem-Zertifikatsspeicher. In der Praxis ist meist genau ein Anker konfiguriert, nämlich der der DNS-Root-Zone.</p>
+</article>
+<article class="term" id="t-root-zone-ksk">
+<h3>Root Zone KSK <span class="tag">RFC 5011, 4034</span></h3>
+<p>Der Root Zone Key Signing Key ist der von der IANA verwaltete DNSSEC-Schlüssel, mit dem der Schlüsselsatz der DNS-Root-Zone signiert wird und der als Vertrauensanker fast aller validierenden Resolver dient. Aktiv signierend ist KSK-2017 mit Key Tag 20326 („Signing since 2018-10-11“); der Nachfolger KSK-2024 mit Key Tag 38696 steht laut IANA in „Pre-Publication“ und soll ab dem 11. Oktober 2026 signieren.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Der KSK signiert nicht die einzelnen Root-Einträge, sondern nur den DNSKEY-Satz der Root-Zone; die eigentlichen Daten signiert der Zone Signing Key. Stand 2026-09-07 hat der Rollover auf KSK-2024 noch nicht stattgefunden.</p>
+</article>
+<article class="term" id="t-dot">
+<h3>DoT <span class="tag">RFC 7858, 8310</span></h3>
+<p>DNS over TLS (DoT) transportiert DNS-Nachrichten in einer TLS-Sitzung über den fest zugewiesenen Port 853 und verhindert damit Mitlesen und Manipulation auf dem Weg. RFC 8310 ergänzt zwei Nutzungsprofile, Strict Privacy mit zwingender Serverauthentifizierung und Opportunistic Privacy ohne diese Garantie.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> DoT im opportunistischen Profil authentifiziert den Server nicht und schützt daher nicht gegen einen aktiven Angreifer. Nur das Strict-Privacy-Profil nach RFC 8310 verweigert die Auflösung, wenn Verschlüsselung und Authentifizierung nicht zustande kommen.</p>
+</article>
+<article class="term" id="t-doh">
+<h3>DoH <span class="tag">RFC 8484</span></h3>
+<p>DNS over HTTPS (DoH) bildet jedes DNS-Anfrage-Antwort-Paar auf einen HTTP-Austausch über HTTPS ab, sodass DNS-Verkehr verschlüsselt und von anderem HTTPS-Verkehr kaum unterscheidbar ist. Der Medientyp ist application/dns-message, üblich ist der Pfad-Template-Endpunkt eines konfigurierten DoH-Servers.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> DoH verbirgt die besuchte Seite nicht vollständig. Erstens sieht der DoH-Betreiber weiterhin alle Anfragen im Klartext und kann sie laut RFC 8484 Abschnitt 8.2 zusätzlich über HTTP-Cookies, Header-Fingerprinting und IP-Adresse korrelieren; zweitens verrät die anschließende Verbindung selbst das Ziel, denn nach RFC 8744 wird „<span lang="en">The SNI extension ... carried in cleartext in the TLS 'ClientHello' message</span>“ und die Server-IP bleibt sichtbar.</p>
+</article>
+<article class="term" id="t-doq">
+<h3>DoQ <span class="tag">RFC 9250</span></h3>
+<p>DNS over QUIC (DoQ) überträgt DNS über dedizierte QUIC-Verbindungen auf UDP-Port 853 mit dem ALPN-Token „doq“ und bietet ähnliche Vertraulichkeit wie DoT ohne das Head-of-Line-Blocking von TCP. RFC 9250 beschreibt DoQ als Allzwecktransport für Stub-zu-Resolver, Resolver-zu-autoritativ und Zonentransfer.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> DoQ auf UDP-Port 853 ist nicht dasselbe wie DoT, das TCP-Port 853 nutzt, und es ist auch nicht DNS over HTTP/3. Beide Seiten müssen DoQ ausdrücklich per ALPN aushandeln.</p>
+</article>
+<article class="term" id="t-dnscrypt">
+<h3>DNSCrypt </h3>
+<p>DNSCrypt ist ein herstelleroffenes, aber nicht von der IETF standardisiertes Protokoll, das laut dnscrypt.info „<span lang="en">encrypts, authenticates and optionally anonymizes communications between your DNS client and resolver</span>“. Version 2 der Spezifikation nutzt die Konstruktion X25519-XChaCha20Poly1305 sowie Ed25519 für die Signatur der Resolver-Zertifikate.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> DNSCrypt ist kein RFC und kein IETF-Standard, sondern liegt nur als individueller Internet-Draft und als eigene Protokollspezifikation vor. Es ist außerdem nicht mit DNSSEC verwandt, denn es sichert den Transportweg, nicht die Zonendaten.</p>
+</article>
+<article class="term" id="t-oblivious-doh">
+<h3>Oblivious DoH <span class="tag">RFC 9230</span></h3>
+<p>Oblivious DNS over HTTPS (ODoH) schiebt einen Proxy zwischen Client und DoH-Target, sodass der Proxy die IP-Adresse des Clients kennt, aber nicht den Inhalt, und das Target den Inhalt entschlüsselt, aber nur die Proxy-IP sieht. Das Verfahren ist in RFC 9230 als Experimental veröffentlicht.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Der Schutz hängt daran, dass Proxy und Target nicht zusammenarbeiten oder demselben Betreiber gehören. Kolludieren beide, ist die Trennung von Identität und Inhalt aufgehoben.</p>
+</article>
+<article class="term" id="t-edns-0">
+<h3>EDNS(0) <span class="tag">RFC 6891, 2671, 2673</span></h3>
+<p>EDNS(0) erweitert das DNS-Drahtformat rückwärtskompatibel über ein OPT-Pseudo-RR (Typ 41) im Additional-Abschnitt, das größere UDP-Nachrichten als 512 Byte, zusätzliche Flag-Bits und einen erweiterten RCODE-Bereich ermöglicht. Das OPT-Record trägt keine Zonendaten, sondern ausschließlich Steuerinformation.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Die vom Client angegebene UDP-Payload-Größe ist nur eine Angabe der eigenen Empfangsfähigkeit, keine Garantie, dass Pfad-MTU und Firewalls Pakete dieser Größe durchlassen. EDNS(0) ist außerdem kein Sicherheitsmechanismus, sondern nur der Trägermechanismus für Optionen wie Padding, ECS oder DNS Cookies.</p>
+</article>
+<article class="term" id="t-edns-client-subnet">
+<h3>EDNS Client Subnet <span class="tag">RFC 7871</span></h3>
+<p>EDNS Client Subnet (ECS) ist eine EDNS(0)-Option, mit der ein Resolver einen gekürzten Teil des Client-Netzpräfixes an autoritative Server weiterreicht, damit diese geografisch passende Antworten liefern und der Cache-Gültigkeitsbereich bekannt wird. RFC 7871 ist Informational und beschreibt ein bereits im Einsatz befindliches Verfahren.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> ECS untergräbt einen Teil des Datenschutzgewinns von verschlüsseltem DNS, weil Netzinformationen des Nutzers an jeden beteiligten autoritativen Server weitergereicht werden. RFC 7871 empfiehlt daher ausdrücklich, die Option in Nameserver-Software standardmäßig zu deaktivieren.</p>
+</article>
+<article class="term" id="t-qname-minimierung">
+<h3>QNAME-Minimierung <span class="tag">RFC 9156, 7816</span></h3>
+<p>Bei der QNAME-Minimierung sendet ein Resolver einem autoritativen Server nicht mehr den vollständigen Namen und Typ, sondern nur den um ein Label längeren Teil des Namens, für den dieser Server zuständig ist. RFC 9156 ist Standards Track und ersetzt RFC 7816.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> QNAME-Minimierung schützt nur gegenüber den vorgelagerten autoritativen Servern wie den Root- und TLD-Servern. Der eigene rekursive Resolver sieht weiterhin den vollständigen angefragten Namen.</p>
+</article>
+<article class="term" id="t-padding">
+<h3>Padding <span class="tag">RFC 7830, 8467</span></h3>
+<p>Die EDNS(0)-Padding-Option (Optionscode 12) erlaubt es Client und Server, DNS-Nachrichten um eine variable Zahl von Oktetten aufzufüllen, um Rückschlüsse aus der Nachrichtenlänge zu erschweren. RFC 8467 empfiehlt experimentell Blocklängen-Padding auf ein Vielfaches von 128 Oktetten für Anfragen und 468 Oktetten für Antworten.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Padding ist nur sinnvoll innerhalb eines verschlüsselten Transports wie DoT, DoH oder DoQ. Auf unverschlüsseltem DNS bringt es keinen Datenschutzgewinn, weil der Inhalt ohnehin lesbar ist.</p>
+</article>
+<article class="term" id="t-encrypted-client-hello">
+<h3>Encrypted Client Hello <span class="tag">RFC 9849, 9848</span></h3>
+<p>Encrypted Client Hello (ECH) ist eine TLS-Erweiterung, die das ClientHello unter einem öffentlichen Serverschlüssel verschlüsselt und damit sensible Felder wie SNI und die ALPN-Liste verbirgt. Die dafür nötige Konfiguration wird üblicherweise über den DNS-Ressourcendatensatz HTTPS/SVCB bezogen.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> ECH allein verbirgt das Ziel nicht. RFC 9849 stellt fest: „<span lang="en">ECH is not in itself sufficient to protect the identity of the server. The target domain may also be visible through other channels, such as plaintext client DNS queries or visible server IP addresses.</span>“</p>
+</article>
+<article class="term" id="t-server-name-indication">
+<h3>Server Name Indication <span class="tag">RFC 6066, 8744</span></h3>
+<p>Server Name Indication (SNI) ist die TLS-Erweiterung, mit der ein Client dem Server im Handshake mitteilt, welchen Hostnamen er kontaktieren will, damit ein Server mehrere virtuelle Hosts unter einer IP-Adresse bedienen kann. Sie ist in RFC 6066 Abschnitt 3 definiert.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Ohne ECH wird der Hostname im SNI im Klartext übertragen, obwohl die Verbindung als HTTPS gilt. RFC 8744 hält fest, dass Überwachung sich zunehmend genau auf „<span lang="en">the cleartext SNI</span>“ stützt, um zu erkennen, welche Dienste ein Nutzer aufruft.</p>
+</article>
+<article class="term" id="t-dns-sinkhole">
+<h3>DNS-Sinkhole </h3>
+<p>Ein DNS-Sinkhole ist ein Resolver, der Anfragen für unerwünschte Namen bewusst nicht wahrheitsgemäß beantwortet, sondern etwa NXDOMAIN, NODATA oder eine umgeleitete Adresse liefert, um Verbindungen zu Schadinfrastruktur oder Werbe- und Trackingdomains zu unterbinden. In BIND 9 wird dies über Response Policy Zones umgesetzt, die die ISC-Dokumentation als „<span lang="en">a form of DNS firewall</span>“ beschreibt.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Ein Sinkhole blockiert nur die Namensauflösung, nicht die Verbindung selbst. Wer die IP-Adresse direkt kennt oder einen eigenen verschlüsselten Resolver im Gerät verwendet, umgeht das Sinkhole vollständig; außerdem kollidiert eine gefälschte Antwort mit DNSSEC-Validierung.</p>
+</article>
+<article class="term" id="t-forwarder">
+<h3>Forwarder <span class="tag">RFC 9499, 2308</span></h3>
+<p>Ein Forwarder ist nach RFC 9499 „<span lang="en">A nameserver used to resolve queries instead of directly using the authoritative nameserver chain</span>“; Forwarding ist der Vorgang, bei dem ein Server eine Anfrage mit gesetztem RD-Bit an einen anderen Server zur Auflösung weitergibt. RFC 9499 ist BCP 219 und die aktuelle DNS-Terminologie.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Forwarding ist nicht dasselbe wie blindes Weiterreichen von Paketen, sondern eine Resolver-Funktion mit eigenem Cache. Wer einen Forwarder einsetzt, verlagert damit auch die Vertrauensfrage und die Sichtbarkeit aller Anfragen auf den Upstream-Betreiber.</p>
+</article>
+<article class="term" id="t-dns-rebinding-schutz">
+<h3>DNS-Rebinding-Schutz </h3>
+<p>DNS-Rebinding-Schutz filtert Antworten aus öffentlichen Zonen heraus, die auf private oder lokale IP-Adressbereiche zeigen, damit ein Angreifer den Browser eines Nutzers nicht als Proxy in dessen internes Netz missbrauchen kann. Unbound setzt dies mit der Option private-address um, die passende A-, AAAA-, SVCB- und HTTPS-Einträge aus Antworten entfernt.</p>
+<p class="pit"><strong>Häufiges Missverständnis:</strong> Der Schutz greift nur für Namen aus öffentlichen Zonen und kann legitime Anwendungsfälle brechen, etwa Split-Horizon-Setups oder Dienste wie ACME-Validierung, die absichtlich private Adressen veröffentlichen. Dafür sieht Unbound ausdrücklich Ausnahmen über private-domain vor.</p>
+</article>
+</div></section>
+<section id="glossary-sources"><h2>Quellen</h2>
+<p>Jede oben genannte Norm im Volltext beim RFC Editor.</p>
+<ul class="src">
+<li><a href="https://www.rfc-editor.org/rfc/rfc1034.txt" rel="noopener nofollow">RFC 1034</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1035.txt" rel="noopener nofollow">RFC 1035</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc1123.txt" rel="noopener nofollow">RFC 1123</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2181.txt" rel="noopener nofollow">RFC 2181</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2182.txt" rel="noopener nofollow">RFC 2182</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2308.txt" rel="noopener nofollow">RFC 2308</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2671.txt" rel="noopener nofollow">RFC 2671</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2673.txt" rel="noopener nofollow">RFC 2673</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4033.txt" rel="noopener nofollow">RFC 4033</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4034.txt" rel="noopener nofollow">RFC 4034</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4035.txt" rel="noopener nofollow">RFC 4035</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4291.txt" rel="noopener nofollow">RFC 4291</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4786.txt" rel="noopener nofollow">RFC 4786</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc5011.txt" rel="noopener nofollow">RFC 5011</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc6066.txt" rel="noopener nofollow">RFC 6066</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc6840.txt" rel="noopener nofollow">RFC 6840</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc6891.txt" rel="noopener nofollow">RFC 6891</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7816.txt" rel="noopener nofollow">RFC 7816</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7830.txt" rel="noopener nofollow">RFC 7830</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7858.txt" rel="noopener nofollow">RFC 7858</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7871.txt" rel="noopener nofollow">RFC 7871</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8020.txt" rel="noopener nofollow">RFC 8020</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8109.txt" rel="noopener nofollow">RFC 8109</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8310.txt" rel="noopener nofollow">RFC 8310</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8467.txt" rel="noopener nofollow">RFC 8467</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8484.txt" rel="noopener nofollow">RFC 8484</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8744.txt" rel="noopener nofollow">RFC 8744</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9156.txt" rel="noopener nofollow">RFC 9156</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9230.txt" rel="noopener nofollow">RFC 9230</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9250.txt" rel="noopener nofollow">RFC 9250</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9364.txt" rel="noopener nofollow">RFC 9364</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9499.txt" rel="noopener nofollow">RFC 9499</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9848.txt" rel="noopener nofollow">RFC 9848</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9849.txt" rel="noopener nofollow">RFC 9849</a></li>
+</ul></section>
+</div></main>
+<footer><div class="wrap"><p>Diese Seite ist eine technische Darstellung und keine Rechtsberatung. Sie führt kein Skript aus, setzt kein Cookie und lädt nichts von fremden Servern.</p>
+<p><a href="https://dns.kaipfstr.de/en/glossary/" hreflang="en" lang="en">English version</a> &middot; <a href="https://github.com/Wasserpuncher/dns.kaipfstr.de" rel="noopener">Quelltext auf GitHub</a></p>
+</div></footer>
+</body>
+</html>

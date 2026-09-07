@@ -3,16 +3,44 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://dns.kaipfstr.de/</loc>
-    <lastmod>2026-09-06</lastmod>
+    <lastmod>2026-09-07</lastmod>
     <xhtml:link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/"/>
   </url>
   <url>
     <loc>https://dns.kaipfstr.de/en/</loc>
-    <lastmod>2026-09-06</lastmod>
+    <lastmod>2026-09-07</lastmod>
     <xhtml:link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/"/>
+  </url>
+  <url>
+    <loc>https://dns.kaipfstr.de/pruefen/</loc>
+    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/pruefen/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/verify/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/pruefen/"/>
+  </url>
+  <url>
+    <loc>https://dns.kaipfstr.de/en/verify/</loc>
+    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/pruefen/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/verify/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/pruefen/"/>
+  </url>
+  <url>
+    <loc>https://dns.kaipfstr.de/glossar/</loc>
+    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/glossar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/glossary/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/glossar/"/>
+  </url>
+  <url>
+    <loc>https://dns.kaipfstr.de/en/glossary/</loc>
+    <lastmod>2026-09-07</lastmod>
+    <xhtml:link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/glossar/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/glossary/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/glossar/"/>
   </url>
 </urlset>

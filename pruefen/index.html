@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DNS selbst prüfen: DNSSEC, DoT, DoH und ECS auf der Kommandozeile</title>
+<meta name="description" content="Mit welchen Befehlen Sie nachmessen, ob Ihr Resolver wirklich DNSSEC validiert, verschlüsselt antwortet und Ihre Adresse nicht weitergibt.">
+<meta name="author" content="Kai Pfister">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#0f5c4a">
+<meta name="referrer" content="no-referrer">
+<link rel="canonical" href="https://dns.kaipfstr.de/pruefen/">
+<link rel="alternate" hreflang="de" href="https://dns.kaipfstr.de/pruefen/">
+<link rel="alternate" hreflang="en" href="https://dns.kaipfstr.de/en/verify/">
+<link rel="alternate" hreflang="x-default" href="https://dns.kaipfstr.de/pruefen/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dns.kaipfstr.de/pruefen/">
+<meta property="og:title" content="DNS selbst prüfen: DNSSEC, DoT, DoH und ECS auf der Kommandozeile">
+<meta property="og:description" content="Mit welchen Befehlen Sie nachmessen, ob Ihr Resolver wirklich DNSSEC validiert, verschlüsselt antwortet und Ihre Adresse nicht weitergibt.">
+<meta property="og:site_name" content="dns.kaipfstr.de">
+<meta property="og:locale" content="de_DE">
+<meta property="og:locale:alternate" content="en_GB">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<style>
+:root{
+  --bg:#fbfaf7; --panel:#ffffff; --ink:#22201d; --muted:#5c574f;
+  --line:#e3ded4; --line-strong:#cec7b8;
+  --accent:#0f5c4a; --accent-ink:#0b4436;
+  --warn-bg:#fdf4ec; --warn-line:#d8a06a; --warn-ink:#7a4310;
+  --stop-bg:#fcf0ef; --stop-line:#c98a84; --stop-ink:#7d2b23;
+  --good:#0f5c4a; --code-bg:#f2efe8;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14161a; --panel:#1b1e24; --ink:#e6e3dd; --muted:#a5a096;
+    --line:#2c3038; --line-strong:#3d434d;
+    --accent:#5fc0a4; --accent-ink:#8ad6bf;
+    --warn-bg:#2a2118; --warn-line:#7a5628; --warn-ink:#e8b579;
+    --stop-bg:#2b1a18; --stop-line:#7d3b34; --stop-ink:#f0a49a;
+    --good:#5fc0a4; --code-bg:#22262d;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--serif);font-size:1.0625rem;line-height:1.72;
+  text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:52rem;margin:0 auto;padding:0 1.25rem}
+a{color:var(--accent-ink);text-underline-offset:.16em;text-decoration-thickness:.06em}
+a:hover,a:focus-visible{text-decoration-thickness:.14em}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+h1,h2,h3,h4{font-family:var(--sans);line-height:1.22;text-wrap:balance;font-weight:700}
+h1{font-size:clamp(2rem,5.2vw,3.05rem);letter-spacing:-.022em;margin:0 0 .6rem}
+h2{font-size:clamp(1.42rem,3.1vw,1.95rem);letter-spacing:-.014em;margin:4.2rem 0 1.1rem;
+   padding-bottom:.45rem;border-bottom:2px solid var(--line-strong)}
+h3{font-size:1.2rem;margin:2.4rem 0 .7rem;letter-spacing:-.008em}
+h4{font-size:.83rem;margin:1.5rem 0 .35rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:700}
+p{margin:0 0 1.15rem;text-wrap:pretty;hyphens:auto}
+ul,ol{margin:0 0 1.15rem;padding-left:1.3rem}
+li{margin:0 0 .5rem}
+strong{font-weight:700}
+code,kbd{font-family:var(--mono);font-size:.855em;background:var(--code-bg);
+  padding:.13em .38em;border-radius:4px;border:1px solid var(--line);word-break:break-all}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:20;background:var(--panel);padding:.6rem 1rem;
+  border:2px solid var(--accent);border-radius:6px}
+
+/* Kopf */
+header.top{background:var(--panel);border-bottom:1px solid var(--line);padding:3.6rem 0 2.6rem}
+.eyebrow{font-family:var(--sans);font-size:.76rem;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin:0 0 .9rem}
+.lede{font-size:1.2rem;color:var(--muted);margin:0 0 1.5rem;max-width:40rem;font-style:italic}
+.meta{font-family:var(--sans);font-size:.83rem;color:var(--muted);display:flex;flex-wrap:wrap;
+  gap:.55rem 1.1rem;align-items:center;margin:0}
+.sitenav{margin:1.6rem 0 1.3rem}
+.sitenav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem}
+.sitenav a{font-family:var(--sans);font-size:.9rem;font-weight:600;display:inline-block;
+  padding:.34rem .85rem;border:1px solid var(--line-strong);border-radius:8px;text-decoration:none;
+  background:var(--bg)}
+.sitenav a:hover,.sitenav a:focus-visible{border-color:var(--accent);color:var(--accent-ink)}
+.sitenav a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.eyebrow a{color:inherit;text-decoration:none}
+.eyebrow a:hover{text-decoration:underline}
+.langswitch{font-family:var(--sans);font-size:.85rem;font-weight:600;display:inline-block;
+  border:1px solid var(--muted);border-radius:999px;padding:.3rem .9rem;text-decoration:none}
+.langswitch:hover{border-color:var(--accent);background:var(--panel)}
+
+/* Inhaltsverzeichnis */
+nav.toc{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1.4rem 1.5rem;margin:2.6rem 0}
+nav.toc h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);
+  border:0;margin:0 0 .7rem;padding:0}
+nav.toc ol{columns:2;column-gap:2rem;margin:0;padding-left:1.15rem;font-family:var(--sans);font-size:.93rem}
+nav.toc li{margin:0 0 .35rem;break-inside:avoid}
+@media(max-width:34rem){nav.toc ol{columns:1}}
+
+/* Karten */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:1.6rem 1.65rem;margin:1.6rem 0}
+.card h3{margin-top:0;display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.tag{font-family:var(--sans);font-size:.68rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;border:1px solid var(--line-strong);border-radius:999px;
+  padding:.16rem .55rem;color:var(--muted);white-space:nowrap}
+.card.warn{background:var(--warn-bg);border-color:var(--warn-line)}
+.card.warn .tag{border-color:var(--warn-line);color:var(--warn-ink)}
+.card.stop{background:var(--stop-bg);border-color:var(--stop-line)}
+.card.stop .tag{border-color:var(--stop-line);color:var(--stop-ink)}
+
+/* Definitionslisten */
+dl.facts{margin:0 0 1rem;display:grid;grid-template-columns:auto 1fr;gap:.3rem 1.1rem;
+  font-size:.97rem;align-items:baseline}
+dl.facts dt{font-family:var(--sans);font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--muted);font-weight:700;padding-top:.18rem}
+dl.facts dd{margin:0}
+@media(max-width:36rem){dl.facts{grid-template-columns:1fr;gap:.1rem}
+  dl.facts dd{margin:0 0 .7rem}}
+
+/* Endpunkt-Blöcke */
+.ep{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .9rem;margin:.9rem 0}
+.ep .epname{font-family:var(--sans);font-size:.86rem;font-weight:700;margin:0 0 .35rem}
+.ep dl{display:grid;grid-template-columns:3.2rem 1fr;gap:.16rem .7rem;margin:0;font-size:.92rem}
+.ep dt{font-family:var(--sans);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);font-weight:700;padding-top:.22rem}
+.ep dd{margin:0}
+
+/* Tabelle */
+.tablewrap{overflow-x:auto;margin:1.5rem 0;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+caption{caption-side:top;text-align:left;padding:.75rem .85rem .1rem;font-family:var(--sans);
+  font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+table{border-collapse:collapse;width:100%;font-family:var(--sans);font-size:.9rem;min-width:34rem}
+th,td{padding:.62rem .85rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  border-bottom:2px solid var(--line-strong);white-space:nowrap}
+tbody tr:last-child td,tbody tr:last-child th{border-bottom:0}
+tbody th{font-weight:400}
+td.yes{color:var(--good);font-weight:700}
+td.no{color:var(--muted)}
+
+/* Listen mit Vor- und Nachteilen */
+ul.pro,ul.con{list-style:none;padding-left:1.6rem}
+ul.pro li,ul.con li{position:relative}
+ul.pro li::before{content:"+";position:absolute;left:-1.25rem;color:var(--good);font-weight:700}
+ul.con li::before{content:"!";position:absolute;left:-1.2rem;color:var(--warn-ink);font-weight:700}
+
+/* Quellen */
+ul.src{list-style:none;padding:0;font-family:var(--sans);font-size:.87rem}
+ul.src li{margin:0 0 .42rem;padding-left:1.1rem;text-indent:-1.1rem}
+.srcnote{font-family:var(--sans);font-size:.83rem;color:var(--muted)}
+
+blockquote{margin:1.3rem 0;padding:.2rem 0 .2rem 1.1rem;border-left:3px solid var(--accent);
+  color:var(--muted);font-style:italic}
+
+/* Pruefseite */
+.check{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:1.4rem 1.5rem;margin:1.4rem 0}
+.check h3{margin-top:0}
+.check .ask{font-style:italic;color:var(--muted);margin:0 0 1rem}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;
+  padding:.9rem 1rem;overflow-x:auto;margin:0 0 1.1rem;font-family:var(--mono);
+  font-size:.86rem;line-height:1.55;tab-size:2}
+pre code{background:none;border:0;padding:0;font-size:1em;word-break:normal;white-space:pre}
+.note{border-left:3px solid var(--line-strong);padding:.1rem 0 .1rem .9rem;margin:1rem 0 0;
+  font-size:.95rem;color:var(--muted)}
+
+/* Glossar */
+.terms{margin:1.4rem 0}
+.term{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:1rem 1.2rem;margin:.7rem 0}
+.term h3{margin:0 0 .4rem;font-size:1.05rem;display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+.term p{margin:0 0 .5rem}
+.term p:last-child{margin-bottom:0}
+.term .pit{font-size:.94rem;color:var(--muted);border-left:3px solid var(--warn-line);
+  padding-left:.8rem;margin-top:.6rem}
+.jump{font-family:var(--sans);font-size:.86rem;margin:1.2rem 0 2rem;line-height:2}
+.jump a{display:inline-block;border:1px solid var(--line-strong);border-radius:6px;
+  padding:.1rem .5rem;text-decoration:none;margin-right:.25rem}
+.jump a:hover{border-color:var(--accent)}
+
+footer{border-top:1px solid var(--line);margin-top:4.5rem;padding:2.4rem 0 3.5rem;
+  font-family:var(--sans);font-size:.87rem;color:var(--muted)}
+footer a{color:var(--accent-ink)}
+</style>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://dns.kaipfstr.de/#website","url":"https://dns.kaipfstr.de/","name":"dns.kaipfstr.de","inLanguage":["de","en"],"publisher":{"@id":"https://dns.kaipfstr.de/#person"}},{"@type":"Person","@id":"https://dns.kaipfstr.de/#person","name":"Kai Pfister","url":"https://github.com/Wasserpuncher"},{"@type":"WebPage","@id":"https://dns.kaipfstr.de/pruefen/#webpage","url":"https://dns.kaipfstr.de/pruefen/","name":"DNS selbst prüfen: DNSSEC, DoT, DoH und ECS auf der Kommandozeile","description":"Mit welchen Befehlen Sie nachmessen, ob Ihr Resolver wirklich DNSSEC validiert, verschlüsselt antwortet und Ihre Adresse nicht weitergibt.","inLanguage":"de","isPartOf":{"@id":"https://dns.kaipfstr.de/#website"},"author":{"@id":"https://dns.kaipfstr.de/#person"},"dateModified":"2026-09-07","breadcrumb":{"@id":"https://dns.kaipfstr.de/pruefen/#breadcrumb"},"license":"https://opensource.org/licenses/MIT"},{"@type":"BreadcrumbList","@id":"https://dns.kaipfstr.de/pruefen/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"dns.kaipfstr.de","item":"https://dns.kaipfstr.de/"},{"@type":"ListItem","position":2,"name":"DNS selbst prüfen: DNSSEC, DoT, DoH und ECS auf der Kommandozeile","item":"https://dns.kaipfstr.de/pruefen/"}]},{"@type":"HowTo","@id":"https://dns.kaipfstr.de/pruefen/#howto","name":"Selbst prüfen","inLanguage":"de","step":[{"@type":"HowToStep","position":1,"name":"Die Positivkontrolle","text":"Markiert der Resolver eine korrekt signierte Antwort als geprüft?"},{"@type":"HowToStep","position":2,"name":"Die Negativkontrolle","text":"Weist der Resolver eine absichtlich falsch signierte Antwort zurück?"},{"@type":"HowToStep","position":3,"name":"Der Beweis, dass es wirklich an DNSSEC lag","text":"Ein SERVFAIL kann viele Ursachen haben. Wie schließe ich die anderen aus?"},{"@type":"HowToStep","position":4,"name":"Den Grund im Klartext lesen","text":"Sagt der Resolver auch, warum er abgelehnt hat?"},{"@type":"HowToStep","position":5,"name":"Der Fallstrick, an dem die meisten Tests scheitern","text":"Warum fehlt das ad-Flag, obwohl der Resolver validiert?"},{"@type":"HowToStep","position":6,"name":"Wer antwortet, und was gibt er von mir weiter?","text":"Sieht der autoritative Server meine Adresse, oder nur die des Resolvers?"},{"@type":"HowToStep","position":7,"name":"Derselbe Anbieter, zwei Adressen, zwei Ergebnisse","text":"Wie sieht der Unterschied zwischen mit und ohne EDNS Client Subnet konkret aus?"},{"@type":"HowToStep","position":8,"name":"Welcher Knoten eines Anycast-Netzes antwortet","text":"Anycast heißt: viele Server, eine Adresse. Welcher ist es gerade?"},{"@type":"HowToStep","position":9,"name":"DNS over TLS in einem Befehl","text":"Kommt die Antwort tatsächlich durch den TLS-Kanal?"},{"@type":"HowToStep","position":10,"name":"Der häufigste Fehler: verschlüsselt, aber ungeprüft","text":"Verschlüsselung ohne Zertifikatsprüfung schützt gegen wen genau?"},{"@type":"HowToStep","position":11,"name":"Die Gegenprobe, die scheitern muss","text":"Prüft mein Werkzeug wirklich, oder nickt es alles ab?"},{"@type":"HowToStep","position":12,"name":"DNS over QUIC prüfen","text":"Spricht der Endpunkt wirklich DoQ, oder nur beinahe?"},{"@type":"HowToStep","position":13,"name":"DNS over HTTPS, der bequeme und der genaue Weg","text":"Antwortet der DoH-Endpunkt so, wie RFC 8484 es vorschreibt?"},{"@type":"HowToStep","position":14,"name":"QNAME-Minimierung","text":"Erfährt jeder Server auf dem Weg den vollen Namen, oder nur so viel wie nötig?"},{"@type":"HowToStep","position":15,"name":"Polstert der Resolver seine Antworten?","text":"Verschlüsselung verbirgt den Inhalt. Verbirgt sie auch die Länge?"}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">Zum Inhalt springen</a>
+<header class="top"><div class="wrap">
+<p class="eyebrow"><a href="https://dns.kaipfstr.de/">dns.kaipfstr.de</a></p>
+<h1>Selbst prüfen</h1>
+<p class="lede">Vertrauen ist gut. Ein Terminal ist besser.</p>
+<nav class="sitenav" aria-label="Seiten"><ul>
+<li><a href="https://dns.kaipfstr.de/">Anbieter</a></li>
+<li><a href="https://dns.kaipfstr.de/pruefen/" aria-current="page">Selbst prüfen</a></li>
+<li><a href="https://dns.kaipfstr.de/glossar/">Glossar</a></li>
+</ul></nav>
+<p class="meta"><a class="langswitch" href="https://dns.kaipfstr.de/en/verify/" hreflang="en" lang="en">English version</a><span>Stand: 6. September 2026</span></p>
+</div></header>
+<main id="main"><div class="wrap">
+<p>Jede Empfehlung auf dieser Seite beruht auf Aussagen der Betreiber und auf Messungen. Aussagen kann man zitieren, Messungen kann man wiederholen. Dieser Abschnitt zeigt, wie.</p>
+<p>Alle Befehle wurden am 7. September 2026 auf einem gewöhnlichen Linux-Rechner ausgeführt, und die beschriebenen Ausgaben sind das, was dabei tatsächlich herauskam. Wo eine Ausgabe abweichen kann, steht es dabei. Sie brauchen nichts als <code>dig</code>, <code>curl</code> und <code>openssl</code>; alle drei sind auf den meisten Systemen vorhanden. Unter Windows liefert das Windows-Subsystem für Linux dieselben Werkzeuge.</p>
+<p>Ein Hinweis vorweg, der die häufigste Fehlerquelle betrifft: Fragen Sie immer den Resolver direkt, mit <code>@</code> und seiner Adresse. Ohne <code>@</code> antwortet der lokale Dienst Ihres Betriebssystems, und dessen Antwort sagt über den eigentlichen Resolver wenig aus.</p>
+<section id="dnssec"><h2>Validiert mein Resolver DNSSEC?</h2>
+<p>Die Frage lässt sich in drei Befehlen beantworten, und zwar zweifelsfrei. Wichtig ist, den Resolver direkt zu
+befragen, also mit <code>@</code> und seiner Adresse. Fragt man ohne <code>@</code>, antwortet der lokale Stub des
+Betriebssystems, und der verschluckt das entscheidende Merkmal oft.</p>
+<article class="check">
+<h3>Die Positivkontrolle</h3>
+<p class="ask">Markiert der Resolver eine korrekt signierte Antwort als geprüft?</p>
+<pre><code>dig +dnssec @9.9.9.9 sigok.ippacket.stream A</code></pre>
+<p>In der Zeile <code>;; flags:</code> muss neben <code>qr rd ra</code> auch <code>ad</code> stehen, der Status
+muss <code>NOERROR</code> sein. Gemessen am 7. September 2026: <code>status: NOERROR</code> und
+<code>flags: qr rd ra ad</code>. Das <code>ad</code> steht für „authentic data“. RFC 4035 erlaubt einem Server, dieses
+Bit nur zu setzen, wenn er alle Datensätze der Antwort selbst geprüft hat.</p>
+<p class="note">Ersetzen Sie <code>9.9.9.9</code> durch die Adresse, die Sie prüfen wollen.</p>
+</article>
+<article class="check">
+<h3>Die Negativkontrolle</h3>
+<p class="ask">Weist der Resolver eine absichtlich falsch signierte Antwort zurück?</p>
+<pre><code>dig @9.9.9.9 sigfail.ippacket.stream A
+dig @9.9.9.9 dnssec-failed.org A</code></pre>
+<p>Beide müssen <code>status: SERVFAIL</code> und eine leere Antwortsektion liefern. Gemessen am
+7. September 2026: beide <code>SERVFAIL</code>. Kommt stattdessen <code>NOERROR</code> mit einer IP-Adresse zurück,
+validiert dieser Resolver nicht. Zwei unabhängige Testdomains deshalb, weil eine davon jederzeit ausfallen kann.</p>
+</article>
+<article class="check">
+<h3>Der Beweis, dass es wirklich an DNSSEC lag</h3>
+<p class="ask">Ein SERVFAIL kann viele Ursachen haben. Wie schließe ich die anderen aus?</p>
+<pre><code>dig +cd @9.9.9.9 sigfail.ippacket.stream A</code></pre>
+<p>Mit gesetztem CD-Bit, also „checking disabled“, muss dieselbe Abfrage jetzt <code>NOERROR</code> und eine
+Adresse liefern. Gemessen am 7. September 2026: ohne <code>+cd</code> SERVFAIL, mit <code>+cd</code> NOERROR. Genau
+dieser Umschlag ist der Beweis: Der Resolver hat vorher geprüft und deshalb abgelehnt, und nicht etwa, weil die Domain
+kaputt oder der Server überlastet wäre.</p>
+</article>
+<article class="check">
+<h3>Den Grund im Klartext lesen</h3>
+<p class="ask">Sagt der Resolver auch, warum er abgelehnt hat?</p>
+<pre><code>dig @9.9.9.9 sigfail.ippacket.stream A | grep EDE</code></pre>
+<p>Eine Zeile der Form <code>; EDE: 6 (DNSSEC Bogus)</code>. Genau das wurde am 7. September 2026 gemessen.
+Extended DNS Errors nach RFC 8914 liefern einen maschinenlesbaren Grund statt eines nackten SERVFAIL. Erscheint keine
+EDE-Zeile, unterstützt der Resolver diese Erweiterung nicht; das ist für sich genommen kein Mangel an der Validierung.</p>
+</article>
+<article class="check">
+<h3>Der Fallstrick, an dem die meisten Tests scheitern</h3>
+<p class="ask">Warum fehlt das ad-Flag, obwohl der Resolver validiert?</p>
+<pre><code>dig +dnssec sigok.ippacket.stream A
+dig +dnssec @9.9.9.9 sigok.ippacket.stream A</code></pre>
+<p>Der Unterschied ist das <code>@</code>. Ohne Adresse fragen Sie den lokalen Dienst des Betriebssystems.
+Auf dem Testrechner lieferte der erste Befehl am 7. September 2026 <code>flags: qr rd ra</code> ohne
+<code>ad</code>, der zweite <code>flags: qr rd ra ad</code>. Der Upstream validiert also, der lokale Stub reicht die
+Markierung nur nicht durch. Wer das nicht weiß, hält einen validierenden Resolver für kaputt.</p>
+<p class="note">Unter Linux zeigt <code>resolvectl status</code>, was der Systemdienst tut.</p>
+</article>
+</section>
+<section id="identity"><h2>Welchen Resolver benutze ich wirklich?</h2>
+<p>Eingetragen ist eine Sache, benutzt eine andere. Router, VPN-Software, Browser mit eigenem DoH und der
+Systemdienst greifen alle ein. Diese Befehle zeigen, wer am Ende wirklich antwortet und welchen Teil Ihrer Adresse er
+dabei weitergibt.</p>
+<article class="check">
+<h3>Wer antwortet, und was gibt er von mir weiter?</h3>
+<p class="ask">Sieht der autoritative Server meine Adresse, oder nur die des Resolvers?</p>
+<pre><code>dig +short TXT whoami.ds.akahelp.net</code></pre>
+<p>Der Dienst von Akamai antwortet mit bis zu drei Paaren. <code>ns</code> ist die Adresse des Resolvers, der
+tatsächlich angefragt hat. Erscheint zusätzlich <code>ecs</code>, wurde ein Teil Ihrer eigenen Adresse mitgeschickt.
+Gemessen am 7. September 2026 über den Systemresolver: nur <code>"ns"</code>, kein <code>ecs</code>. Es wurde also
+nichts von der Client-Adresse weitergereicht.</p>
+</article>
+<article class="check">
+<h3>Derselbe Anbieter, zwei Adressen, zwei Ergebnisse</h3>
+<p class="ask">Wie sieht der Unterschied zwischen mit und ohne EDNS Client Subnet konkret aus?</p>
+<pre><code>dig +short TXT whoami.ds.akahelp.net @9.9.9.9
+dig +short TXT whoami.ds.akahelp.net @9.9.9.11</code></pre>
+<p>Gemessen am 7. September 2026. Über <code>9.9.9.9</code> kam ausschließlich <code>"ns"</code> mit der
+Resolveradresse zurück. Über <code>9.9.9.11</code> kamen zusätzlich <code>"ip"</code> und
+<code>"ecs" "203.0.113.0/24/24"</code>, also das eigene Netz mit gekürzter Adresse. Derselbe Betreiber, dieselbe
+Datenschutzerklärung, ein Zeichen Unterschied in der Adresse. Das ist der sauberste Nachweis für ECS, weil alle
+anderen Bedingungen gleich bleiben.</p>
+<p class="note">Die gezeigte Netzangabe ist ein Beispiel. In Ihrer Ausgabe steht Ihr eigenes Netz.</p>
+</article>
+<article class="check">
+<h3>Welcher Knoten eines Anycast-Netzes antwortet</h3>
+<p class="ask">Anycast heißt: viele Server, eine Adresse. Welcher ist es gerade?</p>
+<pre><code>dig +nsid @9.9.9.9 example.com A</code></pre>
+<p>Im Abschnitt <code>OPT PSEUDOSECTION</code> erscheint eine Zeile
+<code>; NSID: ... ("res701.qfra3")</code>. Genau das wurde am 7. September 2026 gemessen; die Kennung deutet auf einen
+Standort in Frankfurt. Fehlt die Zeile, sendet der Server keine Kennung. Der Vorteil gegenüber der älteren Abfrage
+<code>dig @server CH TXT id.server</code>: Die Kennung reist in der normalen Antwort mit.</p>
+</article>
+</section>
+<section id="encrypted"><h2>Kommt die Antwort wirklich verschlüsselt?</h2>
+<p>Eine verschlüsselte Verbindung allein sagt nichts, solange niemand prüft, wer am anderen Ende sitzt. Genau das
+ist der häufigste Fehler in Anleitungen: Sie zeigen einen erfolgreichen Handschlag und nennen ihn Sicherheit.</p>
+<article class="check">
+<h3>DNS over TLS in einem Befehl</h3>
+<p class="ask">Kommt die Antwort tatsächlich durch den TLS-Kanal?</p>
+<pre><code>dig +tls @dns.quad9.net example.com A</code></pre>
+<p>Entscheidend ist die vorletzte Zeile. Gemessen am 7. September 2026:
+<code>;; SERVER: 149.112.112.112#853(dns.quad9.net) (TLS)</code>. Das <code>(TLS)</code> und der Port
+<code>853</code> sind der Beleg. Steht dort kein <code>(TLS)</code>, lief die Abfrage im Klartext.</p>
+</article>
+<article class="check">
+<h3>Der häufigste Fehler: verschlüsselt, aber ungeprüft</h3>
+<p class="ask">Verschlüsselung ohne Zertifikatsprüfung schützt gegen wen genau?</p>
+<pre><code>echo QUIT | openssl s_client -connect dns.quad9.net:853 \
+  -servername dns.quad9.net -alpn dot 2&gt;&amp;1 \
+  | grep -E 'subject=|Verification|ALPN protocol'</code></pre>
+<p>Drei Zeilen müssen zusammenkommen. Gemessen am 7. September 2026:
+<code>subject=C=CH, ST=Zurich, L=Zürich, O=Quad9, CN=dns.quad9.net</code>, dann <code>Verification: OK</code>, dann
+<code>ALPN protocol: dot</code>. Erst alle drei zusammen belegen: verschlüsselt, richtiger Gegenüber, richtiges
+Protokoll. Ein Handschlag allein belegt nur, dass irgendjemand geantwortet hat.</p>
+<p class="note">Mit <code>kdig</code> aus dem Paket <code>knot-dnsutils</code> (Debian, Ubuntu) beziehungsweise
+<code>knot-utils</code> (Fedora, RHEL) geht dasselbe kürzer:
+<code>kdig -d @dns.quad9.net +tls-ca +tls-host=dns.quad9.net example.com A</code>. Achtung: <code>+tls</code> allein
+prüft das Zertifikat nicht, dafür braucht es <code>+tls-ca</code>.</p>
+</article>
+<article class="check">
+<h3>Die Gegenprobe, die scheitern muss</h3>
+<p class="ask">Prüft mein Werkzeug wirklich, oder nickt es alles ab?</p>
+<pre><code>echo QUIT | openssl s_client -connect 9.9.9.9:853 \
+  -servername dns.quad9.net -alpn dot -verify_return_error \
+  -verify_hostname wrong.example.com 2&gt;&amp;1 | grep -iE 'verif|error' | head -3</code></pre>
+<p>Dieser Befehl muss fehlschlagen. Erwartet wird eine Zeile mit einem Prüffehler zum Hostnamen. Kommt hier
+eine erfolgreiche Prüfung zurück, ist Ihre gesamte übrige Prüfung wertlos. Eine Negativkontrolle, die nicht scheitert,
+misst nichts.</p>
+</article>
+<article class="check">
+<h3>DNS over QUIC prüfen</h3>
+<p class="ask">Spricht der Endpunkt wirklich DoQ, oder nur beinahe?</p>
+<pre><code>openssl s_client -quic -alpn doq -connect dns.quad9.net:853 \
+  -servername dns.quad9.net &lt; /dev/null 2&gt;&amp;1 \
+  | grep -E 'ALPN protocol|Verification'</code></pre>
+<p>Gemessen am 7. September 2026: <code>Verification: OK</code> und <code>ALPN protocol: doq</code>. Achtung
+bei der Auslegung: Ein ausgehandeltes <code>doq</code> beweist nur, dass der Server das Protokoll annimmt. Ob danach
+auch eine Antwort kommt, ist eine zweite Frage. Genau dieser Unterschied trat bei UncensoredDNS auf, wo der Handschlag
+gelang, eine echte Abfrage aber unbeantwortet blieb.</p>
+<p class="note">Braucht OpenSSL 3.5 oder neuer. Version prüfen mit <code>openssl version</code>.</p>
+</article>
+<article class="check">
+<h3>DNS over HTTPS, der bequeme und der genaue Weg</h3>
+<p class="ask">Antwortet der DoH-Endpunkt so, wie RFC 8484 es vorschreibt?</p>
+<pre><code>dig +https @dns.quad9.net example.com A
+
+curl -sS -o antwort.bin -w '%{http_code} %{content_type} %{size_download}\n' \
+  -H 'accept: application/dns-message' \
+  'https://dns.quad9.net/dns-query?dns=AAABAAABAAAAAAAAA3d3dwdleGFtcGxlA2NvbQAAAQAB'</code></pre>
+<p>Der erste Befehl ist der bequeme: <code>dig</code> spricht DoH selbst und zeigt eine lesbare Antwort.
+Der zweite zeigt, was wirklich über die Leitung geht. Gemessen am 7. September 2026:
+<code>200 application/dns-message 65</code>. Die Datei enthält eine binäre DNS-Nachricht, kein JSON. Die ersten Bytes
+lauten <code>00 00 81 80 00 01 00 02</code>: Kennung null, wie RFC 8484 es verlangt, Antwortbit gesetzt, eine Frage,
+zwei Antworten.</p>
+<p class="note">Die Base64-Zeichenkette im Beispiel steht so im RFC 8484 selbst und fragt nach
+<code>www.example.com</code>. Manche Anbieter bieten zusätzlich eine JSON-Schnittstelle an; die ist bequem, aber kein
+Standard und funktioniert nicht überall gleich.</p>
+</article>
+</section>
+<section id="metadata"><h2>Was verrät meine Anfrage noch?</h2>
+<p>Zwei Eigenschaften entscheiden darüber, wie viel ein Resolver über Sie preisgibt und wie viel ein Beobachter aus
+der reinen Paketgröße ableiten kann. Beide lassen sich in je einem Befehl messen.</p>
+<article class="check">
+<h3>QNAME-Minimierung</h3>
+<p class="ask">Erfährt jeder Server auf dem Weg den vollen Namen, oder nur so viel wie nötig?</p>
+<pre><code>dig +short TXT qnamemintest.internet.nl @9.9.9.9</code></pre>
+<p>Die Antwort enthält genau einen von zwei Sätzen. Gemessen am 7. September 2026:
+<code>"HOORAY - QNAME minimisation is enabled on your resolver :)!"</code>. Die Gegenaussage lautet
+<code>"NO - QNAME minimisation is NOT enabled on your resolver :("</code>. Daneben erscheinen immer die Zeile
+<code>a.b.qnamemin-test.internet.nl.</code> und ein SPF-Eintrag; die Reihenfolge wechselt.</p>
+<p class="note">Der Testdienst wird von SIDN Labs und NLnet Labs betrieben.</p>
+</article>
+<article class="check">
+<h3>Polstert der Resolver seine Antworten?</h3>
+<p class="ask">Verschlüsselung verbirgt den Inhalt. Verbirgt sie auch die Länge?</p>
+<pre><code>dig +tls +padding=468 A example.com @9.9.9.9
+dig +tls +padding=468 A example.com @1.1.1.1</code></pre>
+<p>Ein sehenswerter Unterschied. Gemessen am 7. September 2026: Bei <code>9.9.9.9</code> fehlte die
+PAD-Zeile, und <code>;; MSG SIZE  rcvd: 72</code> zeigte die ungepolsterte Größe. Bei <code>1.1.1.1</code> erschien
+<code>; PAD: (392 bytes)</code> und <code>;; MSG SIZE  rcvd: 468</code>. Cloudflare polsterte die Antwort auf eine
+einheitliche Länge, Quad9 an diesem Tag nicht.</p>
+<p class="note">Warum das zählt: RFC 9076 weist darauf hin, dass sich aus Größe und Zeitmuster verschlüsselter
+Nachrichten Rückschlüsse ziehen lassen. Polsterung nach RFC 7830 nimmt dieser Auswertung die Grundlage. Ein einzelner
+Messwert an einem Tag ist allerdings keine Aussage über den Dauerbetrieb.</p>
+</article>
+</section>
+<section id="testdomains"><h2>Warum die Testdomains keine Webseite haben</h2>
+<p>Ein Hinweis zu den Testdomains: <code>sigok.ippacket.stream</code>, <code>sigfail.ippacket.stream</code>, <code>dnssec-failed.org</code> und <code>qnamemintest.internet.nl</code> haben keine Webseite, die man aufrufen könnte. Sie existieren nur im DNS. Bei <code>dnssec-failed.org</code> ist das sogar zwingend: Wenn Ihr Resolver richtig arbeitet, kann er den Namen gar nicht auflösen, und dann lässt sich auch keine Seite öffnen. Das Ausbleiben der Seite ist hier der Beweis, nicht der Fehler.</p>
+</section>
+<section id="verify-sources"><h2>Quellen</h2>
+<p>Die Normtexte und Testdienste, auf die sich dieser Abschnitt stützt.</p>
+<ul class="src">
+<li><a href="https://www.rfc-editor.org/rfc/rfc4035.txt" rel="noopener nofollow">RFC 4035, Protocol Modifications for the DNS Security Extensions</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8914.txt" rel="noopener nofollow">RFC 8914, Extended DNS Errors</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8484.txt" rel="noopener nofollow">RFC 8484, DNS Queries over HTTPS</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc7830.txt" rel="noopener nofollow">RFC 7830, The EDNS(0) Padding Option</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc9156.txt" rel="noopener nofollow">RFC 9156, DNS Query Name Minimisation to Improve Privacy</a></li>
+<li><a href="https://internet.nl/" rel="noopener nofollow">internet.nl: Betreiber des Tests auf QNAME-Minimierung</a></li>
+<li><a href="https://www.knot-dns.cz/docs/latest/html/man_kdig.html" rel="noopener nofollow">kdig: Handbuchseite</a></li>
+</ul></section>
+</div></main>
+<footer><div class="wrap"><p>Diese Seite ist eine technische Darstellung und keine Rechtsberatung. Sie führt kein Skript aus, setzt kein Cookie und lädt nichts von fremden Servern.</p>
+<p><a href="https://dns.kaipfstr.de/en/verify/" hreflang="en" lang="en">English version</a> &middot; <a href="https://github.com/Wasserpuncher/dns.kaipfstr.de" rel="noopener">Quelltext auf GitHub</a></p>
+</div></footer>
+</body>
+</html>
